@@ -18,7 +18,7 @@ public class MessagePanel {
 	private MainPanel panel; 
  
 	public MessagePanel(SimpleWindow window) {
-		panel = new MainPanel(BasicColors.LIGHT_VIOLET);
+		panel = new MainPanel(BasicColors.OCEAN_BLUE);
 		this.window = window;
 	}
 

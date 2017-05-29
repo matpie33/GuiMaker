@@ -31,6 +31,10 @@ public class MainPanel {
 		gapBetweenRows = 0;
 	}
 
+	public void setGapsBetweenRowsTo(int gap) {
+		gapBetweenRows = gap;
+	}
+
 	public MainPanel(Color color) {
 		this(color, false);
 	}
@@ -154,7 +158,7 @@ public class MainPanel {
 		if (shouldPutRowsHighestAsPossible) {
 			updateRowsAboveMe();
 			c.weighty = 1;
-			c.anchor = GridBagConstraints.NORTHWEST;
+			// c.anchor = GridBagConstraints.NORTHWEST;
 			if (c.fill == GridBagConstraints.BOTH) {
 				c.fill = GridBagConstraints.HORIZONTAL;
 			}
@@ -164,6 +168,8 @@ public class MainPanel {
 		c.fill = fill;
 		int a = gapBetweenRows;
 		c.insets = new Insets(a, a, a, a);
+		System.out.printf("constraint: fill %d, weightx %f, weighty %f, anchor %d", c.fill,
+				c.weightx, c.weighty, c.anchor);
 		panel.add(p, c);
 		rows.add(p);
 	}
@@ -210,6 +216,10 @@ public class MainPanel {
 		removeAndUpdateRows(row, number);
 	}
 
+	public void addElementsToRow(int rowNumber, JComponent... elements) {
+		addElementsToRow(rows.get(rowNumber), elements);
+	}
+
 	public void addElementsToRow(JPanel row, JComponent... elements) {
 
 		GridBagConstraints c = ((GridBagLayout) row.getLayout())
@@ -219,7 +229,7 @@ public class MainPanel {
 
 			row.add(element, c); // TODO why it works?
 		}
-
+		updateView();
 	}
 
 	public void removeRow(JPanel row) {
@@ -242,13 +252,17 @@ public class MainPanel {
 			GridBagLayout g = (GridBagLayout) panel.getLayout();
 			JPanel row = rows.get(i);
 			GridBagConstraints c = g.getConstraints(row);
+			System.out.printf("constraint: fill %d, weightx %f, weighty %f, anchor %d", c.fill,
+					c.weightx, c.weighty, c.anchor);
 			if (direction.equals(Direction.FORWARD)) {
 				c.gridy++;
 			}
 			else if (direction.equals(Direction.BACKWARD)) {
 				c.gridy--;
 			}
-
+			c.weighty = 0;
+			c.anchor = GridBagConstraints.NORTH;
+			c.fill = GridBagConstraints.BOTH;
 			panel.remove(row);
 			panel.add(row, c);
 		}
@@ -287,8 +301,9 @@ public class MainPanel {
 	}
 
 	private void updateView() {
-		panel.repaint();
 		panel.revalidate();
+		panel.repaint();
+
 	}
 
 	public JPanel getPanel() {
@@ -301,6 +316,26 @@ public class MainPanel {
 			this.panel.remove(panel);
 			rows.remove(panel);
 		}
+	}
+
+	public void removeElementsFromRow(int rowNumber, Component... elements) {
+		JPanel row = rows.get(rowNumber);
+		for (int i = 0; i < row.getComponentCount(); i++) {
+			System.out.println("in panel");
+			System.out.println(row.getComponent(i));
+		}
+		for (Component c : elements) {
+			System.out.println("to remove");
+			System.out.println(c);
+			row.remove(c);
+		}
+
+	}
+
+	public void removeLastElementFromRow(int rowNumber) {
+		JPanel row = rows.get(rowNumber);
+		row.remove(row.getComponentCount() - 1);
+		updateView();
 	}
 
 	private JPanel findRow(Component... elements) {
@@ -316,6 +351,10 @@ public class MainPanel {
 	public void clear() {
 		panel.removeAll();
 		rows.clear();
+	}
+
+	public void setBackground(Color c) {
+		panel.setBackground(c);
 	}
 
 }

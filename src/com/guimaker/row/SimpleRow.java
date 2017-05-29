@@ -14,7 +14,7 @@ public class SimpleRow {
 	protected int anchor;
 
 	public SimpleRow(boolean verticalFill, JComponent... components) {
-		anchor = GridBagConstraints.NORTHWEST;
+		anchor = GridBagConstraints.NORTH;
 		verticallyFilledElements = new JComponent[] {};
 		horizontallyFilledElements = new JComponent[] {};
 		if (verticalFill)
@@ -89,8 +89,9 @@ public class SimpleRow {
 		return fill;
 	}
 
-	public void setAnchor(int anchor) {
+	public SimpleRow setAnchor(int anchor) {
 		this.anchor = anchor;
+		return this;
 	}
 
 	public int getAnchor() {

@@ -20,10 +20,9 @@ import com.guimaker.colors.BasicColors;
 
 public class GuiMaker {
 
-	
 	private static final Dimension scrollPanesSize = new Dimension(300, 300);
 	private static final Dimension minimumListSize = new Dimension(200, 100);
-	private static final Dimension paneSize = new Dimension (100,100);
+	private static final Dimension paneSize = new Dimension(100, 100);
 
 	public static JLabel createLabel(String title) {
 		JLabel l = new JLabel(title);
@@ -39,8 +38,8 @@ public class GuiMaker {
 			j.setBackground(BasicColors.GREY);
 		return j;
 	}
-	
-	public static JTextArea createTextArea (boolean editable, int maxCharacters){
+
+	public static JTextArea createTextArea(boolean editable, int maxCharacters) {
 		JTextArea j = createTextArea(editable);
 		limitCharactersInTextField(j, maxCharacters);
 		return j;
@@ -51,56 +50,52 @@ public class GuiMaker {
 		b.addActionListener(listener);
 		return b;
 	}
-		
-	public static JScrollPane createScrollPane(Color bgColor, Border border, Component component,Dimension size) {
-		JScrollPane scroll = null;		
-		scroll = new JScrollPane(component);		
+
+	public static JScrollPane createScrollPane(Color bgColor, Border border, Component component,
+			Dimension size) {
+		JScrollPane scroll = null;
+		scroll = new JScrollPane(component);
 		scroll.getViewport().setBackground(bgColor);
-		scroll.setBorder(border);
+		// scroll.setBorder(border);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
 		scroll.setPreferredSize(size);
 		return scroll;
 	}
-	
+
 	public static JScrollPane createScrollPane(Color bgColor, Border border, Component component) {
-		return createScrollPane(bgColor,border,component,scrollPanesSize);
+		return createScrollPane(bgColor, border, component, scrollPanesSize);
 	}
-	
-	public static JTextField createTextField (int textLength){		
-		return createTextField(textLength, "", true);	
+
+	public static JTextField createTextField(int textLength) {
+		return createTextField(textLength, "", true);
 	}
-	
-	
-	public static JTextField createTextField (int textLength, String text){
+
+	public static JTextField createTextField(int textLength, String text) {
 		return createTextField(textLength, text, true);
 	}
-	
-	public static JTextField createTextField (int textLength, String text, boolean editable){
-		JTextField textField = new JTextField(text,textLength);
-//		limitCharactersInTextField(textField, textLength);
+
+	public static JTextField createTextField(int textLength, String text, boolean editable) {
+		JTextField textField = new JTextField(text, textLength);
+		// limitCharactersInTextField(textField, textLength);
 		textField.setEditable(editable);
-		return textField;			
+		return textField;
 	}
-	
-	
+
 	private static void limitCharactersInTextField(JTextComponent textField, int maxDigits) {
 		((AbstractDocument) textField.getDocument())
 				.setDocumentFilter(new LimitDocumentFilter(maxDigits));
 	}
-	
-	public static JRadioButton createRadioButton (String text, ActionListener listener){
-		JRadioButton radioButton = new JRadioButton(text);	
+
+	public static JRadioButton createRadioButton(String text, ActionListener listener) {
+		JRadioButton radioButton = new JRadioButton(text);
 		radioButton.addActionListener(listener);
 		return radioButton;
 	}
-	
-	public static JCheckBox createCheckBox (String text, ActionListener listener){
-		JCheckBox checkbox = new JCheckBox (text);
+
+	public static JCheckBox createCheckBox(String text, ActionListener listener) {
+		JCheckBox checkbox = new JCheckBox(text);
 		checkbox.addActionListener(listener);
 		return checkbox;
 	}
-	
-	
-	
 
 }

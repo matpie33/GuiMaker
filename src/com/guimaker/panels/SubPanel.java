@@ -16,7 +16,7 @@ public class SubPanel {
 		super();
 		panel = new JPanel();
 		panel.setLayout(new GridLayout(1,2));
-		leftPanel = new MainPanel(BasicColors.LIGHT_VIOLET);
+		leftPanel = new MainPanel(BasicColors.OCEAN_BLUE);
 		rightPanel = new MainPanel(BasicColors.LIGHT_BLUE);
 		panel.add (leftPanel.getPanel());
 		panel.add (rightPanel.getPanel());
