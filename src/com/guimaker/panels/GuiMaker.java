@@ -58,7 +58,10 @@ public class GuiMaker {
 		scroll.getViewport().setBackground(bgColor);
 		// scroll.setBorder(border);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
-		scroll.setPreferredSize(size);
+		if (size != null) {
+			scroll.setPreferredSize(size);
+		}
+
 		return scroll;
 	}
 

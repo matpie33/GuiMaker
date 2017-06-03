@@ -310,6 +310,11 @@ public class MainPanel {
 		return panel;
 	}
 
+	public Component getElementFromRow(int rowNumber0Based, int elementNumber0Based) {
+		JPanel j = rows.get(rowNumber0Based);
+		return j.getComponent(elementNumber0Based);
+	}
+
 	public void removeRowWithElements(Component... elements) {
 		JPanel panel = findRow(elements);
 		if (panel != null) {
