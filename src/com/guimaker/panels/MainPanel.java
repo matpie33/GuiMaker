@@ -362,4 +362,15 @@ public class MainPanel {
 		panel.setBackground(c);
 	}
 
+	public boolean rowContainsComponent(int rowNumber, Component c) {
+		JPanel row = rows.get(rowNumber);
+		Component[] components = row.getComponents();
+		for (Component componentInRow : components) {
+			if (componentInRow.equals(c)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
