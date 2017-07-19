@@ -11,5 +11,6 @@ public class BasicColors {
 	public static final Color VERY_LIGHT_BLUE = new Color(140, 196, 237);
 	public static final Color OCEAN_BLUE = new Color(90, 170, 230);
 	public static final Color GREY = new Color(190, 190, 190);
+	public static final Color NAVY_BLUE = new Color(30, 10, 90);
 
 }

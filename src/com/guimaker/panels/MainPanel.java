@@ -146,8 +146,12 @@ public class MainPanel {
 	}
 
 	private void createConstraintsAndAdd(JPanel p, int anchor, int fill) {
+		createConstraintsAndAdd(p, anchor, fill, rows.size());
+	}
+
+	private void createConstraintsAndAdd(JPanel p, int anchor, int fill, int rowNumber) {
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = rows.size();
+		c.gridy = rowNumber;
 		c.weightx = 1;
 		if (fill == GridBagConstraints.BOTH || fill == GridBagConstraints.VERTICAL) {
 			c.weighty = 1;
@@ -157,7 +161,7 @@ public class MainPanel {
 		}
 		if (shouldPutRowsHighestAsPossible) {
 			updateRowsAboveMe();
-			c.weighty = 1;
+			c.weighty = 0;
 			// c.anchor = GridBagConstraints.NORTHWEST;
 			if (c.fill == GridBagConstraints.BOTH) {
 				c.fill = GridBagConstraints.HORIZONTAL;
@@ -171,7 +175,7 @@ public class MainPanel {
 		System.out.printf("constraint: fill %d, weightx %f, weighty %f, anchor %d", c.fill,
 				c.weightx, c.weighty, c.anchor);
 		panel.add(p, c);
-		rows.add(p);
+		rows.add(rowNumber, p);
 	}
 
 	private void updateRowsAboveMe() {
@@ -262,7 +266,7 @@ public class MainPanel {
 			}
 			c.weighty = 0;
 			c.anchor = GridBagConstraints.NORTH;
-			c.fill = GridBagConstraints.BOTH;
+			// c.fill = GridBagConstraints.BOTH;
 			panel.remove(row);
 			panel.add(row, c);
 		}
@@ -279,16 +283,11 @@ public class MainPanel {
 		return p;
 	}
 
-	public void insertRow(int number, JComponent... components) {
+	public void insertRow(int number, SimpleRow row) {
 		movePanels(Direction.FORWARD, number);
-		JPanel newRow = new JPanel();
-		// addComponentsToSinglePanel(GridBagConstraints.NONE, components);
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = number;
-		c.weightx = 1;
-		c.weighty = 1;
-		panel.add(newRow, c);
-		rows.add(number, newRow);
+		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
+		int fill = row.getFillingType();
+		createConstraintsAndAdd(panel, row.getAnchor(), fill, number);
 		updateView();
 	}
 
@@ -371,6 +370,12 @@ public class MainPanel {
 			}
 		}
 		return false;
+	}
+
+	public void changeVisibilityOfLastElementInRow(int rowNumber, boolean visible) {
+		JPanel panel = rows.get(rowNumber);
+		Component c = panel.getComponent(panel.getComponentCount() - 1);
+		c.setVisible(visible);
 	}
 
 }
