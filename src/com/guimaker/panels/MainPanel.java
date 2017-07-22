@@ -265,7 +265,7 @@ public class MainPanel {
 				c.gridy--;
 			}
 			c.weighty = 0;
-			c.anchor = GridBagConstraints.NORTH;
+			// c.anchor = GridBagConstraints.NORTH;
 			// c.fill = GridBagConstraints.BOTH;
 			panel.remove(row);
 			panel.add(row, c);
