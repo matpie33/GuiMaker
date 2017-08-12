@@ -1,5 +1,6 @@
 package com.guimaker.row;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 
 import javax.swing.JComponent;
@@ -12,9 +13,10 @@ public class SimpleRow {
 	protected JComponent[] horizontallyFilledElements;
 	protected JComponent[] verticallyFilledElements;
 	protected int anchor;
+	private Color color;
 
 	public SimpleRow(boolean verticalFill, JComponent... components) {
-		anchor = GridBagConstraints.NORTH;
+		anchor = GridBagConstraints.NORTHWEST;
 		verticallyFilledElements = new JComponent[] {};
 		horizontallyFilledElements = new JComponent[] {};
 		if (verticalFill)
@@ -55,6 +57,15 @@ public class SimpleRow {
 
 	public JComponent[] getComponents() {
 		return componentsInRow;
+	}
+
+	public SimpleRow setColor(Color c) {
+		this.color = c;
+		return this;
+	}
+
+	public Color getColor() {
+		return color;
 	}
 
 	public String toString() {

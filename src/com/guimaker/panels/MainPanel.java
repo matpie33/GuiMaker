@@ -23,7 +23,7 @@ public class MainPanel {
 
 	private List<JPanel> rows;
 	private JPanel panel;
-	private int gapBetweenRows = 5;
+	private int gapBetweenRows = 2;
 	private int gapInsideRow = 3;
 	private final boolean shouldPutRowsHighestAsPossible;
 
@@ -66,6 +66,10 @@ public class MainPanel {
 
 	public JPanel addRow(SimpleRow row) {
 		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
+		if (row.getColor() != null) {
+			panel.setBackground(row.getColor());
+			panel.setOpaque(true);
+		}
 		int fill = row.getFillingType();
 		createConstraintsAndAdd(panel, row.getAnchor(), fill);
 		updateView();
@@ -115,6 +119,7 @@ public class MainPanel {
 
 		int a = gapInsideRow;
 		gbc.insets = new Insets(a, a, a, a);
+		int i = 0;
 		for (JComponent compo : components) {
 			System.out.println("components size: " + components.length);
 			if (compo == null) {
@@ -138,6 +143,10 @@ public class MainPanel {
 				gbc.weightx = 0;
 				gbc.weighty = 0;
 			}
+			if (i == components.length - 1) {
+				gbc.weightx = 1;
+			}
+			i++;
 
 			p.add(compo, gbc);
 		}
@@ -161,8 +170,7 @@ public class MainPanel {
 		}
 		if (shouldPutRowsHighestAsPossible) {
 			updateRowsAboveMe();
-			c.weighty = 0;
-			// c.anchor = GridBagConstraints.NORTHWEST;
+			c.weighty = 1;
 			if (c.fill == GridBagConstraints.BOTH) {
 				c.fill = GridBagConstraints.HORIZONTAL;
 			}
@@ -171,7 +179,7 @@ public class MainPanel {
 		c.anchor = anchor;
 		c.fill = fill;
 		int a = gapBetweenRows;
-		c.insets = new Insets(a, a, a, a);
+		c.insets = new Insets(a, a, 0, 0);
 		System.out.printf("constraint: fill %d, weightx %f, weighty %f, anchor %d", c.fill,
 				c.weightx, c.weighty, c.anchor);
 		panel.add(p, c);
@@ -215,6 +223,13 @@ public class MainPanel {
 		return this;
 	}
 
+	public void removeLastRow() {
+		if (!rows.isEmpty()) {
+			removeRow(rows.get(rows.size() - 1));
+		}
+
+	}
+
 	public void removeRow(int number) {
 		JPanel row = rows.get(number);
 		removeAndUpdateRows(row, number);
@@ -244,6 +259,8 @@ public class MainPanel {
 		movePanels(Direction.BACKWARD, lastRowToUpdate);
 		panel.remove(row);
 		rows.remove(row);
+		GridBagConstraints c = getConstraintsForRow(rows.size() - 1);
+		c.weighty = 1;
 		updateView();
 	}
 
@@ -255,7 +272,7 @@ public class MainPanel {
 		for (int i = rows.size() - 1; i >= startIndex; i--) {
 			GridBagLayout g = (GridBagLayout) panel.getLayout();
 			JPanel row = rows.get(i);
-			GridBagConstraints c = g.getConstraints(row);
+			GridBagConstraints c = getConstraintsForRow(i);
 			System.out.printf("constraint: fill %d, weightx %f, weighty %f, anchor %d", c.fill,
 					c.weightx, c.weighty, c.anchor);
 			if (direction.equals(Direction.FORWARD)) {
@@ -270,6 +287,12 @@ public class MainPanel {
 			panel.remove(row);
 			panel.add(row, c);
 		}
+	}
+
+	private GridBagConstraints getConstraintsForRow(int rowNumber) {
+		GridBagLayout g = (GridBagLayout) panel.getLayout();
+		JPanel row = rows.get(rowNumber);
+		return g.getConstraints(row);
 	}
 
 	public SubPanel divideRow(int number) {

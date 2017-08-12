@@ -30,10 +30,24 @@ public class GuiMaker {
 	}
 
 	public static JTextArea createTextArea(boolean editable) {
-		JTextArea j = new JTextArea();
+		return createTextArea(editable, 0, 0); // TODO have to do it better
+	}
+
+	public static JTextArea createTextArea(boolean editable, boolean opaque) {
+		return createTextArea(editable, opaque, 0, 0);
+	}
+
+	public static JTextArea createTextArea(boolean editable, int initialRows, int initialColumns) {
+		return createTextArea(editable, true, initialRows, initialColumns);
+	}
+
+	public static JTextArea createTextArea(boolean editable, boolean opaque, int initialRows,
+			int initialColumns) {
+		JTextArea j = new JTextArea(initialRows, initialColumns);
 		j.setWrapStyleWord(true);
 		j.setLineWrap(true);
 		j.setEditable(editable);
+		j.setOpaque(opaque);
 		if (!editable)
 			j.setBackground(BasicColors.GREY);
 		return j;
@@ -53,9 +67,14 @@ public class GuiMaker {
 
 	public static JScrollPane createScrollPane(Color bgColor, Border border, Component component,
 			Dimension size) {
-		JScrollPane scroll = null;
-		scroll = new JScrollPane(component);
-		scroll.getViewport().setBackground(bgColor);
+		JScrollPane scroll = new JScrollPane(component);
+		if (bgColor == null) {
+			scroll.setOpaque(false);
+		}
+		else {
+			scroll.getViewport().setBackground(bgColor);
+		}
+
 		// scroll.setBorder(border);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
 		if (size != null) {
