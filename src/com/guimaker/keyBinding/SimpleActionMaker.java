@@ -11,10 +11,9 @@ import com.guimaker.window.ConfirmPanel;
 import com.guimaker.window.SimpleWindow;
 
 public class SimpleActionMaker {
-	
-	
-	
-	public static AbstractAction createConfirmingAction (final ConfirmPanel panel, final boolean chosen){
+
+	public static AbstractAction createConfirmingAction(final ConfirmPanel panel,
+			final boolean chosen) {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -23,22 +22,21 @@ public class SimpleActionMaker {
 		};
 	}
 
-	public static WindowListener createClosingListener (final SimpleWindow window){
-		return new WindowAdapter (){
+	public static WindowListener createClosingListener(final SimpleWindow window) {
+		return new WindowAdapter() {
 			@Override
-			public void windowClosed(WindowEvent e){
+			public void windowClosed(WindowEvent e) {
 				window.close();
 			}
 		};
 	}
-	
-    public static AbstractAction createDisposingAction(final SimpleWindow dialog){
+
+	public static AbstractAction createDisposingAction(final SimpleWindow dialog) {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(dialog);
 				dialog.dispose();
 			}
 		};
-    }
+	}
 }

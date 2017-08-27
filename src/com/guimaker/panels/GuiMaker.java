@@ -21,8 +21,6 @@ import com.guimaker.colors.BasicColors;
 public class GuiMaker {
 
 	private static final Dimension scrollPanesSize = new Dimension(300, 300);
-	private static final Dimension minimumListSize = new Dimension(200, 100);
-	private static final Dimension paneSize = new Dimension(100, 100);
 
 	public static JLabel createLabel(String title) {
 		JLabel l = new JLabel(title);
@@ -74,8 +72,7 @@ public class GuiMaker {
 		else {
 			scroll.getViewport().setBackground(bgColor);
 		}
-
-		// scroll.setBorder(border);
+		scroll.setBorder(border);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
 		if (size != null) {
 			scroll.setPreferredSize(size);

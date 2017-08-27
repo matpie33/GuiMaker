@@ -22,7 +22,6 @@ public class SimpleRow {
 		if (verticalFill)
 			enableVerticalFill();
 		this.componentsInRow = components;
-		System.out.println("components size" + componentsInRow.length);
 	}
 
 	protected void enableHorizontalFill() {

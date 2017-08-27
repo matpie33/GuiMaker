@@ -66,10 +66,6 @@ public class MainPanel {
 
 	public JPanel addRow(SimpleRow row) {
 		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
-		if (row.getColor() != null) {
-			panel.setBackground(row.getColor());
-			panel.setOpaque(true);
-		}
 		int fill = row.getFillingType();
 		createConstraintsAndAdd(panel, row.getAnchor(), fill);
 		updateView();
@@ -85,8 +81,6 @@ public class MainPanel {
 		if (row.getComponents().length == 1) {
 			componentsFilling.put(row.getComponents()[0], row.getFillingType());
 		}
-		System.out.println("to fill horizontal: " + horizontal.length);
-		System.out.println("to fill vertical: " + vertical.size());
 		for (JComponent hor : horizontal) {
 			boolean bothSides = false;
 			for (JComponent ver : vertical) {
@@ -115,13 +109,12 @@ public class MainPanel {
 		p.setOpaque(false);
 
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.WEST;
+		gbc.anchor = GridBagConstraints.CENTER;
 
 		int a = gapInsideRow;
 		gbc.insets = new Insets(a, a, a, a);
 		int i = 0;
 		for (JComponent compo : components) {
-			System.out.println("components size: " + components.length);
 			if (compo == null) {
 				continue;
 			}
@@ -180,8 +173,6 @@ public class MainPanel {
 		c.fill = fill;
 		int a = gapBetweenRows;
 		c.insets = new Insets(a, a, 0, 0);
-		System.out.printf("constraint: fill %d, weightx %f, weighty %f, anchor %d", c.fill,
-				c.weightx, c.weighty, c.anchor);
 		panel.add(p, c);
 		rows.add(rowNumber, p);
 	}
@@ -259,8 +250,6 @@ public class MainPanel {
 		movePanels(Direction.BACKWARD, lastRowToUpdate);
 		panel.remove(row);
 		rows.remove(row);
-		GridBagConstraints c = getConstraintsForRow(rows.size() - 1);
-		c.weighty = 1;
 		updateView();
 	}
 
@@ -273,8 +262,6 @@ public class MainPanel {
 			GridBagLayout g = (GridBagLayout) panel.getLayout();
 			JPanel row = rows.get(i);
 			GridBagConstraints c = getConstraintsForRow(i);
-			System.out.printf("constraint: fill %d, weightx %f, weighty %f, anchor %d", c.fill,
-					c.weightx, c.weighty, c.anchor);
 			if (direction.equals(Direction.FORWARD)) {
 				c.gridy++;
 			}
@@ -347,13 +334,7 @@ public class MainPanel {
 
 	public void removeElementsFromRow(int rowNumber, Component... elements) {
 		JPanel row = rows.get(rowNumber);
-		for (int i = 0; i < row.getComponentCount(); i++) {
-			System.out.println("in panel");
-			System.out.println(row.getComponent(i));
-		}
 		for (Component c : elements) {
-			System.out.println("to remove");
-			System.out.println(c);
 			row.remove(c);
 		}
 
@@ -399,6 +380,17 @@ public class MainPanel {
 		JPanel panel = rows.get(rowNumber);
 		Component c = panel.getComponent(panel.getComponentCount() - 1);
 		c.setVisible(visible);
+	}
+
+	public void setPanelColor(int rowNumber, Color color) {
+		JPanel panel = rows.get(rowNumber);
+		panel.setOpaque(true);
+		panel.setBackground(color);
+	}
+
+	public void clearPanelColor(int rowNumber) {
+		JPanel panel = rows.get(rowNumber);
+		panel.setOpaque(false);
 	}
 
 }
