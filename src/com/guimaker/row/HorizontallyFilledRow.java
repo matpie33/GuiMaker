@@ -2,24 +2,21 @@ package com.guimaker.row;
 
 import javax.swing.JComponent;
 
-public class HorizontallyFilledRow extends SimpleRow{
-		
-	public HorizontallyFilledRow(boolean verticalFill, JComponent[] components) {		
-		super(verticalFill,components);
+public class HorizontallyFilledRow extends SimpleRow {
+
+	public HorizontallyFilledRow(boolean verticalFill, JComponent[] components) {
+		super(verticalFill, components);
 		enableHorizontalFill();
-	}			
-	
-	public SimpleRow fillHorizontallySomeElements (JComponent ... filledElements){
+	}
+
+	public SimpleRow fillHorizontallySomeElements(JComponent... filledElements) {
 		fillHorizontally(filledElements);
 		return this;
 	}
-	
-	public SimpleRow fillHorizontallyEqually (){
+
+	public SimpleRow fillHorizontallyEqually() {
 		fillHorizontally(componentsInRow);
 		return this;
 	}
-	
-	
-	
-	
+
 }

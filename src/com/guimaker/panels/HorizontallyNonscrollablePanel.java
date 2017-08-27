@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
-public class HorizontallyNonscrollablePanel extends JPanel implements Scrollable{
+public class HorizontallyNonscrollablePanel extends JPanel implements Scrollable {
 
 	public Dimension getPreferredScrollableViewportSize() {
 		return super.getPreferredSize();
@@ -27,5 +27,5 @@ public class HorizontallyNonscrollablePanel extends JPanel implements Scrollable
 	public boolean getScrollableTracksViewportHeight() {
 		return false;
 	}
-	
+
 }
