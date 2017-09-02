@@ -1,4 +1,4 @@
-package com.guimaker.panels;
+package com.guimaker.utilities;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

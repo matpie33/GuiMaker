@@ -1,4 +1,4 @@
-package com.guimaker.row;
+package com.guimaker.enums;
 
 import java.awt.GridBagConstraints;
 

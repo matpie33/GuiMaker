@@ -14,9 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
+import com.guimaker.row.Rows;
 import com.guimaker.row.SimpleRow;
 
 public class MainPanel {
@@ -25,7 +28,9 @@ public class MainPanel {
 	private JPanel panel;
 	private int gapBetweenRows = 2;
 	private int gapInsideRow = 3;
+	private int gapRightSide;
 	private final boolean shouldPutRowsHighestAsPossible;
+	private Border rightBorder;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -33,6 +38,14 @@ public class MainPanel {
 
 	public void setGapsBetweenRowsTo(int gap) {
 		gapBetweenRows = gap;
+	}
+
+	public void setGapsRightSideBetweenColumnsTo(int gap) {
+		gapRightSide = gap;
+	}
+
+	public void setRightBorder() {
+		rightBorder = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK);
 	}
 
 	public MainPanel(Color color) {
@@ -64,10 +77,18 @@ public class MainPanel {
 		rows = new LinkedList<JPanel>();
 	}
 
+	public List<JPanel> addRows(Rows rows) {
+		List<JPanel> panels = new ArrayList<>();
+		for (SimpleRow row : rows.getRows()) {
+			panels.add(addRow(row));
+		}
+		return panels;
+	}
+
 	public JPanel addRow(SimpleRow row) {
 		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
-		int fill = row.getFillingType();
-		createConstraintsAndAdd(panel, row.getAnchor(), fill);
+		int fill = row.getFillTypeAsGridBagConstraint();
+		createConstraintsAndAdd(panel, row.getAnchor().getAnchor(), fill);
 		updateView();
 		return panel;
 	}
@@ -79,7 +100,7 @@ public class MainPanel {
 				Arrays.asList(row.getVerticallyFilledElements()));
 
 		if (row.getComponents().length == 1) {
-			componentsFilling.put(row.getComponents()[0], row.getFillingType());
+			componentsFilling.put(row.getComponents()[0], row.getFillTypeAsGridBagConstraint());
 		}
 		for (JComponent hor : horizontal) {
 			boolean bothSides = false;
@@ -112,11 +133,15 @@ public class MainPanel {
 		gbc.anchor = GridBagConstraints.CENTER;
 
 		int a = gapInsideRow;
-		gbc.insets = new Insets(a, a, a, a);
+		int b = gapRightSide;
+		gbc.insets = new Insets(a, a, a, b);
 		int i = 0;
 		for (JComponent compo : components) {
 			if (compo == null) {
 				continue;
+			}
+			if (rightBorder != null) {
+				compo.setBorder(rightBorder);
 			}
 			if (componentsFilling.containsKey(compo)) {
 				gbc.fill = componentsFilling.get(compo);
@@ -296,8 +321,8 @@ public class MainPanel {
 	public void insertRow(int number, SimpleRow row) {
 		movePanels(Direction.FORWARD, number);
 		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
-		int fill = row.getFillingType();
-		createConstraintsAndAdd(panel, row.getAnchor(), fill, number);
+		int fill = row.getFillTypeAsGridBagConstraint();
+		createConstraintsAndAdd(panel, row.getAnchor().getAnchor(), fill, number);
 		updateView();
 	}
 

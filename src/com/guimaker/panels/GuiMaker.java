@@ -3,20 +3,29 @@ package com.guimaker.panels;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import com.guimaker.colors.BasicColors;
+import com.guimaker.enums.ComponentType;
+import com.guimaker.enums.TextAlignment;
+import com.guimaker.utilities.CommonActionsMaker;
+import com.guimaker.utilities.HotkeyWrapper;
+import com.guimaker.utilities.LimitDocumentFilter;
 
 public class GuiMaker {
 
@@ -24,6 +33,12 @@ public class GuiMaker {
 
 	public static JLabel createLabel(String title) {
 		JLabel l = new JLabel(title);
+		return l;
+	}
+
+	public static JLabel createErrorLabel(String message) {
+		JLabel l = new JLabel(message);
+		l.setForeground(Color.red);
 		return l;
 	}
 
@@ -57,10 +72,35 @@ public class GuiMaker {
 		return j;
 	}
 
-	public static JButton createButton(String title, ActionListener listener) {
-		JButton b = new JButton(title);
-		b.addActionListener(listener);
-		return b;
+	public static AbstractButton createButtonlikeComponent(ComponentType type, String message,
+			AbstractAction actionOnClick, int hotkey, int keyModifier) {
+		AbstractButton component = createButtonlikeComponent(type, message, actionOnClick);
+		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);
+		CommonActionsMaker.addHotkey(hotkey, wrapper.getKeyMask(), actionOnClick, component);
+		return component;
+	}
+
+	public static AbstractButton createButtonlikeComponent(ComponentType type, String message,
+			AbstractAction actionOnClick) {
+		AbstractButton component;
+		switch (type) {
+		case BUTTON:
+			component = new JButton(message);
+			break;
+		case RADIOBUTTON:
+			component = new JRadioButton(message);
+			break;
+		default:
+			component = null;
+			break;
+		}
+		component.addActionListener(actionOnClick);
+		return component;
+	}
+
+	public static AbstractButton createButtonlikeComponent(ComponentType type, String message,
+			AbstractAction actionOnClick, int hotkey) {
+		return createButtonlikeComponent(type, message, actionOnClick, hotkey, 0);
 	}
 
 	public static JScrollPane createScrollPane(Color bgColor, Border border, Component component,
@@ -105,16 +145,23 @@ public class GuiMaker {
 				.setDocumentFilter(new LimitDocumentFilter(maxDigits));
 	}
 
-	public static JRadioButton createRadioButton(String text, ActionListener listener) {
-		JRadioButton radioButton = new JRadioButton(text);
-		radioButton.addActionListener(listener);
-		return radioButton;
+	public static JTextPane createTextPane(String text, TextAlignment alignment) {
+		JTextPane textPane = new JTextPane();
+		textPane.setBackground(BasicColors.VERY_LIGHT_BLUE);
+		textPane.setText(text);
+		textPane.setEditable(false);
+		StyledDocument doc = textPane.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, alignment.getStyleConstant());
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		return textPane;
 	}
 
-	public static JCheckBox createCheckBox(String text, ActionListener listener) {
-		JCheckBox checkbox = new JCheckBox(text);
-		checkbox.addActionListener(listener);
-		return checkbox;
+	public static JScrollPane createTextPaneWrappedInScrollPane(String text,
+			TextAlignment alignment) {
+		JScrollPane pane = new JScrollPane(createTextPane(text, alignment));
+		pane.setPreferredSize(new Dimension(250, 70));
+		return pane;
 	}
 
 }
