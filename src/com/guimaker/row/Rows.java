@@ -35,4 +35,10 @@ public class Rows extends SimpleRow {
 		return new Rows(rows.toArray(new SimpleRow[] {}));
 	}
 
+	@Override
+	public Rows fillHorizontallyEqually() {
+		super.fillHorizontallyEqually();
+		return this;
+	}
+
 }

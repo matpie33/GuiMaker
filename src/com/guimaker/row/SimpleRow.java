@@ -25,7 +25,7 @@ public class SimpleRow {
 	}
 
 	public SimpleRow(FillType fillingType, JComponent... components) {
-		this(fillingType, Anchor.NORTHWEST, components);
+		this(fillingType, Anchor.SOUTHWEST, components);
 	}
 
 	public SimpleRow fillHorizontallyEqually() {
