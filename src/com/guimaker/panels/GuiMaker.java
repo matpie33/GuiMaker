@@ -3,6 +3,7 @@ package com.guimaker.panels;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.FocusListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -31,8 +32,9 @@ public class GuiMaker {
 
 	private static final Dimension scrollPanesSize = new Dimension(300, 300);
 
-	public static JLabel createLabel(String title) {
+	public static JLabel createLabel(String title, Color color) {
 		JLabel l = new JLabel(title);
+		l.setForeground(color);
 		return l;
 	}
 
@@ -69,6 +71,15 @@ public class GuiMaker {
 	public static JTextArea createTextArea(boolean editable, int maxCharacters) {
 		JTextArea j = createTextArea(editable);
 		limitCharactersInTextField(j, maxCharacters);
+		return j;
+	}
+
+	public static JTextArea createTextArea(boolean editable, int maximumNumberOfDigits, String text,
+			FocusListener listener) {
+		JTextArea j = new JTextArea(1, maximumNumberOfDigits);
+		limitCharactersInTextField(j, maximumNumberOfDigits);
+		j.setText(text);
+		j.addFocusListener(listener);
 		return j;
 	}
 
@@ -162,6 +173,15 @@ public class GuiMaker {
 		JScrollPane pane = new JScrollPane(createTextPane(text, alignment));
 		pane.setPreferredSize(new Dimension(250, 70));
 		return pane;
+	}
+
+	public static JTextArea createTextArea(String text, FocusListener listener) {
+		JTextArea elem = new JTextArea(text, 1, 15);
+		elem.addFocusListener(listener);
+		elem.setOpaque(true);
+		elem.setLineWrap(true);
+		elem.setWrapStyleWord(true);
+		return elem;
 	}
 
 }

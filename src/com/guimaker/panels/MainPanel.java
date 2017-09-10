@@ -310,7 +310,7 @@ public class MainPanel {
 		updateView();
 	}
 
-	public void removeRow(JPanel row) {
+	private void removeRow(JPanel row) {
 		removeAndUpdateRows(row, rows.indexOf(row));
 	}
 
@@ -325,6 +325,9 @@ public class MainPanel {
 	}
 
 	private void giveLastRowTheRestOfSpace() {
+		if (rows.isEmpty()) {
+			return;
+		}
 		int lastRow = rows.size() - 1;
 		GridBagConstraints cd = getConstraintsForRow(lastRow);
 		cd.weighty = 1;
@@ -469,6 +472,10 @@ public class MainPanel {
 	public void clearPanelColor(int rowNumber) {
 		JPanel panel = rows.get(rowNumber);
 		panel.setOpaque(false);
+	}
+
+	public int getIndexOfPanel(JPanel panel) {
+		return rows.indexOf(panel);
 	}
 
 }
