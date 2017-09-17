@@ -7,6 +7,7 @@ import java.awt.event.FocusListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -14,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.JTextComponent;
@@ -31,6 +33,8 @@ import com.guimaker.utilities.LimitDocumentFilter;
 public class GuiMaker {
 
 	private static final Dimension scrollPanesSize = new Dimension(300, 300);
+	private static final Border textFieldBorder = BorderFactory
+			.createBevelBorder(BevelBorder.LOWERED);
 
 	public static JLabel createLabel(String title, Color color) {
 		JLabel l = new JLabel(title);
@@ -61,6 +65,7 @@ public class GuiMaker {
 		JTextArea j = new JTextArea(initialRows, initialColumns);
 		j.setWrapStyleWord(true);
 		j.setLineWrap(true);
+		j.setBorder(textFieldBorder);
 		j.setEditable(editable);
 		j.setOpaque(opaque);
 		if (!editable)
@@ -74,10 +79,13 @@ public class GuiMaker {
 		return j;
 	}
 
-	public static JTextArea createTextArea(boolean editable, int maximumNumberOfDigits, String text,
+	public static JTextArea createTextArea(int maximumNumberOfDigits, String text,
 			FocusListener listener) {
 		JTextArea j = new JTextArea(1, maximumNumberOfDigits);
 		limitCharactersInTextField(j, maximumNumberOfDigits);
+		j.setBorder(textFieldBorder);
+		j.setLineWrap(true);
+		j.setWrapStyleWord(true);
 		j.setText(text);
 		j.addFocusListener(listener);
 		return j;
@@ -179,6 +187,7 @@ public class GuiMaker {
 		JTextArea elem = new JTextArea(text, 1, 15);
 		elem.addFocusListener(listener);
 		elem.setOpaque(true);
+		elem.setBorder(textFieldBorder);
 		elem.setLineWrap(true);
 		elem.setWrapStyleWord(true);
 		return elem;

@@ -26,12 +26,14 @@ public class MainPanel {
 
 	private List<JPanel> rows;
 	private JPanel panel;
-	private int gapBetweenRows = 2;
+	private int gapBetweenRows = 4;
 	private int gapInsideRow = 3;
 	private int gapRightSide;
 	private final boolean shouldPutRowsHighestAsPossible;
 	private Border borderToUse;
 	private Color rowColor;
+	private int numberOfColumns;
+	private int numberOfRows;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -67,6 +69,9 @@ public class MainPanel {
 
 	public MainPanel(Color color, boolean putRowsHighestAsPossible, boolean scrollHorizontally) {
 
+		numberOfColumns = 0;
+		numberOfRows = 0;
+
 		shouldPutRowsHighestAsPossible = putRowsHighestAsPossible;
 		if (scrollHorizontally) {
 			panel = new JPanel();
@@ -85,6 +90,37 @@ public class MainPanel {
 		panel.setLayout(new GridBagLayout());
 		rows = new LinkedList<JPanel>();
 
+	}
+
+	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
+			int startingColumn, JComponent... elements) {
+		if (numberOfColumns < elements.length) {
+			numberOfColumns = elements.length;
+		}
+		System.out.println("next row: " + startingColumn);
+		for (JComponent element : elements) {
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = startingColumn++;
+			c.gridy = numberOfRows;
+			c.anchor = GridBagConstraints.NORTHWEST;
+			int xGap = gapInsideRow;
+			int yGap = gapBetweenRows;
+			c.insets = new Insets(yGap, xGap, yGap, xGap);
+			c.weightx = 0;
+			if (componentToFill == element) {
+				c.fill = GridBagConstraints.HORIZONTAL;
+				c.weightx = 1;
+			}
+			c.weighty = 0;
+
+			panel.add(element, c);
+		}
+		numberOfRows++;
+		updateView();
+	}
+
+	public void addElementsInColumnStartingFromColumn(int columnNumber, JComponent... elements) {
+		addElementsInColumnStartingFromColumn(null, columnNumber, elements);
 	}
 
 	public List<JPanel> addRows(Rows rows) {
@@ -171,12 +207,13 @@ public class MainPanel {
 		p.setOpaque(false);
 
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		int a = gapInsideRow;
 		int b = gapRightSide;
 		int rightGap = a != b && b > 0 ? b : a;
-		gbc.insets = new Insets(a, a, a, rightGap);
+		gbc.insets = new Insets(0, a, 0, rightGap);
+
 		int i = 0;
 		for (JComponent compo : components) {
 			if (compo == null) {
