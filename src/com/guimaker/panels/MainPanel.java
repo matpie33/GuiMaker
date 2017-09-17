@@ -132,13 +132,20 @@ public class MainPanel {
 	}
 
 	public JPanel addRow(SimpleRow row) {
+		return addRow(row, rows.size());
+	}
+
+	private JPanel addRow(SimpleRow row, int rowNumber) {
 		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
-		if (rowColor != null) {
+		if (row.isBorderEnabled() && borderToUse != null) {
+			panel.setBorder(borderToUse);
+		}
+		if (row.isOpaque() && rowColor != null) {
 			panel.setBackground(rowColor);
 			panel.setOpaque(true);
 		}
 		int fill = row.getFillTypeAsGridBagConstraint();
-		createConstraintsAndAdd(panel, row.getAnchor().getAnchor(), fill);
+		createConstraintsAndAdd(panel, row.getAnchor().getAnchor(), fill, rowNumber);
 		checkForFillingNeed();
 		updateView();
 		return panel;
@@ -200,9 +207,6 @@ public class MainPanel {
 	private JPanel addComponentsToSinglePanel(JComponent[] components,
 			Map<JComponent, Integer> componentsFilling) {
 		JPanel p = new JPanel();
-		if (borderToUse != null) {
-			p.setBorder(borderToUse);
-		}
 		p.setLayout(new GridBagLayout());
 		p.setOpaque(false);
 
@@ -247,10 +251,6 @@ public class MainPanel {
 		}
 
 		return p;
-	}
-
-	private void createConstraintsAndAdd(JPanel p, int anchor, int fill) {
-		createConstraintsAndAdd(p, anchor, fill, rows.size());
 	}
 
 	private void createConstraintsAndAdd(JPanel p, int anchor, int fill, int rowNumber) {
@@ -414,10 +414,7 @@ public class MainPanel {
 
 	public void insertRow(int number, SimpleRow row) {
 		movePanels(Direction.FORWARD, number);
-		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
-		int fill = row.getFillTypeAsGridBagConstraint();
-		createConstraintsAndAdd(panel, row.getAnchor().getAnchor(), fill, number);
-		updateView();
+		addRow(row, number);
 	}
 
 	public int getNumberOfRows() {

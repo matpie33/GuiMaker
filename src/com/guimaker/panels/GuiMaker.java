@@ -65,11 +65,11 @@ public class GuiMaker {
 		JTextArea j = new JTextArea(initialRows, initialColumns);
 		j.setWrapStyleWord(true);
 		j.setLineWrap(true);
-		j.setBorder(textFieldBorder);
+		if (editable) {
+			j.setBorder(textFieldBorder);
+		}
 		j.setEditable(editable);
 		j.setOpaque(opaque);
-		if (!editable)
-			j.setBackground(BasicColors.GREY);
 		return j;
 	}
 
@@ -179,6 +179,7 @@ public class GuiMaker {
 	public static JScrollPane createTextPaneWrappedInScrollPane(String text,
 			TextAlignment alignment) {
 		JScrollPane pane = new JScrollPane(createTextPane(text, alignment));
+		pane.setBorder(null);
 		pane.setPreferredSize(new Dimension(250, 70));
 		return pane;
 	}

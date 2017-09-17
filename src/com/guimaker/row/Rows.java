@@ -37,7 +37,13 @@ public class Rows extends SimpleRow {
 
 	@Override
 	public Rows fillHorizontallyEqually() {
-		super.fillHorizontallyEqually();
+		rows.get(rows.size() - 1).fillHorizontallyEqually();
+		return this;
+	}
+
+	@Override
+	public Rows fillVertically(JComponent... filledElements) {
+		rows.get(rows.size() - 1).fillVertically(filledElements);
 		return this;
 	}
 

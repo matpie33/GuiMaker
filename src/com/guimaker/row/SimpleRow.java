@@ -15,6 +15,8 @@ public class SimpleRow {
 	protected Anchor anchor;
 	private Color color;
 	private FillType fillType;
+	private boolean isOpaque;
+	private boolean borderEnabled;
 
 	public SimpleRow(FillType fillingType, Anchor anchor, JComponent... components) {
 		fillType = fillingType;
@@ -22,6 +24,8 @@ public class SimpleRow {
 		verticallyFilledElements = new JComponent[] {};
 		horizontallyFilledElements = new JComponent[] {};
 		this.componentsInRow = components;
+		isOpaque = true;
+		borderEnabled = true;
 	}
 
 	public SimpleRow(FillType fillingType, JComponent... components) {
@@ -134,6 +138,24 @@ public class SimpleRow {
 
 	public void setFillType(FillType fillType) {
 		this.fillType = fillType;
+	}
+
+	public SimpleRow setNotOpaque() {
+		isOpaque = false;
+		return this;
+	}
+
+	public boolean isOpaque() {
+		return isOpaque;
+	}
+
+	public SimpleRow disableBorder() {
+		borderEnabled = false;
+		return this;
+	}
+
+	public boolean isBorderEnabled() {
+		return borderEnabled;
 	}
 
 }
