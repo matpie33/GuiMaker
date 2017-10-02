@@ -65,8 +65,7 @@ public class GuiMaker {
 		return new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyChar() == KeyEvent.VK_TAB) {
-					// TODO it bugs ctrl + i - not working adding new word
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
 					a.transferFocus();
 					e.consume();
 				}
