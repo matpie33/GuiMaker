@@ -27,6 +27,7 @@ import com.guimaker.options.TextComponentOptions;
 import com.guimaker.options.TextPaneOptions;
 import com.guimaker.utilities.CommonActionsMaker;
 import com.guimaker.utilities.HotkeyWrapper;
+import com.guimaker.utilities.KeyModifiers;
 import com.guimaker.utilities.LimitDocumentFilter;
 
 public class GuiMaker {
@@ -74,7 +75,7 @@ public class GuiMaker {
 	}
 
 	public static AbstractButton createButtonlikeComponent(ComponentType type, String message,
-			AbstractAction actionOnClick, int hotkey, int keyModifier) {
+			AbstractAction actionOnClick, int hotkey, KeyModifiers keyModifier) {
 		AbstractButton component = createButtonlikeComponent(type, message, actionOnClick);
 		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);
 		CommonActionsMaker.addHotkey(hotkey, wrapper.getKeyMask(), actionOnClick, component);
@@ -101,7 +102,7 @@ public class GuiMaker {
 
 	public static AbstractButton createButtonlikeComponent(ComponentType type, String message,
 			AbstractAction actionOnClick, int hotkey) {
-		return createButtonlikeComponent(type, message, actionOnClick, hotkey, 0);
+		return createButtonlikeComponent(type, message, actionOnClick, hotkey, KeyModifiers.NONE);
 	}
 
 	public static JScrollPane createScrollPane(ScrollPaneOptions options) {
