@@ -1,13 +1,12 @@
 package com.guimaker.panels;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -15,17 +14,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.ComponentType;
-import com.guimaker.enums.TextAlignment;
+import com.guimaker.options.ComponentOptions;
+import com.guimaker.options.ScrollPaneOptions;
+import com.guimaker.options.TextComponentOptions;
+import com.guimaker.options.TextPaneOptions;
 import com.guimaker.utilities.CommonActionsMaker;
 import com.guimaker.utilities.HotkeyWrapper;
 import com.guimaker.utilities.LimitDocumentFilter;
@@ -33,62 +32,46 @@ import com.guimaker.utilities.LimitDocumentFilter;
 public class GuiMaker {
 
 	private static final Dimension scrollPanesSize = new Dimension(300, 300);
-	private static final Border textFieldBorder = BorderFactory
-			.createBevelBorder(BevelBorder.LOWERED);
 
-	public static JLabel createLabel(String title, Color color) {
-		JLabel l = new JLabel(title);
-		l.setForeground(color);
+	public static JLabel createLabel(ComponentOptions options) {
+		JLabel l = new JLabel();
+		l.setText(options.getText());
+		l.setForeground(options.getForegroundColor());
+		l.setBackground(options.getBackgroundColor());
+		l.setBorder(options.getBorder());
 		return l;
 	}
 
-	public static JLabel createErrorLabel(String message) {
-		JLabel l = new JLabel(message);
-		l.setForeground(Color.red);
-		return l;
-	}
-
-	public static JTextArea createTextArea(boolean editable) {
-		return createTextArea(editable, 0, 0); // TODO have to do it better
-	}
-
-	public static JTextArea createTextArea(boolean editable, boolean opaque) {
-		return createTextArea(editable, opaque, 0, 0);
-	}
-
-	public static JTextArea createTextArea(boolean editable, int initialRows, int initialColumns) {
-		return createTextArea(editable, true, initialRows, initialColumns);
-	}
-
-	public static JTextArea createTextArea(boolean editable, boolean opaque, int initialRows,
-			int initialColumns) {
-		JTextArea j = new JTextArea(initialRows, initialColumns);
-		j.setWrapStyleWord(true);
-		j.setLineWrap(true);
-		if (editable) {
-			j.setBorder(textFieldBorder);
+	public static JTextArea createTextArea(TextComponentOptions options) {
+		JTextArea j = new JTextArea(options.getNumberOfRows(), options.getNumberOfColumns());
+		j.setWrapStyleWord(options.isWrapStyleWord());
+		j.setLineWrap(options.isLineWrap());
+		j.setEditable(options.isEditable());
+		j.setBorder(options.getBorder());
+		if (!options.isEditable())
+			j.setHighlighter(null);
+		j.setOpaque(options.isOpaque());
+		j.setText(options.getText());
+		if (options.getMaximumCharacters() > 0) {
+			limitCharactersInTextComponent(j, options.getMaximumCharacters());
 		}
-		j.setEditable(editable);
-		j.setOpaque(opaque);
+		if (options.isMoveToNextComponentWhenTabbed()) {
+			j.addKeyListener(createTabListenerThatMovesFocusToNextComponent(j));
+		}
 		return j;
 	}
 
-	public static JTextArea createTextArea(boolean editable, int maxCharacters) {
-		JTextArea j = createTextArea(editable);
-		limitCharactersInTextField(j, maxCharacters);
-		return j;
-	}
-
-	public static JTextArea createTextArea(int maximumNumberOfDigits, String text,
-			FocusListener listener) {
-		JTextArea j = new JTextArea(1, maximumNumberOfDigits);
-		limitCharactersInTextField(j, maximumNumberOfDigits);
-		j.setBorder(textFieldBorder);
-		j.setLineWrap(true);
-		j.setWrapStyleWord(true);
-		j.setText(text);
-		j.addFocusListener(listener);
-		return j;
+	private static KeyListener createTabListenerThatMovesFocusToNextComponent(JTextComponent a) {
+		return new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyChar() == KeyEvent.VK_TAB) {
+					// TODO it bugs ctrl + i - not working adding new word
+					a.transferFocus();
+					e.consume();
+				}
+			}
+		};
 	}
 
 	public static AbstractButton createButtonlikeComponent(ComponentType type, String message,
@@ -122,26 +105,14 @@ public class GuiMaker {
 		return createButtonlikeComponent(type, message, actionOnClick, hotkey, 0);
 	}
 
-	public static JScrollPane createScrollPane(Color bgColor, Border border, Component component,
-			Dimension size) {
-		JScrollPane scroll = new JScrollPane(component);
-		if (bgColor == null) {
-			scroll.setOpaque(false);
-		}
-		else {
-			scroll.getViewport().setBackground(bgColor);
-		}
-		scroll.setBorder(border);
-		scroll.getVerticalScrollBar().setUnitIncrement(20);
-		if (size != null) {
-			scroll.setPreferredSize(size);
-		}
-
+	public static JScrollPane createScrollPane(ScrollPaneOptions options) {
+		JScrollPane scroll = new JScrollPane(options.getComponentToWrap());
+		scroll.setOpaque(options.isOpaque());
+		scroll.getViewport().setBackground(options.getBackgroundColor());
+		scroll.setBorder(options.getBorder());
+		scroll.getVerticalScrollBar().setUnitIncrement(options.getUnitIncrement());
+		scroll.setPreferredSize(options.getPreferredSize());
 		return scroll;
-	}
-
-	public static JScrollPane createScrollPane(Color bgColor, Border border, Component component) {
-		return createScrollPane(bgColor, border, component, scrollPanesSize);
 	}
 
 	public static JTextField createTextField(int textLength) {
@@ -159,39 +130,36 @@ public class GuiMaker {
 		return textField;
 	}
 
-	private static void limitCharactersInTextField(JTextComponent textField, int maxDigits) {
+	private static void limitCharactersInTextComponent(JTextComponent textField, int maxDigits) {
 		((AbstractDocument) textField.getDocument())
 				.setDocumentFilter(new LimitDocumentFilter(maxDigits));
 	}
 
-	public static JTextPane createTextPane(String text, TextAlignment alignment) {
+	public static JTextPane createTextPane(TextPaneOptions textPaneOptions) {
 		JTextPane textPane = new JTextPane();
-		textPane.setBackground(BasicColors.VERY_LIGHT_BLUE);
-		textPane.setText(text);
-		textPane.setEditable(false);
+		textPane.setBackground(textPaneOptions.getBackgroundColor());
+		textPane.setText(textPaneOptions.getText());
+		textPane.setEditable(textPaneOptions.isEditable());
+		textPane.setPreferredSize(textPaneOptions.getPreferredSize());
+		textPane.setEnabled(textPaneOptions.isEnabled());
 		StyledDocument doc = textPane.getStyledDocument();
 		SimpleAttributeSet center = new SimpleAttributeSet();
-		StyleConstants.setAlignment(center, alignment.getStyleConstant());
+		StyleConstants.setAlignment(center, textPaneOptions.getTextAlignment().getStyleConstant());
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		return textPane;
 	}
 
-	public static JScrollPane createTextPaneWrappedInScrollPane(String text,
-			TextAlignment alignment) {
-		JScrollPane pane = new JScrollPane(createTextPane(text, alignment));
-		pane.setBorder(null);
-		pane.setPreferredSize(new Dimension(250, 70));
+	public static JScrollPane createTextPaneWrappedInScrollPane(TextPaneOptions textPaneOptions,
+			ScrollPaneOptions scrollPaneOptions) {
+		JScrollPane pane = createScrollPane(
+				scrollPaneOptions.componentToWrap(createTextPane(textPaneOptions)));
 		return pane;
 	}
 
-	public static JTextArea createTextArea(String text, FocusListener listener) {
-		JTextArea elem = new JTextArea(text, 1, 15);
-		elem.addFocusListener(listener);
-		elem.setOpaque(true);
-		elem.setBorder(textFieldBorder);
-		elem.setLineWrap(true);
-		elem.setWrapStyleWord(true);
-		return elem;
+	public static JScrollPane createTextPaneWrappedInScrollPane(TextPaneOptions textPaneOptions) {
+		JScrollPane pane = createScrollPane(
+				new ScrollPaneOptions().componentToWrap(createTextPane(textPaneOptions)));
+		return pane;
 	}
 
 }
