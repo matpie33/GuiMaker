@@ -146,32 +146,8 @@ public class MainPanel {
 		}
 		int fill = row.getFillTypeAsGridBagConstraint();
 		createConstraintsAndAdd(panel, row.getAnchor().getAnchor(), fill, rowNumber);
-		checkForFillingNeed();
 		updateView();
 		return panel;
-	}
-
-	private void checkForFillingNeed() {
-		if (shouldPutRowsHighestAsPossible) {
-			return;
-		}
-		GridBagLayout g = (GridBagLayout) panel.getLayout();
-		Component[] components = panel.getComponents();
-		boolean anyFillerPresent = false;
-		for (Component c : components) {
-			GridBagConstraints constr = g.getConstraints(c);
-			if (constr.fill != 0) {
-				anyFillerPresent = true;
-				break;
-			}
-		}
-		if (!anyFillerPresent) {
-			Component c = components[0];
-			GridBagConstraints con = g.getConstraints(c);
-			con.weighty = 1;
-			panel.remove(c);
-			panel.add(c, con);
-		}
 	}
 
 	private Map<JComponent, Integer> mapComponentToFilling(SimpleRow row) {
@@ -258,8 +234,10 @@ public class MainPanel {
 		c.gridy = rowNumber;
 		c.weightx = 1;
 
-		if (fill == GridBagConstraints.BOTH || fill == GridBagConstraints.VERTICAL) {
+		if (rows.isEmpty() || fill == GridBagConstraints.BOTH
+				|| fill == GridBagConstraints.VERTICAL) {
 			c.weighty = 1;
+			removeFillingFromOtherPanels();
 		}
 		else {
 			c.weighty = 0;
@@ -279,6 +257,23 @@ public class MainPanel {
 		c.insets = new Insets(a, a, a, a);
 		panel.add(p, c);
 		rows.add(rowNumber, p);
+	}
+
+	private void removeFillingFromOtherPanels() {
+		if (shouldPutRowsHighestAsPossible) {
+			return;
+		}
+		GridBagLayout g = (GridBagLayout) panel.getLayout();
+		Component[] components = panel.getComponents();
+		for (Component c : components) {
+			GridBagConstraints constr = g.getConstraints(c);
+			if (constr.weighty != 0) {
+				constr.weighty = 0;
+				panel.remove(c);
+				panel.add(c, constr);
+			}
+		}
+
 	}
 
 	private void updateRowsAboveMe() {
@@ -339,12 +334,23 @@ public class MainPanel {
 
 	public void addElementsToRow(JPanel row, JComponent... elements) {
 
+		addOrRemoveFillingFromLastElementInRow(false, row);
 		GridBagConstraints c = ((GridBagLayout) row.getLayout())
-				.getConstraints(row.getComponent(0));
+				.getConstraints(row.getComponent(row.getComponentCount() - 1));
+		c.weightx = 1;
 		for (JComponent element : elements) {
 			row.add(element, c); // TODO why it works?
 		}
 		updateView();
+	}
+
+	private void addOrRemoveFillingFromLastElementInRow(boolean addFilling, JPanel row) {
+		GridBagConstraints c = ((GridBagLayout) row.getLayout())
+				.getConstraints(row.getComponent(row.getComponentCount() - 1));
+		Component comp = row.getComponent(row.getComponentCount() - 1);
+		row.remove(comp);
+		c.weightx = addFilling ? 1 : 0;
+		row.add(comp, c);
 	}
 
 	private void removeRow(JPanel row) {
@@ -448,6 +454,8 @@ public class MainPanel {
 		for (Component c : elements) {
 			row.remove(c);
 		}
+		addOrRemoveFillingFromLastElementInRow(true, row);
+		updateView();
 
 	}
 
@@ -457,8 +465,7 @@ public class MainPanel {
 
 	public void removeLastElementFromRow(int rowNumber) {
 		JPanel row = rows.get(rowNumber);
-		row.remove(row.getComponentCount() - 1);
-		updateView();
+		removeElementsFromRow(rowNumber, row.getComponent(row.getComponentCount() - 1));
 	}
 
 	private JPanel findRow(Component... elements) {
