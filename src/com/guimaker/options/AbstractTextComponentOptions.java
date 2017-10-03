@@ -11,6 +11,7 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	private boolean wrapStyleWord = true;
 	private boolean lineWrap = true;
 	private boolean moveToNextComponentWhenTabbed = true;
+	private boolean digitsOnly = false;
 	private int numberOfRows = 0;
 	private int numberOfColumns = 0;
 	private int maximumCharacters = 0;
@@ -85,6 +86,15 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	public TextOptions maximumCharacters(int maximumCharacters) {
 		this.maximumCharacters = maximumCharacters;
 		return getThis();
+	}
+
+	public TextOptions digitsOnly(boolean digitsOnly) {
+		this.digitsOnly = digitsOnly;
+		return getThis();
+	}
+
+	public boolean isDigitsOnly() {
+		return digitsOnly;
 	}
 
 }

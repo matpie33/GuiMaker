@@ -1,5 +1,6 @@
 package com.guimaker.panels;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -54,7 +55,8 @@ public class GuiMaker {
 		j.setOpaque(options.isOpaque());
 		j.setText(options.getText());
 		if (options.getMaximumCharacters() > 0) {
-			limitCharactersInTextComponent(j, options.getMaximumCharacters());
+			limitCharactersInTextComponent(j, options.getMaximumCharacters(),
+					options.isDigitsOnly());
 		}
 		if (options.isMoveToNextComponentWhenTabbed()) {
 			j.addKeyListener(createTabListenerThatMovesFocusToNextComponent(j));
@@ -108,7 +110,10 @@ public class GuiMaker {
 	public static JScrollPane createScrollPane(ScrollPaneOptions options) {
 		JScrollPane scroll = new JScrollPane(options.getComponentToWrap());
 		scroll.setOpaque(options.isOpaque());
-		scroll.getViewport().setBackground(options.getBackgroundColor());
+		if (options.getBackgroundColor() != null) {
+			scroll.getViewport().setBackground(options.getBackgroundColor());
+		}
+
 		scroll.setBorder(options.getBorder());
 		scroll.getVerticalScrollBar().setUnitIncrement(options.getUnitIncrement());
 		scroll.setPreferredSize(options.getPreferredSize());
@@ -130,9 +135,10 @@ public class GuiMaker {
 		return textField;
 	}
 
-	private static void limitCharactersInTextComponent(JTextComponent textField, int maxDigits) {
+	private static void limitCharactersInTextComponent(JTextComponent textField, int maxDigits,
+			boolean digitsOnly) {
 		((AbstractDocument) textField.getDocument())
-				.setDocumentFilter(new LimitDocumentFilter(maxDigits));
+				.setDocumentFilter(new LimitDocumentFilter(maxDigits, digitsOnly));
 	}
 
 	public static JTextPane createTextPane(TextPaneOptions textPaneOptions) {
@@ -142,6 +148,10 @@ public class GuiMaker {
 		textPane.setEditable(textPaneOptions.isEditable());
 		textPane.setPreferredSize(textPaneOptions.getPreferredSize());
 		textPane.setEnabled(textPaneOptions.isEnabled());
+		textPane.setDisabledTextColor(Color.BLACK);
+		textPane.setOpaque(textPaneOptions.isOpaque());
+		// TODO extract common method for creating gui element using common
+		// options
 		StyledDocument doc = textPane.getStyledDocument();
 		SimpleAttributeSet center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, textPaneOptions.getTextAlignment().getStyleConstant());
@@ -158,7 +168,9 @@ public class GuiMaker {
 
 	public static JScrollPane createTextPaneWrappedInScrollPane(TextPaneOptions textPaneOptions) {
 		JScrollPane pane = createScrollPane(
-				new ScrollPaneOptions().componentToWrap(createTextPane(textPaneOptions)));
+				new ScrollPaneOptions().componentToWrap(createTextPane(textPaneOptions))
+						.opaque(textPaneOptions.isOpaque()));
+		pane.getViewport().setOpaque(textPaneOptions.isOpaque());
 		return pane;
 	}
 
