@@ -17,6 +17,7 @@ public class SimpleRow {
 	private FillType fillType;
 	private boolean isOpaque;
 	private boolean borderEnabled;
+	private boolean useAllExtraVerticalSpace = false;
 
 	public SimpleRow(FillType fillingType, Anchor anchor, JComponent... components) {
 		fillType = fillingType;
@@ -29,7 +30,7 @@ public class SimpleRow {
 	}
 
 	public SimpleRow(FillType fillingType, JComponent... components) {
-		this(fillingType, Anchor.SOUTHWEST, components);
+		this(fillingType, Anchor.NORTHWEST, components);
 	}
 
 	public SimpleRow fillHorizontallyEqually() {
@@ -156,6 +157,15 @@ public class SimpleRow {
 
 	public boolean isBorderEnabled() {
 		return borderEnabled;
+	}
+
+	public SimpleRow useAllExtraVerticalSpace() {
+		useAllExtraVerticalSpace = true;
+		return this;
+	}
+
+	public boolean isUseAllExtraVerticalSpace() {
+		return useAllExtraVerticalSpace;
 	}
 
 }

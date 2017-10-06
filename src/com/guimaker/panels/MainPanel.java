@@ -24,7 +24,7 @@ import com.guimaker.row.SimpleRow;
 
 public class MainPanel {
 
-	private List<JPanel> rows;
+	private List<JComponent> rows;
 	private JPanel panel;
 	private int gapBetweenRows = 4;
 	private int gapInsideRow = 3;
@@ -88,7 +88,7 @@ public class MainPanel {
 		}
 
 		panel.setLayout(new GridBagLayout());
-		rows = new LinkedList<JPanel>();
+		rows = new LinkedList<>();
 
 	}
 
@@ -123,20 +123,24 @@ public class MainPanel {
 		addElementsInColumnStartingFromColumn(null, columnNumber, elements);
 	}
 
-	public List<JPanel> addRows(Rows rows) {
-		List<JPanel> panels = new ArrayList<>();
+	public List<JComponent> addRows(Rows rows) {
+		List<JComponent> panels = new ArrayList<>();
 		for (SimpleRow row : rows.getRows()) {
 			panels.add(addRow(row));
 		}
 		return panels;
 	}
 
-	public JPanel addRow(SimpleRow row) {
+	public JComponent addRow(SimpleRow row) {
 		return addRow(row, rows.size());
 	}
 
-	private JPanel addRow(SimpleRow row, int rowNumber) {
-		JPanel panel = addComponentsToSinglePanel(row.getComponents(), mapComponentToFilling(row));
+	private JComponent addRow(SimpleRow row, int rowNumber) {
+		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
+				mapComponentToFilling(row), row.isUseAllExtraVerticalSpace());
+		if (panel == null) {
+			return null;
+		}
 		if (row.isBorderEnabled() && borderToUse != null) {
 			panel.setBorder(borderToUse);
 		}
@@ -145,7 +149,7 @@ public class MainPanel {
 			panel.setOpaque(true);
 		}
 		int fill = row.getFillTypeAsGridBagConstraint();
-		createConstraintsAndAdd(panel, row.getAnchor().getAnchor(), fill, rowNumber);
+		createConstraintsAndAdd(panel, row, rowNumber);
 		updateView();
 		return panel;
 	}
@@ -180,8 +184,11 @@ public class MainPanel {
 		return componentsFilling;
 	}
 
-	private JPanel addComponentsToSinglePanel(JComponent[] components,
-			Map<JComponent, Integer> componentsFilling) {
+	private JComponent addComponentsToSinglePanel(JComponent[] components,
+			Map<JComponent, Integer> componentsFilling, boolean useExtraSpaceVertically) {
+		if (components.length == 1) {
+			return components[0];
+		}
 		JPanel p = new JPanel();
 		p.setLayout(new GridBagLayout());
 		p.setOpaque(false);
@@ -202,10 +209,11 @@ public class MainPanel {
 
 			if (componentsFilling.containsKey(compo)) {
 				gbc.fill = componentsFilling.get(compo);
-				if (gbc.fill == GridBagConstraints.VERTICAL) {
-					gbc.weighty = 1;
+				gbc.weighty = useExtraSpaceVertically ? 1 : 0;
+				if (gbc.fill == GridBagConstraints.HORIZONTAL) {
+					gbc.weightx = 1;
 				}
-				else if (gbc.fill == GridBagConstraints.HORIZONTAL) {
+				else if (gbc.fill == GridBagConstraints.VERTICAL) {
 					gbc.weightx = 1;
 				}
 				else if (gbc.fill == GridBagConstraints.BOTH) {
@@ -229,12 +237,13 @@ public class MainPanel {
 		return p;
 	}
 
-	private void createConstraintsAndAdd(JPanel p, int anchor, int fill, int rowNumber) {
+	private void createConstraintsAndAdd(JComponent p, SimpleRow row, int rowNumber) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridy = rowNumber;
 		c.weightx = 1;
-
-		if (rows.isEmpty() || fill == GridBagConstraints.BOTH
+		int fill = row.getFillTypeAsGridBagConstraint();
+		int anchor = row.getAnchor().getAnchor();
+		if (row.isUseAllExtraVerticalSpace() || fill == GridBagConstraints.BOTH
 				|| fill == GridBagConstraints.VERTICAL) {
 			c.weighty = 1;
 			removeFillingFromOtherPanels();
@@ -298,7 +307,7 @@ public class MainPanel {
 		GridBagLayout g = (GridBagLayout) panel.getLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
-		JPanel row = rows.get(number);
+		JComponent row = rows.get(number);
 		c = g.getConstraints(row);
 
 		panel.remove(row);
@@ -319,8 +328,7 @@ public class MainPanel {
 	}
 
 	public void removeRow(int number) {
-		JPanel row = rows.get(number);
-
+		JComponent row = rows.get(number);
 		removeAndUpdateRows(row, number);
 	}
 
@@ -332,7 +340,7 @@ public class MainPanel {
 		addElementsToRow(rows.get(rowNumber), elements);
 	}
 
-	public void addElementsToRow(JPanel row, JComponent... elements) {
+	public void addElementsToRow(JComponent row, JComponent... elements) {
 
 		addOrRemoveFillingFromLastElementInRow(false, row);
 		GridBagConstraints c = ((GridBagLayout) row.getLayout())
@@ -344,7 +352,7 @@ public class MainPanel {
 		updateView();
 	}
 
-	private void addOrRemoveFillingFromLastElementInRow(boolean addFilling, JPanel row) {
+	private void addOrRemoveFillingFromLastElementInRow(boolean addFilling, JComponent row) {
 		GridBagConstraints c = ((GridBagLayout) row.getLayout())
 				.getConstraints(row.getComponent(row.getComponentCount() - 1));
 		Component comp = row.getComponent(row.getComponentCount() - 1);
@@ -353,11 +361,11 @@ public class MainPanel {
 		row.add(comp, c);
 	}
 
-	private void removeRow(JPanel row) {
+	private void removeRow(JComponent row) {
 		removeAndUpdateRows(row, rows.indexOf(row));
 	}
 
-	private void removeAndUpdateRows(JPanel row, int lastRowToUpdate) {
+	private void removeAndUpdateRows(JComponent row, int lastRowToUpdate) {
 		movePanels(Direction.BACKWARD, lastRowToUpdate);
 		panel.remove(row);
 		rows.remove(row);
@@ -385,7 +393,7 @@ public class MainPanel {
 	private void movePanels(Direction direction, int startIndex) {
 
 		for (int i = rows.size() - 1; i >= startIndex; i--) {
-			JPanel row = rows.get(i);
+			JComponent row = rows.get(i);
 			GridBagConstraints c = getConstraintsForRow(i);
 			if (direction.equals(Direction.FORWARD)) {
 				c.gridy++;
@@ -403,7 +411,7 @@ public class MainPanel {
 
 	private GridBagConstraints getConstraintsForRow(int rowNumber) {
 		GridBagLayout g = (GridBagLayout) panel.getLayout();
-		JPanel row = rows.get(rowNumber);
+		JComponent row = rows.get(rowNumber);
 		return g.getConstraints(row);
 	}
 
@@ -427,7 +435,7 @@ public class MainPanel {
 		return rows.size();
 	}
 
-	public List<JPanel> getRows() {
+	public List<JComponent> getRows() {
 		return rows;
 	}
 
@@ -442,7 +450,7 @@ public class MainPanel {
 	}
 
 	public void removeRowWithElements(Component... elements) {
-		JPanel panel = findRow(elements);
+		JComponent panel = findRow(elements);
 		if (panel != null) {
 			this.panel.remove(panel);
 			rows.remove(panel);
@@ -450,7 +458,7 @@ public class MainPanel {
 	}
 
 	public void removeElementsFromRow(int rowNumber, Component... elements) {
-		JPanel row = rows.get(rowNumber);
+		JComponent row = rows.get(rowNumber);
 		for (Component c : elements) {
 			row.remove(c);
 		}
@@ -464,12 +472,12 @@ public class MainPanel {
 	}
 
 	public void removeLastElementFromRow(int rowNumber) {
-		JPanel row = rows.get(rowNumber);
+		JComponent row = rows.get(rowNumber);
 		removeElementsFromRow(rowNumber, row.getComponent(row.getComponentCount() - 1));
 	}
 
-	private JPanel findRow(Component... elements) {
-		for (JPanel panel : rows) {
+	private JComponent findRow(Component... elements) {
+		for (JComponent panel : rows) {
 			Set<Component> e = new HashSet<Component>(Arrays.asList(panel.getComponents()));
 			if (e.equals(new HashSet<Component>(Arrays.asList(elements)))) {
 				return panel;
@@ -488,7 +496,7 @@ public class MainPanel {
 	}
 
 	public boolean rowContainsComponent(int rowNumber, Component c) {
-		JPanel row = rows.get(rowNumber);
+		JComponent row = rows.get(rowNumber);
 		Component[] components = row.getComponents();
 		for (Component componentInRow : components) {
 			if (componentInRow.equals(c)) {
@@ -499,23 +507,23 @@ public class MainPanel {
 	}
 
 	public void changeVisibilityOfLastElementInRow(int rowNumber, boolean visible) {
-		JPanel panel = rows.get(rowNumber);
+		JComponent panel = rows.get(rowNumber);
 		Component c = panel.getComponent(panel.getComponentCount() - 1);
 		c.setVisible(visible);
 	}
 
 	public void setPanelColor(int rowNumber, Color color) {
-		JPanel panel = rows.get(rowNumber);
+		JComponent panel = rows.get(rowNumber);
 		panel.setOpaque(true);
 		panel.setBackground(color);
 	}
 
 	public void clearPanelColor(int rowNumber) {
-		JPanel panel = rows.get(rowNumber);
+		JComponent panel = rows.get(rowNumber);
 		panel.setOpaque(false);
 	}
 
-	public int getIndexOfPanel(JPanel panel) {
+	public int getIndexOfPanel(JComponent panel) {
 		return rows.indexOf(panel);
 	}
 

@@ -29,6 +29,7 @@ public class Rows extends SimpleRow {
 		return this;
 	}
 
+	// TODO remove the overrides, do it better
 	@Override
 	public Rows nextRow(FillType fillType, Anchor anchor, JComponent... components) {
 		rows.add(createSimpleRow(fillType, anchor, components));
@@ -44,6 +45,12 @@ public class Rows extends SimpleRow {
 	@Override
 	public Rows fillVertically(JComponent... filledElements) {
 		rows.get(rows.size() - 1).fillVertically(filledElements);
+		return this;
+	}
+
+	@Override
+	public Rows useAllExtraVerticalSpace() {
+		rows.get(rows.size() - 1).useAllExtraVerticalSpace();
 		return this;
 	}
 
