@@ -19,7 +19,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import com.guimaker.row.Rows;
 import com.guimaker.row.SimpleRow;
 
 public class MainPanel {
@@ -123,16 +122,12 @@ public class MainPanel {
 		addElementsInColumnStartingFromColumn(null, columnNumber, elements);
 	}
 
-	public List<JComponent> addRows(Rows rows) {
-		List<JComponent> panels = new ArrayList<>();
-		for (SimpleRow row : rows.getRows()) {
-			panels.add(addRow(row));
+	public JComponent addRows(SimpleRow simpleRows) {
+		JComponent panel = null;
+		for (SimpleRow row: simpleRows.getBuilder().getRows()){
+			panel = addRow(row, rows.size());
 		}
-		return panels;
-	}
-
-	public JComponent addRow(SimpleRow row) {
-		return addRow(row, rows.size());
+		return panel;
 	}
 
 	private JComponent addRow(SimpleRow row, int rowNumber) {
