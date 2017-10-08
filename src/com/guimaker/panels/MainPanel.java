@@ -129,6 +129,10 @@ public class MainPanel {
 		return panel;
 	}
 
+	public JComponent addRow(SimpleRow simpleRows) {
+		return addRow(simpleRows, rows.size());
+	}
+
 	private JComponent addRow(SimpleRow row, int rowNumber) {
 		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
 				mapComponentToFilling(row), row.isUseAllExtraVerticalSpace());
@@ -142,7 +146,6 @@ public class MainPanel {
 			panel.setBackground(rowColor);
 			panel.setOpaque(true);
 		}
-		int fill = row.getFillTypeAsGridBagConstraint();
 		createConstraintsAndAdd(panel, row, rowNumber);
 		updateView();
 		return panel;
