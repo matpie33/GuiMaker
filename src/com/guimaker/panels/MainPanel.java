@@ -96,7 +96,6 @@ public class MainPanel {
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
 		}
-		System.out.println("next row: " + startingColumn);
 		for (JComponent element : elements) {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
