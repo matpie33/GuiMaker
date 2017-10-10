@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.guimaker.row.SimpleRow;
@@ -104,17 +102,20 @@ public class MainPanel {
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, xGap, yGap, xGap);
-			c.weightx = 0;
+
 			if (componentToFill == element) {
 				c.fill = GridBagConstraints.HORIZONTAL;
 				c.weightx = 1;
+			}
+			else{
+				c.weightx = 0;
 			}
 			c.weighty = 0;
 
 			panel.add(element, c);
 		}
 		numberOfRows++;
-		updateView();
+//		updateView();
 	}
 
 	public void addElementsInColumnStartingFromColumn(int columnNumber, JComponent... elements) {
@@ -437,8 +438,14 @@ public class MainPanel {
 	}
 
 	private void updateView() {
-		panel.revalidate();
-		panel.repaint();
+		SwingUtilities.invokeLater(new Runnable (){
+			@Override
+			public void run (){
+				panel.revalidate();
+				panel.repaint();
+			}
+		});
+
 
 	}
 
