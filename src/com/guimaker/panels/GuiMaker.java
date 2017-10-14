@@ -33,7 +33,6 @@ import com.guimaker.utilities.LimitDocumentFilter;
 
 public class GuiMaker {
 
-	private static final Dimension scrollPanesSize = new Dimension(300, 300);
 
 	public static JLabel createLabel(ComponentOptions options) {
 		JLabel l = new JLabel();
@@ -76,7 +75,7 @@ public class GuiMaker {
 		};
 	}
 
-	public static AbstractButton createButtonlikeComponent(ComponentType type, String message,
+	private static AbstractButton createButtonlikeComponent(ComponentType type, String message,
 			AbstractAction actionOnClick, int hotkey, KeyModifiers keyModifier) {
 		AbstractButton component = createButtonlikeComponent(type, message, actionOnClick);
 		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);

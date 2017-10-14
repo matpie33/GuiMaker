@@ -16,7 +16,7 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	private int numberOfColumns = 0;
 	private int maximumCharacters = 0;
 
-	public AbstractTextComponentOptions() {
+	AbstractTextComponentOptions() {
 		border(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 	}
 

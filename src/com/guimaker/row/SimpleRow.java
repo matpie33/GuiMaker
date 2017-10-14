@@ -7,9 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SimpleRow  {
-    protected JComponent[] componentsInRow;
-    protected JComponent[] horizontallyFilledElements;
-    protected JComponent[] verticallyFilledElements;
+    private JComponent[] componentsInRow;
+	private JComponent[] horizontallyFilledElements = new JComponent[] {};
+	private JComponent[] verticallyFilledElements = new JComponent[] {};
     private Anchor anchor;
     private Color color;
     private FillType fillType;
@@ -22,9 +22,7 @@ public class SimpleRow  {
         this.builder = builder;
     	fillType = fillingType;
         this.anchor = anchor;
-        verticallyFilledElements = new JComponent[] {};
-        horizontallyFilledElements = new JComponent[] {};
-        this.componentsInRow = components;
+		this.componentsInRow = components;
         isOpaque = true;
         borderEnabled = true;
     }
@@ -47,14 +45,6 @@ public class SimpleRow  {
     public SimpleRow fillAllVertically() {
         verticallyFilledElements = componentsInRow;
         return this;
-    }
-
-	SimpleRow createSimpleRow(FillType fillType, Anchor anchor,
-                                        JComponent... components) {
-		SimpleRow simpleRow = copyRow().setComponents(components);
-        simpleRow.setFillType(fillType);
-        simpleRow.setAnchor(anchor);
-        return simpleRow;
     }
 
     public JComponent[] getHorizontallyFilledElements() {
@@ -110,10 +100,6 @@ public class SimpleRow  {
         return fillType.getGridBagConstraintsFilling();
     }
 
-    public FillType getFillTypeAsEnum() {
-        return fillType;
-    }
-
     public SimpleRow setAnchor(Anchor anchor) {
         this.anchor = anchor;
         return this;
@@ -121,20 +107,6 @@ public class SimpleRow  {
 
     public Anchor getAnchor() {
         return anchor;
-    }
-
-    private SimpleRow copyRow() {
-		SimpleRow simpleRow = new SimpleRow(builder, fillType, Anchor.NORTHWEST, new JComponent[] {});
-        return simpleRow;
-    }
-
-    private SimpleRow setComponents(JComponent... components) {
-        componentsInRow = components;
-        return this;
-    }
-
-    public void setFillType(FillType fillType) {
-        this.fillType = fillType;
     }
 
     public SimpleRow setNotOpaque() {
