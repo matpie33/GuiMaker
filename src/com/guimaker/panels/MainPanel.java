@@ -115,7 +115,6 @@ public class MainPanel {
 			panel.add(element, c);
 		}
 		numberOfRows++;
-//		updateView();
 	}
 
 	public void addElementsInColumnStartingFromColumn(int columnNumber, JComponent... elements) {
@@ -148,7 +147,6 @@ public class MainPanel {
 			panel.setOpaque(true);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
-		updateView();
 		return panel;
 	}
 
