@@ -123,7 +123,9 @@ public class GuiMaker {
 			limitCharactersInTextComponent(textComponent, options.getMaximumCharacters(),
 					options.isDigitsOnly());
 		}
-		textComponent.setBackground(options.getBackgroundColor());
+		if (options.getBackgroundColor() != null){
+			textComponent.setBackground(options.getBackgroundColor());
+		}
 
 	}
 

@@ -139,11 +139,11 @@ public class MainPanel {
 		if (panel == null) {
 			return null;
 		}
-		if (row.isBorderEnabled() && borderToUse != null) {
-			panel.setBorder(borderToUse);
+		if (row.isBorderEnabled() && (borderToUse != null || row.getBorder() != null)) {
+			panel.setBorder(borderToUse != null? borderToUse: row.getBorder());
 		}
-		if (row.isOpaque() && rowColor != null) {
-			panel.setBackground(rowColor);
+		if (row.isOpaque() && (rowColor != null || row.getColor() != null)) {
+			panel.setBackground(rowColor != null? rowColor: row.getColor());
 			panel.setOpaque(true);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);

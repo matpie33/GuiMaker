@@ -4,6 +4,7 @@ import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class SimpleRow  {
@@ -17,6 +18,17 @@ public class SimpleRow  {
     private boolean borderEnabled;
     private boolean useAllExtraVerticalSpace = false;
     private SimpleRowBuilder builder;
+
+	public Border getBorder() {
+		return border;
+	}
+
+	public SimpleRow setBorder(Border border) {
+		this.border = border;
+		return this;
+	}
+
+	private Border border;
 
     SimpleRow(SimpleRowBuilder builder, FillType fillingType, Anchor anchor, JComponent... components) {
         this.builder = builder;
