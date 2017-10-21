@@ -8,9 +8,7 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 
 	private boolean editable = true;
 	private boolean enabled = true;
-	private boolean wrapStyleWord = true;
-	private boolean lineWrap = true;
-	private boolean moveToNextComponentWhenTabbed = true;
+
 	private boolean digitsOnly = false;
 	private int numberOfRows = 0;
 	private int numberOfColumns = 0;
@@ -40,18 +38,6 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 		return maximumCharacters;
 	}
 
-	public boolean isWrapStyleWord() {
-		return wrapStyleWord;
-	}
-
-	public boolean isLineWrap() {
-		return lineWrap;
-	}
-
-	public boolean isMoveToNextComponentWhenTabbed() {
-		return moveToNextComponentWhenTabbed;
-	}
-
 	public TextOptions editable(boolean editable) {
 		this.editable = editable;
 		return getThis();
@@ -59,21 +45,6 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 
 	public TextOptions enabled(boolean enabled) {
 		this.enabled = enabled;
-		return getThis();
-	}
-
-	public TextOptions wrapStyleWord(boolean wrapStyleWord) {
-		this.wrapStyleWord = wrapStyleWord;
-		return getThis();
-	}
-
-	public TextOptions lineWrap(boolean lineWrap) {
-		this.lineWrap = lineWrap;
-		return getThis();
-	}
-
-	public TextOptions moveToNextComponentWhenTabbed(boolean moveToNextComponentWhenTabbed) {
-		this.moveToNextComponentWhenTabbed = moveToNextComponentWhenTabbed;
 		return getThis();
 	}
 

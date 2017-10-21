@@ -8,6 +8,7 @@ public class TextPaneOptions extends AbstractTextComponentOptions<TextPaneOption
 
 	public TextPaneOptions textAlignment(TextAlignment alignment) {
 		this.textAlignment = alignment;
+		border(null);
 		return getThis();
 	}
 

@@ -22,10 +22,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.guimaker.enums.ComponentType;
-import com.guimaker.options.ComponentOptions;
-import com.guimaker.options.ScrollPaneOptions;
-import com.guimaker.options.TextComponentOptions;
-import com.guimaker.options.TextPaneOptions;
+import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsMaker;
 import com.guimaker.utilities.HotkeyWrapper;
 import com.guimaker.utilities.KeyModifiers;
@@ -35,32 +32,23 @@ public class GuiMaker {
 
 
 	public static JLabel createLabel(ComponentOptions options) {
-		JLabel l = new JLabel();
-		l.setText(options.getText());
-		l.setForeground(options.getForegroundColor());
-		l.setBackground(options.getBackgroundColor());
-		l.setBorder(options.getBorder());
-		return l;
+		JLabel label = new JLabel();
+		label.setText(options.getText());
+		label.setForeground(options.getForegroundColor());
+		label.setBackground(options.getBackgroundColor());
+		label.setBorder(options.getBorder());
+		return label;
 	}
 
-	public static JTextArea createTextArea(TextComponentOptions options) {
-		JTextArea j = new JTextArea(options.getNumberOfRows(), options.getNumberOfColumns());
-		j.setWrapStyleWord(options.isWrapStyleWord());
-		j.setLineWrap(options.isLineWrap());
-		j.setEditable(options.isEditable());
-		j.setBorder(options.getBorder());
-		if (!options.isEditable())
-			j.setHighlighter(null);
-		j.setOpaque(options.isOpaque());
-		j.setText(options.getText());
-		if (options.getMaximumCharacters() > 0) {
-			limitCharactersInTextComponent(j, options.getMaximumCharacters(),
-					options.isDigitsOnly());
-		}
+	public static JTextArea createTextArea(TextAreaOptions options) {
+		JTextArea textArea = new JTextArea(options.getNumberOfRows(), options.getNumberOfColumns());
+		setTextComponentOptions(options, textArea);
+		textArea.setWrapStyleWord(options.isWrapStyleWord());
+		textArea.setLineWrap(options.isLineWrap());
 		if (options.isMoveToNextComponentWhenTabbed()) {
-			j.addKeyListener(createTabListenerThatMovesFocusToNextComponent(j));
+			textArea.addKeyListener(createTabListenerThatMovesFocusToNextComponent(textArea));
 		}
-		return j;
+		return textArea;
 	}
 
 	private static KeyListener createTabListenerThatMovesFocusToNextComponent(JTextComponent a) {
@@ -107,32 +95,44 @@ public class GuiMaker {
 	}
 
 	public static JScrollPane createScrollPane(ScrollPaneOptions options) {
-		JScrollPane scroll = new JScrollPane(options.getComponentToWrap());
-		scroll.setOpaque(options.isOpaque());
+		JScrollPane scrollPane = new JScrollPane(options.getComponentToWrap());
+		scrollPane.setOpaque(options.isOpaque());
 		if (options.getBackgroundColor() != null) {
-			scroll.getViewport().setBackground(options.getBackgroundColor());
+			scrollPane.getViewport().setBackground(options.getBackgroundColor());
 		}
 
-		scroll.setBorder(options.getBorder());
-		scroll.getVerticalScrollBar().setUnitIncrement(options.getUnitIncrement());
-		scroll.setPreferredSize(options.getPreferredSize());
-		return scroll;
+		scrollPane.setBorder(options.getBorder());
+		scrollPane.getVerticalScrollBar().setUnitIncrement(options.getUnitIncrement());
+		scrollPane.setPreferredSize(options.getPreferredSize());
+		return scrollPane;
 	}
 
-	public static JTextField createTextField(int textLength) {
-		return createTextField(textLength, "", true);
+	private static void setTextComponentOptions (AbstractTextComponentOptions options, JTextComponent textComponent){
+		textComponent.setEditable(options.isEditable());
+		textComponent.setEnabled(options.isEnabled());
+		textComponent.setBorder(options.getBorder());
+		if (!options.isEditable())
+			textComponent.setHighlighter(null);
+		if (options.hasPreferredSize()){
+			textComponent.setPreferredSize(options.getPreferredSize());
+		}
+		textComponent.setOpaque(options.isOpaque());
+		textComponent.setText(options.getText());
+		textComponent.setDisabledTextColor(Color.BLACK);
+		if (options.getMaximumCharacters() > 0) {
+			limitCharactersInTextComponent(textComponent, options.getMaximumCharacters(),
+					options.isDigitsOnly());
+		}
+		textComponent.setBackground(options.getBackgroundColor());
+
 	}
 
-	public static JTextField createTextField(int textLength, String text) {
-		return createTextField(textLength, text, true);
-	}
-
-	public static JTextField createTextField(int textLength, String text, boolean editable) {
-		JTextField textField = new JTextField(text, textLength);
-		// limitCharactersInTextField(textField, textLength);
-		textField.setEditable(editable);
+	public static JTextField createTextField(TextComponentOptions options) {
+		JTextField textField = new JTextField(options.getText(), options.getNumberOfColumns());
+		setTextComponentOptions(options, textField);
 		return textField;
 	}
+
 
 	private static void limitCharactersInTextComponent(JTextComponent textField, int maxDigits,
 			boolean digitsOnly) {
@@ -142,15 +142,7 @@ public class GuiMaker {
 
 	public static JTextPane createTextPane(TextPaneOptions textPaneOptions) {
 		JTextPane textPane = new JTextPane();
-		textPane.setBackground(textPaneOptions.getBackgroundColor());
-		textPane.setText(textPaneOptions.getText());
-		textPane.setEditable(textPaneOptions.isEditable());
-		textPane.setPreferredSize(textPaneOptions.getPreferredSize());
-		textPane.setEnabled(textPaneOptions.isEnabled());
-		textPane.setDisabledTextColor(Color.BLACK);
-		textPane.setOpaque(textPaneOptions.isOpaque());
-		// TODO extract common method for creating gui element using common
-		// options
+		setTextComponentOptions(textPaneOptions, textPane);
 		StyledDocument doc = textPane.getStyledDocument();
 		SimpleAttributeSet center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, textPaneOptions.getTextAlignment().getStyleConstant());

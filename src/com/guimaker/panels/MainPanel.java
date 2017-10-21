@@ -435,7 +435,7 @@ public class MainPanel {
 		return rows;
 	}
 
-	private void updateView() {
+	public void updateView() {
 		SwingUtilities.invokeLater(new Runnable (){
 			@Override
 			public void run (){

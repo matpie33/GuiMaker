@@ -13,6 +13,7 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 	private Color backgroundColor;
 	private String text;
 	private Dimension preferredSize;
+	private boolean hasPreferredSize;
 
 	public Color getForegroundColor() {
 		return foregroundColor;
@@ -65,7 +66,12 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 
 	public Options preferredSize(Dimension preferredSize) {
 		this.preferredSize = preferredSize;
+		hasPreferredSize = true;
 		return getThis();
+	}
+
+	public boolean hasPreferredSize (){
+		return hasPreferredSize;
 	}
 
 	public abstract Options getThis();
