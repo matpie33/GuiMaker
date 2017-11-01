@@ -239,18 +239,24 @@ public class MainPanel {
 		c.weightx = 1;
 		int fill = row.getFillTypeAsGridBagConstraint();
 		int anchor = row.getAnchor().getAnchor();
-		if (row.isUseAllExtraVerticalSpace() || fill == GridBagConstraints.BOTH
+		if (shouldPutRowsHighestAsPossible || row.isUseAllExtraVerticalSpace() || fill == GridBagConstraints.BOTH
 				|| fill == GridBagConstraints.VERTICAL) {
 			c.weighty = 1;
-			removeFillingFromOtherPanels();
+			removeFillingFromOtherPanels(rowNumber);
 		}
 		else {
 			c.weighty = 0;
 		}
 
 		if (shouldPutRowsHighestAsPossible) {
-			updateRowsAboveMe();
-			c.weighty = 1;
+			if (rowNumber >= rows.size()) {
+				updateRowsAboveMe();
+				c.weighty = 1;
+			}
+			else {
+				c.weighty = 0;
+			}
+
 			if (c.fill == GridBagConstraints.BOTH) {
 				c.fill = GridBagConstraints.HORIZONTAL;
 			}
@@ -264,13 +270,13 @@ public class MainPanel {
 		rows.add(rowNumber, p);
 	}
 
-	private void removeFillingFromOtherPanels() {
+	private void removeFillingFromOtherPanels(int rowNumber) {
 		if (shouldPutRowsHighestAsPossible) {
 			return;
 		}
 		GridBagLayout g = (GridBagLayout) panel.getLayout();
-		Component[] components = panel.getComponents();
-		for (Component c : components) {
+		for (int i =0; i<rowNumber; i++){
+			Component c = panel.getComponent(i);
 			GridBagConstraints constr = g.getConstraints(c);
 			if (constr.weighty != 0) {
 				constr.weighty = 0;
@@ -397,7 +403,10 @@ public class MainPanel {
 			else if (direction.equals(Direction.BACKWARD)) {
 				c.gridy--;
 			}
-			c.weighty = 0;
+			if (!shouldPutRowsHighestAsPossible){
+				c.weighty = 0;
+			}
+
 
 			panel.remove(row);
 			panel.add(row, c);
