@@ -104,13 +104,15 @@ public class MainPanel {
 			c.insets = new Insets(yGap, xGap, yGap, xGap);
 
 			if (componentToFill == element) {
-				c.fill = GridBagConstraints.HORIZONTAL;
+				c.fill = GridBagConstraints.BOTH;
 				c.weightx = 1;
+				c.weighty = 1;
 			}
 			else{
 				c.weightx = 0;
+				c.weighty = 0;
 			}
-			c.weighty = 0;
+
 
 			panel.add(element, c);
 		}
