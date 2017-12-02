@@ -89,7 +89,13 @@ public class MainPanel {
 
 	}
 
-	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
+	public void addElementsInColumnStartingFromColumn(JComponent componentsToFill,
+			int startingColumn, JComponent... elements) {
+		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent [] {
+				componentsToFill}), startingColumn, elements);
+	}
+
+	public void addElementsInColumnStartingFromColumn(List <JComponent> componentsToFill,
 			int startingColumn, JComponent... elements) {
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
@@ -103,7 +109,7 @@ public class MainPanel {
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, xGap, yGap, xGap);
 
-			if (componentToFill == element) {
+			if (componentsToFill.contains(element)) {
 				c.fill = GridBagConstraints.BOTH;
 				c.weightx = 1;
 				c.weighty = 1;
@@ -120,7 +126,7 @@ public class MainPanel {
 	}
 
 	public void addElementsInColumnStartingFromColumn(int columnNumber, JComponent... elements) {
-		addElementsInColumnStartingFromColumn(null, columnNumber, elements);
+		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent [] {}), columnNumber, elements);
 	}
 
 	public JComponent addRows(SimpleRow simpleRows) {

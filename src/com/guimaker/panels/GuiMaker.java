@@ -116,6 +116,9 @@ public class GuiMaker {
 		if (options.hasPreferredSize()){
 			textComponent.setPreferredSize(options.getPreferredSize());
 		}
+		if (options.getFontSize()>0) {
+			textComponent.setFont(textComponent.getFont().deriveFont(options.getFontSize()));
+		}
 		textComponent.setOpaque(options.isOpaque());
 		textComponent.setText(options.getText());
 		textComponent.setDisabledTextColor(Color.BLACK);
