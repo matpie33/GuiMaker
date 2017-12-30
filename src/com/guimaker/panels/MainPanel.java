@@ -103,7 +103,7 @@ public class MainPanel {
 		for (JComponent element : elements) {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
-			c.gridy = numberOfRows;
+			c.gridy = numberOfRows+rows.size();
 			c.anchor = GridBagConstraints.NORTHWEST;
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
@@ -115,7 +115,7 @@ public class MainPanel {
 				c.weighty = 1;
 			}
 			else{
-				c.weightx = 0;
+				c.weightx = 1;
 				c.weighty = 0;
 			}
 
@@ -453,14 +453,8 @@ public class MainPanel {
 	}
 
 	public void updateView() {
-		SwingUtilities.invokeLater(new Runnable (){
-			@Override
-			public void run (){
-				panel.revalidate();
-				panel.repaint();
-			}
-		});
-
+		panel.revalidate();
+		panel.repaint();
 
 	}
 
