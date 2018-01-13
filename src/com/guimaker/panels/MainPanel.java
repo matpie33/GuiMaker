@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import com.guimaker.enums.FillType;
 import com.guimaker.row.SimpleRow;
 
 public class MainPanel {
@@ -89,14 +90,14 @@ public class MainPanel {
 
 	}
 
-	public void addElementsInColumnStartingFromColumn(JComponent componentsToFill,
+	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
 			int startingColumn, JComponent... elements) {
 		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent [] {
-				componentsToFill}), startingColumn, elements);
+				componentToFill}), FillType.BOTH, startingColumn, elements);
 	}
 
 	public void addElementsInColumnStartingFromColumn(List <JComponent> componentsToFill,
-			int startingColumn, JComponent... elements) {
+			FillType fillType,	int startingColumn, JComponent... elements) {
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
 		}
@@ -108,21 +109,33 @@ public class MainPanel {
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, xGap, yGap, xGap);
+			c.weighty = 0;
 
 			if (componentsToFill.contains(element)) {
-				c.fill = GridBagConstraints.BOTH;
+				c.fill = fillType.getGridBagConstraintsFilling();
 				c.weightx = 1;
-				c.weighty = 1;
+//				c.weighty = 1;
 			}
 			else{
 				c.weightx = 1;
 				c.weighty = 0;
 			}
 
-
 			panel.add(element, c);
 		}
 		numberOfRows++;
+	}
+
+	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
+			int startingColumn, FillType fillType, JComponent... elements) {
+		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent [] {
+				componentToFill}), fillType, startingColumn, elements);
+	}
+
+	public void addElementsInColumnStartingFromColumn(List <JComponent> componentsToFill,
+			int startingColumn, JComponent... elements) {
+		addElementsInColumnStartingFromColumn(componentsToFill, FillType.BOTH, startingColumn,
+				elements);
 	}
 
 	public void addElementsInColumnStartingFromColumn(int columnNumber, JComponent... elements) {
