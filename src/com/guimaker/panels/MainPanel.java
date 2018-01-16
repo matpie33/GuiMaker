@@ -5,6 +5,10 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +36,7 @@ public class MainPanel {
 	private Color rowColor;
 	private int numberOfColumns;
 	private int numberOfRows;
+	private Color originalBackgroundColor;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -69,7 +74,7 @@ public class MainPanel {
 
 		numberOfColumns = 0;
 		numberOfRows = 0;
-
+		originalBackgroundColor = color;
 		shouldPutRowsHighestAsPossible = putRowsHighestAsPossible;
 		if (scrollHorizontally) {
 			panel = new JPanel();
@@ -77,6 +82,8 @@ public class MainPanel {
 		else {
 			panel = new HorizontallyNonscrollablePanel();
 		}
+		panel.setFocusable(true);
+
 
 		if (color == null) {
 			panel.setOpaque(false);
@@ -88,6 +95,10 @@ public class MainPanel {
 		panel.setLayout(new GridBagLayout());
 		rows = new LinkedList<>();
 
+	}
+
+	public void setOriginalBackgroundColor (){
+		setBackground(originalBackgroundColor);
 	}
 
 	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
