@@ -1,10 +1,6 @@
 package com.guimaker.panels;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -20,6 +16,7 @@ import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.JTextComponent;
 
 import com.guimaker.enums.FillType;
 import com.guimaker.row.SimpleRow;
@@ -37,6 +34,7 @@ public class MainPanel {
 	private int numberOfColumns;
 	private int numberOfRows;
 	private Color originalBackgroundColor;
+	private boolean skipInsetsForExtremeEdges = false;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -97,6 +95,10 @@ public class MainPanel {
 
 	}
 
+	public void setSkipInsetsForExtremeEdges(boolean skipInsetsForExtremeEdges){
+		this.skipInsetsForExtremeEdges = skipInsetsForExtremeEdges;
+	}
+
 	public void setOriginalBackgroundColor (){
 		setBackground(originalBackgroundColor);
 	}
@@ -135,6 +137,57 @@ public class MainPanel {
 			panel.add(element, c);
 		}
 		numberOfRows++;
+	}
+
+	public void insertElementBeforeOtherElement (JComponent elementBeforeWhichWeInsert,
+			JComponent elementToInsert){
+		insertElementBeforeOtherElement(panel, elementBeforeWhichWeInsert, elementToInsert);
+
+	}
+
+	private void insertElementBeforeOtherElement(Container containerToCheck,
+			JComponent elementBeforeWhichWeInsert, JComponent elementToInsert){
+		int elementBeforeWeInsertGridX = Integer.MAX_VALUE;
+		boolean found = false;
+		for (Component component: containerToCheck.getComponents()){
+			LayoutManager layout = containerToCheck.getLayout();
+			GridBagLayout gridBagLayout = (GridBagLayout) layout;
+			GridBagConstraints constraints = gridBagLayout.getConstraints(elementBeforeWhichWeInsert);
+			if (component instanceof JPanel){
+				insertElementBeforeOtherElement((JPanel)component, elementBeforeWhichWeInsert,
+						elementToInsert);
+			}
+			else if (component == elementBeforeWhichWeInsert ||
+					constraints.gridx > elementBeforeWeInsertGridX){
+				if (layout instanceof GridBagLayout){
+					containerToCheck.remove(component);
+					if (!found){
+						addElement(constraints.gridy, constraints.gridx,
+								containerToCheck, elementToInsert);
+						found=true;
+					}
+					constraints.gridx = constraints.gridx + 1;
+					containerToCheck.add(component, constraints);
+					if (elementBeforeWeInsertGridX == Integer.MAX_VALUE)
+						elementBeforeWeInsertGridX = constraints.gridx - 1;
+				}
+
+			}
+
+		}
+		if (!found){
+			return;
+		}
+		updateView();
+		SwingUtilities.windowForComponent(elementToInsert).pack();
+	}
+
+	private void addElement (int row, int column, Container container, JComponent element){
+		GridBagConstraints constraints = initializeGridBagConstraints();
+		constraints.gridx = column;
+		constraints.gridy = row;
+		container.add(element, constraints);
+
 	}
 
 	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
@@ -221,20 +274,15 @@ public class MainPanel {
 		p.setLayout(new GridBagLayout());
 		p.setOpaque(false);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-
-		int a = gapInsideRow;
-		int b = gapRightSide;
-		int rightGap = a != b && b > 0 ? b : a;
-		gbc.insets = new Insets(0, a, 0, rightGap);
+		GridBagConstraints gbc = initializeGridBagConstraints();
+		gbc.gridx =0;
+		gbc.gridy = 0;
 
 		int i = 0;
 		for (JComponent compo : components) {
 			if (compo == null) {
 				continue;
 			}
-
 			if (componentsFilling.containsKey(compo)) {
 				gbc.fill = componentsFilling.get(compo);
 				gbc.weighty = useExtraSpaceVertically ? 1 : 0;
@@ -248,7 +296,6 @@ public class MainPanel {
 					gbc.weightx = 1;
 					gbc.weighty = 1;
 				}
-
 			}
 			else {
 				gbc.weightx = 0;
@@ -257,12 +304,32 @@ public class MainPanel {
 			if (i == components.length - 1) {
 				gbc.weightx = 1;
 			}
-			i++;
+			if (skipInsetsForExtremeEdges){
+				if (i==0 || i==components.length - 1){
+					gbc.insets = new Insets(0,0,0,0);
+				}
+				else if (i==1){
+					gbc.insets = initializeGridBagConstraints().insets;
+				}
+			}
 
 			p.add(compo, gbc);
+			gbc.gridx = gbc.gridx +1;
+			i++;
 		}
 
 		return p;
+	}
+
+	private GridBagConstraints initializeGridBagConstraints (){
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+
+		int a = gapInsideRow;
+		int b = gapRightSide;
+		int rightGap = a != b && b > 0 ? b : a;
+		gbc.insets = new Insets(0, a, 0, rightGap);
+		return gbc;
 	}
 
 	private void createConstraintsAndAdd(JComponent p, SimpleRow row, int rowNumber) {
@@ -297,7 +364,13 @@ public class MainPanel {
 		c.anchor = anchor;
 		c.fill = fill;
 		int a = gapBetweenRows;
-		c.insets = new Insets(a, a, a, a);
+		if (!skipInsetsForExtremeEdges){
+			c.insets = new Insets(a, a, a, a);
+		}
+		else{
+			c.insets = new Insets(a, 0, a, 0);
+		}
+
 		panel.add(p, c);
 		rows.add(rowNumber, p);
 	}
@@ -409,6 +482,31 @@ public class MainPanel {
 		updateView();
 	}
 
+	public void insertRowStartingFromColumn (int columnNumber, int rowNumber,
+			JComponent... components){
+		//TODO theres a chaos already with the inserting methods, and the add row/add elements in column
+		for (Component c: panel.getComponents()){
+			GridBagLayout layout = (GridBagLayout)panel.getLayout();
+			GridBagConstraints constraints = layout.getConstraints(c);
+			if (constraints.gridy == rowNumber){
+				constraints.gridy = constraints.gridy + 1;
+				panel.remove(c);
+				panel.add(c, constraints);
+			}
+		}
+		for (JComponent component: components){
+			addElement(rowNumber, columnNumber, panel, component);
+			columnNumber++;
+		}
+		numberOfRows++;
+		updateView();
+		Window w = SwingUtilities.windowForComponent(components[0]);
+		if (w != null){
+			w.pack();
+		}
+
+	}
+
 	private void giveLastRowTheRestOfSpace() {
 		if (rows.isEmpty()) {
 			return;
@@ -469,7 +567,7 @@ public class MainPanel {
 	}
 
 	public int getNumberOfRows() {
-		return rows.size();
+		return Math.max(rows.size(), numberOfRows);
 	}
 
 	public List<JComponent> getRows() {
@@ -484,6 +582,17 @@ public class MainPanel {
 
 	public JPanel getPanel() {
 		return panel;
+	}
+
+	public void removeRowInAColumnWay(int rowNumber){
+		for (Component component: panel.getComponents()){
+			GridBagLayout gridBagLayout = (GridBagLayout) panel.getLayout();
+			if (gridBagLayout.getConstraints(component).gridy == rowNumber){
+				panel.remove(component);
+			}
+		}
+		updateView();
+		SwingUtilities.windowForComponent(panel).pack();
 	}
 
 	public void removeRowWithElements(Component... elements) {

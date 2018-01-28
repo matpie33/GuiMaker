@@ -2,18 +2,20 @@ package com.guimaker.options;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
+import java.awt.*;
 
 public abstract class AbstractTextComponentOptions<TextOptions extends AbstractTextComponentOptions<TextOptions>>
 		extends AbstractComponentOptions<TextOptions> {
 
 	private boolean editable = true;
 	private boolean enabled = true;
-
+	private boolean focusable = true;
 	private boolean digitsOnly = false;
 	private int numberOfRows = 0;
 	private int numberOfColumns = 0;
 	private int maximumCharacters = 0;
 	private float fontSize;
+
 
 	AbstractTextComponentOptions() {
 		border(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -37,6 +39,11 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 
 	public int getMaximumCharacters() {
 		return maximumCharacters;
+	}
+
+	public TextOptions focusable (boolean focusable){
+		this.focusable = focusable;
+		return getThis();
 	}
 
 	public TextOptions editable(boolean editable) {
@@ -77,4 +84,9 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 		this.fontSize = fontSize;
 		return getThis();
 	}
+
+	public boolean isFocusable (){
+		return focusable;
+	}
+
 }

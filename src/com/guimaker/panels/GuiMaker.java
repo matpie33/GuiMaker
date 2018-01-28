@@ -111,6 +111,7 @@ public class GuiMaker {
 		textComponent.setEditable(options.isEditable());
 		textComponent.setEnabled(options.isEnabled());
 		textComponent.setBorder(options.getBorder());
+		textComponent.setFocusable(options.isFocusable());
 		if (!options.isEditable())
 			textComponent.setHighlighter(null);
 		if (options.hasPreferredSize()){
@@ -129,6 +130,7 @@ public class GuiMaker {
 		if (options.getBackgroundColor() != null){
 			textComponent.setBackground(options.getBackgroundColor());
 		}
+		textComponent.setForeground(options.getForegroundColor());
 
 	}
 

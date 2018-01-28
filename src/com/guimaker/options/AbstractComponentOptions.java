@@ -8,7 +8,7 @@ import javax.swing.border.Border;
 public abstract class AbstractComponentOptions<Options extends AbstractComponentOptions<Options>> {
 
 	private boolean opaque = true;
-	private Color foregroundColor;
+	private Color foregroundColor = Color.BLACK;
 	private Border border;
 	private Color backgroundColor;
 	private String text;
