@@ -121,17 +121,15 @@ public class MainPanel {
 			c.anchor = GridBagConstraints.NORTHWEST;
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
-			c.insets = new Insets(yGap, xGap, yGap, xGap);
+			c.insets = new Insets(yGap, 0, yGap, xGap);
 			c.weighty = 0;
 
 			if (componentsToFill.contains(element)) {
 				c.fill = fillType.getGridBagConstraintsFilling();
 				c.weightx = 1;
-//				c.weighty = 1;
 			}
 			else{
-				c.weightx = 1;
-				c.weighty = 0;
+				c.weightx = 0;
 			}
 
 			panel.add(element, c);
@@ -305,8 +303,8 @@ public class MainPanel {
 				gbc.weightx = 1;
 			}
 			if (skipInsetsForExtremeEdges){
-				if (i==0 || i==components.length - 1){
-					gbc.insets = new Insets(0,0,0,0);
+				if (i== components.length -1){
+					gbc.insets.right = 0;
 				}
 				else if (i==1){
 					gbc.insets = initializeGridBagConstraints().insets;
@@ -328,7 +326,7 @@ public class MainPanel {
 		int a = gapInsideRow;
 		int b = gapRightSide;
 		int rightGap = a != b && b > 0 ? b : a;
-		gbc.insets = new Insets(0, a, 0, rightGap);
+		gbc.insets = new Insets(0, 0, 0, rightGap);
 		return gbc;
 	}
 
@@ -488,7 +486,7 @@ public class MainPanel {
 		for (Component c: panel.getComponents()){
 			GridBagLayout layout = (GridBagLayout)panel.getLayout();
 			GridBagConstraints constraints = layout.getConstraints(c);
-			if (constraints.gridy == rowNumber){
+			if (constraints.gridy >= rowNumber){
 				constraints.gridy = constraints.gridy + 1;
 				panel.remove(c);
 				panel.add(c, constraints);
