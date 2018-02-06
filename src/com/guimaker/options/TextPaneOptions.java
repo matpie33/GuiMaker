@@ -16,8 +16,7 @@ public class TextPaneOptions extends AbstractTextComponentOptions<TextPaneOption
 		return textAlignment;
 	}
 
-	@Override
-	public TextPaneOptions getThis() {
+	@Override public TextPaneOptions getThis() {
 		return this;
 	}
 

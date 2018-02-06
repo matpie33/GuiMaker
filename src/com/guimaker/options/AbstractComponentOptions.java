@@ -1,9 +1,7 @@
 package com.guimaker.options;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
 import javax.swing.border.Border;
+import java.awt.*;
 
 public abstract class AbstractComponentOptions<Options extends AbstractComponentOptions<Options>> {
 
@@ -70,7 +68,7 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 		return getThis();
 	}
 
-	public boolean hasPreferredSize (){
+	public boolean hasPreferredSize() {
 		return hasPreferredSize;
 	}
 

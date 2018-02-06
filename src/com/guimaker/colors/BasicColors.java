@@ -1,6 +1,6 @@
 package com.guimaker.colors;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class BasicColors {
 

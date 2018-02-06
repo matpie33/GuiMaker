@@ -1,25 +1,13 @@
 package com.guimaker.panels;
 
-import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.guimaker.enums.FillType;
+import com.guimaker.row.SimpleRow;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.text.JTextComponent;
-
-import com.guimaker.enums.FillType;
-import com.guimaker.row.SimpleRow;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class MainPanel {
 
@@ -81,7 +69,6 @@ public class MainPanel {
 			panel = new HorizontallyNonscrollablePanel();
 		}
 
-
 		if (color == null) {
 			panel.setOpaque(false);
 		}
@@ -94,29 +81,29 @@ public class MainPanel {
 
 	}
 
-	public void setSkipInsetsForExtremeEdges(boolean skipInsetsForExtremeEdges){
+	public void setSkipInsetsForExtremeEdges(boolean skipInsetsForExtremeEdges) {
 		this.skipInsetsForExtremeEdges = skipInsetsForExtremeEdges;
 	}
 
-	public void setOriginalBackgroundColor (){
+	public void setOriginalBackgroundColor() {
 		setBackground(originalBackgroundColor);
 	}
 
 	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
 			int startingColumn, JComponent... elements) {
-		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent [] {
-				componentToFill}), FillType.BOTH, startingColumn, elements);
+		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent[] { componentToFill }),
+				FillType.BOTH, startingColumn, elements);
 	}
 
-	public void addElementsInColumnStartingFromColumn(List <JComponent> componentsToFill,
-			FillType fillType,	int startingColumn, JComponent... elements) {
+	public void addElementsInColumnStartingFromColumn(List<JComponent> componentsToFill,
+			FillType fillType, int startingColumn, JComponent... elements) {
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
 		}
 		for (JComponent element : elements) {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
-			c.gridy = numberOfRows+rows.size();
+			c.gridy = numberOfRows + rows.size();
 			c.anchor = GridBagConstraints.NORTHWEST;
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
@@ -127,7 +114,7 @@ public class MainPanel {
 				c.fill = fillType.getGridBagConstraintsFilling();
 				c.weightx = 1;
 			}
-			else{
+			else {
 				c.weightx = 0;
 			}
 
@@ -136,32 +123,33 @@ public class MainPanel {
 		numberOfRows++;
 	}
 
-	public void insertElementBeforeOtherElement (JComponent elementBeforeWhichWeInsert,
-			JComponent elementToInsert){
+	public void insertElementBeforeOtherElement(JComponent elementBeforeWhichWeInsert,
+			JComponent elementToInsert) {
 		insertElementBeforeOtherElement(panel, elementBeforeWhichWeInsert, elementToInsert);
 
 	}
 
 	private void insertElementBeforeOtherElement(Container containerToCheck,
-			JComponent elementBeforeWhichWeInsert, JComponent elementToInsert){
+			JComponent elementBeforeWhichWeInsert, JComponent elementToInsert) {
 		int elementBeforeWeInsertGridX = Integer.MAX_VALUE;
 		boolean found = false;
-		for (Component component: containerToCheck.getComponents()){
+		for (Component component : containerToCheck.getComponents()) {
 			LayoutManager layout = containerToCheck.getLayout();
 			GridBagLayout gridBagLayout = (GridBagLayout) layout;
-			GridBagConstraints constraints = gridBagLayout.getConstraints(elementBeforeWhichWeInsert);
-			if (component instanceof JPanel){
-				insertElementBeforeOtherElement((JPanel)component, elementBeforeWhichWeInsert,
+			GridBagConstraints constraints = gridBagLayout
+					.getConstraints(elementBeforeWhichWeInsert);
+			if (component instanceof JPanel) {
+				insertElementBeforeOtherElement((JPanel) component, elementBeforeWhichWeInsert,
 						elementToInsert);
 			}
-			else if (component == elementBeforeWhichWeInsert ||
-					constraints.gridx > elementBeforeWeInsertGridX){
-				if (layout instanceof GridBagLayout){
+			else if (component == elementBeforeWhichWeInsert
+					|| constraints.gridx > elementBeforeWeInsertGridX) {
+				if (layout instanceof GridBagLayout) {
 					containerToCheck.remove(component);
-					if (!found){
-						addElement(constraints.gridy, constraints.gridx,
-								containerToCheck, elementToInsert);
-						found=true;
+					if (!found) {
+						addElement(constraints.gridy, constraints.gridx, containerToCheck,
+								elementToInsert);
+						found = true;
 					}
 					constraints.gridx = constraints.gridx + 1;
 					containerToCheck.add(component, constraints);
@@ -172,13 +160,13 @@ public class MainPanel {
 			}
 
 		}
-		if (!found){
+		if (!found) {
 			return;
 		}
 		updateView();
 	}
 
-	private void addElement (int row, int column, Container container, JComponent element){
+	private void addElement(int row, int column, Container container, JComponent element) {
 		GridBagConstraints constraints = initializeGridBagConstraints();
 		constraints.gridx = column;
 		constraints.gridy = row;
@@ -188,23 +176,24 @@ public class MainPanel {
 
 	public void addElementsInColumnStartingFromColumn(JComponent componentToFill,
 			int startingColumn, FillType fillType, JComponent... elements) {
-		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent [] {
-				componentToFill}), fillType, startingColumn, elements);
+		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent[] { componentToFill }),
+				fillType, startingColumn, elements);
 	}
 
-	public void addElementsInColumnStartingFromColumn(List <JComponent> componentsToFill,
+	public void addElementsInColumnStartingFromColumn(List<JComponent> componentsToFill,
 			int startingColumn, JComponent... elements) {
 		addElementsInColumnStartingFromColumn(componentsToFill, FillType.BOTH, startingColumn,
 				elements);
 	}
 
 	public void addElementsInColumnStartingFromColumn(int columnNumber, JComponent... elements) {
-		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent [] {}), columnNumber, elements);
+		addElementsInColumnStartingFromColumn(Arrays.asList(new JComponent[] {}), columnNumber,
+				elements);
 	}
 
 	public JComponent addRows(SimpleRow simpleRows) {
 		JComponent panel = null;
-		for (SimpleRow row: simpleRows.getBuilder().getRows()){
+		for (SimpleRow row : simpleRows.getBuilder().getRows()) {
 			panel = addRow(row, rows.size());
 		}
 		return panel;
@@ -221,10 +210,10 @@ public class MainPanel {
 			return null;
 		}
 		if (row.isBorderEnabled() && (borderToUse != null || row.getBorder() != null)) {
-			panel.setBorder(borderToUse != null? borderToUse: row.getBorder());
+			panel.setBorder(borderToUse != null ? borderToUse : row.getBorder());
 		}
 		if (row.isOpaque() && (rowColor != null || row.getColor() != null)) {
-			panel.setBackground(rowColor != null? rowColor: row.getColor());
+			panel.setBackground(rowColor != null ? rowColor : row.getColor());
 			panel.setOpaque(true);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
@@ -271,7 +260,7 @@ public class MainPanel {
 		p.setOpaque(false);
 
 		GridBagConstraints gbc = initializeGridBagConstraints();
-		gbc.gridx =0;
+		gbc.gridx = 0;
 		gbc.gridy = 0;
 
 		int i = 0;
@@ -300,24 +289,24 @@ public class MainPanel {
 			if (i == components.length - 1) {
 				gbc.weightx = 1;
 			}
-			if (skipInsetsForExtremeEdges){
-				if (i== components.length -1){
+			if (skipInsetsForExtremeEdges) {
+				if (i == components.length - 1) {
 					gbc.insets.right = 0;
 				}
-				else if (i==1){
+				else if (i == 1) {
 					gbc.insets = initializeGridBagConstraints().insets;
 				}
 			}
 
 			p.add(compo, gbc);
-			gbc.gridx = gbc.gridx +1;
+			gbc.gridx = gbc.gridx + 1;
 			i++;
 		}
 
 		return p;
 	}
 
-	private GridBagConstraints initializeGridBagConstraints (){
+	private GridBagConstraints initializeGridBagConstraints() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
@@ -334,8 +323,8 @@ public class MainPanel {
 		c.weightx = 1;
 		int fill = row.getFillTypeAsGridBagConstraint();
 		int anchor = row.getAnchor().getAnchor();
-		if (shouldPutRowsHighestAsPossible || row.isUseAllExtraVerticalSpace() || fill == GridBagConstraints.BOTH
-				|| fill == GridBagConstraints.VERTICAL) {
+		if (shouldPutRowsHighestAsPossible || row.isUseAllExtraVerticalSpace()
+				|| fill == GridBagConstraints.BOTH || fill == GridBagConstraints.VERTICAL) {
 			c.weighty = 1;
 			removeFillingFromOtherPanels(rowNumber);
 		}
@@ -360,10 +349,10 @@ public class MainPanel {
 		c.anchor = anchor;
 		c.fill = fill;
 		int a = gapBetweenRows;
-		if (!skipInsetsForExtremeEdges){
+		if (!skipInsetsForExtremeEdges) {
 			c.insets = new Insets(a, a, a, a);
 		}
-		else{
+		else {
 			c.insets = new Insets(a, 0, a, 0);
 		}
 
@@ -376,7 +365,7 @@ public class MainPanel {
 			return;
 		}
 		GridBagLayout g = (GridBagLayout) panel.getLayout();
-		for (int i =0; i<rowNumber; i++){
+		for (int i = 0; i < rowNumber; i++) {
 			Component c = panel.getComponent(i);
 			GridBagConstraints constr = g.getConstraints(c);
 			if (constr.weighty != 0) {
@@ -478,19 +467,19 @@ public class MainPanel {
 		updateView();
 	}
 
-	public void insertRowStartingFromColumn (int columnNumber, int rowNumber,
-			JComponent... components){
+	public void insertRowStartingFromColumn(int columnNumber, int rowNumber,
+			JComponent... components) {
 		//TODO theres a chaos already with the inserting methods, and the add row/add elements in column
-		for (Component c: panel.getComponents()){
-			GridBagLayout layout = (GridBagLayout)panel.getLayout();
+		for (Component c : panel.getComponents()) {
+			GridBagLayout layout = (GridBagLayout) panel.getLayout();
 			GridBagConstraints constraints = layout.getConstraints(c);
-			if (constraints.gridy >= rowNumber){
+			if (constraints.gridy >= rowNumber) {
 				constraints.gridy = constraints.gridy + 1;
 				panel.remove(c);
 				panel.add(c, constraints);
 			}
 		}
-		for (JComponent component: components){
+		for (JComponent component : components) {
 			addElement(rowNumber, columnNumber, panel, component);
 			columnNumber++;
 		}
@@ -524,10 +513,9 @@ public class MainPanel {
 			else if (direction.equals(Direction.BACKWARD)) {
 				c.gridy--;
 			}
-			if (!shouldPutRowsHighestAsPossible){
+			if (!shouldPutRowsHighestAsPossible) {
 				c.weighty = 0;
 			}
-
 
 			panel.remove(row);
 			panel.add(row, c);
@@ -575,10 +563,10 @@ public class MainPanel {
 		return panel;
 	}
 
-	public void removeRowInAColumnWay(int rowNumber){
-		for (Component component: panel.getComponents()){
+	public void removeRowInAColumnWay(int rowNumber) {
+		for (Component component : panel.getComponents()) {
 			GridBagLayout gridBagLayout = (GridBagLayout) panel.getLayout();
-			if (gridBagLayout.getConstraints(component).gridy == rowNumber){
+			if (gridBagLayout.getConstraints(component).gridy == rowNumber) {
 				panel.remove(component);
 			}
 		}

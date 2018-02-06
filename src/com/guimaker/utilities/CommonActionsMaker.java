@@ -1,31 +1,27 @@
 package com.guimaker.utilities;
 
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
-
 import com.guimaker.enums.ComponentType;
 import com.guimaker.panels.GuiMaker;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class CommonActionsMaker {
 
 	public static AbstractButton createButtonDispose(String text, int keyEventName,
 			final Window window) {
-		return GuiMaker.createButtonlikeComponent(ComponentType.BUTTON, text,
-				createDisposeAction(window), keyEventName);
+		return GuiMaker
+				.createButtonlikeComponent(ComponentType.BUTTON, text, createDisposeAction(window),
+						keyEventName);
 	}
 
 	public static AbstractAction createDisposeAction(final Window dialog) {
 		return new AbstractAction() {
 			private static final long serialVersionUID = 5504620933205592893L;
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
+			@Override public void actionPerformed(ActionEvent e) {
 				dialog.dispose();
 			}
 		};
@@ -36,8 +32,7 @@ public class CommonActionsMaker {
 		AbstractAction action = new AbstractAction() {
 			private static final long serialVersionUID = 5504620933205592893L;
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
+			@Override public void actionPerformed(ActionEvent e) {
 				dialog.setVisible(false);
 			}
 		};

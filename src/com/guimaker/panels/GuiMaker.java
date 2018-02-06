@@ -1,26 +1,5 @@
 package com.guimaker.panels;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-
 import com.guimaker.enums.ComponentType;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsMaker;
@@ -28,8 +7,14 @@ import com.guimaker.utilities.HotkeyWrapper;
 import com.guimaker.utilities.KeyModifiers;
 import com.guimaker.utilities.LimitDocumentFilter;
 
-public class GuiMaker {
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+public class GuiMaker {
 
 	public static JLabel createLabel(ComponentOptions options) {
 		JLabel label = new JLabel();
@@ -53,8 +38,7 @@ public class GuiMaker {
 
 	private static KeyListener createTabListenerThatMovesFocusToNextComponent(JTextComponent a) {
 		return new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
+			@Override public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
 					a.transferFocus();
 					e.consume();
@@ -107,17 +91,18 @@ public class GuiMaker {
 		return scrollPane;
 	}
 
-	private static void setTextComponentOptions (AbstractTextComponentOptions options, JTextComponent textComponent){
+	private static void setTextComponentOptions(AbstractTextComponentOptions options,
+			JTextComponent textComponent) {
 		textComponent.setEditable(options.isEditable());
 		textComponent.setEnabled(options.isEnabled());
 		textComponent.setBorder(options.getBorder());
 		textComponent.setFocusable(options.isFocusable());
 		if (!options.isEditable())
 			textComponent.setHighlighter(null);
-		if (options.hasPreferredSize()){
+		if (options.hasPreferredSize()) {
 			textComponent.setPreferredSize(options.getPreferredSize());
 		}
-		if (options.getFontSize()>0) {
+		if (options.getFontSize() > 0) {
 			textComponent.setFont(textComponent.getFont().deriveFont(options.getFontSize()));
 		}
 		textComponent.setOpaque(options.isOpaque());
@@ -127,7 +112,7 @@ public class GuiMaker {
 			limitCharactersInTextComponent(textComponent, options.getMaximumCharacters(),
 					options.isDigitsOnly());
 		}
-		if (options.getBackgroundColor() != null){
+		if (options.getBackgroundColor() != null) {
 			textComponent.setBackground(options.getBackgroundColor());
 		}
 		textComponent.setForeground(options.getForegroundColor());
@@ -139,7 +124,6 @@ public class GuiMaker {
 		setTextComponentOptions(options, textField);
 		return textField;
 	}
-
 
 	private static void limitCharactersInTextComponent(JTextComponent textField, int maxDigits,
 			boolean digitsOnly) {

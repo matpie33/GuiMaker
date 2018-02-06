@@ -11,7 +11,7 @@ public class SimpleRowBuilder {
 
 	private List<SimpleRow> rows;
 
-	private SimpleRowBuilder (){
+	private SimpleRowBuilder() {
 		rows = new ArrayList<>();
 	}
 
@@ -19,20 +19,20 @@ public class SimpleRowBuilder {
 		return rows;
 	}
 
-	public void addRow (SimpleRow row){
+	public void addRow(SimpleRow row) {
 		rows.add(row);
 	}
 
-	public static SimpleRow createRow(FillType fillingType, Anchor anchor, JComponent... components){
+	public static SimpleRow createRow(FillType fillingType, Anchor anchor,
+			JComponent... components) {
 		SimpleRowBuilder builder = new SimpleRowBuilder();
-		SimpleRow s = new SimpleRow (builder, fillingType, anchor, components);
+		SimpleRow s = new SimpleRow(builder, fillingType, anchor, components);
 		builder.addRow(s);
 		return s;
 	}
 
-	public static SimpleRow createRow (FillType fillingType, JComponent... components){
-		return createRow(fillingType, Anchor.NORTHWEST,  components);
+	public static SimpleRow createRow(FillType fillingType, JComponent... components) {
+		return createRow(fillingType, Anchor.NORTHWEST, components);
 	}
-
 
 }

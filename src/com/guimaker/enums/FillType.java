@@ -1,6 +1,6 @@
 package com.guimaker.enums;
 
-import java.awt.GridBagConstraints;
+import java.awt.*;
 
 public enum FillType {
 	HORIZONTAL(GridBagConstraints.HORIZONTAL), VERTICAL(GridBagConstraints.VERTICAL), NONE(

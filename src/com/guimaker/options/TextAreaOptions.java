@@ -1,9 +1,5 @@
 package com.guimaker.options;
 
-import com.guimaker.enums.TextAlignment;
-
-import java.awt.*;
-
 public class TextAreaOptions extends AbstractTextComponentOptions<TextAreaOptions> {
 
 	private boolean wrapStyleWord = true;
@@ -37,8 +33,7 @@ public class TextAreaOptions extends AbstractTextComponentOptions<TextAreaOption
 		return getThis();
 	}
 
-	@Override
-	public TextAreaOptions getThis() {
+	@Override public TextAreaOptions getThis() {
 		return this;
 	}
 

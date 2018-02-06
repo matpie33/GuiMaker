@@ -1,10 +1,7 @@
 package com.guimaker.panels;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-
-import javax.swing.JPanel;
-import javax.swing.Scrollable;
+import javax.swing.*;
+import java.awt.*;
 
 public class HorizontallyNonscrollablePanel extends JPanel implements Scrollable {
 

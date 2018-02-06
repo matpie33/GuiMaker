@@ -1,6 +1,6 @@
 package com.guimaker.options;
 
-import java.awt.Component;
+import java.awt.*;
 
 public class ScrollPaneOptions extends AbstractComponentOptions<ScrollPaneOptions> {
 
@@ -25,8 +25,7 @@ public class ScrollPaneOptions extends AbstractComponentOptions<ScrollPaneOption
 		return getThis();
 	}
 
-	@Override
-	public ScrollPaneOptions getThis() {
+	@Override public ScrollPaneOptions getThis() {
 		return this;
 	}
 

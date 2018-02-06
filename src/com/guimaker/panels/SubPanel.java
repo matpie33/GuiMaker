@@ -1,10 +1,9 @@
 package com.guimaker.panels;
 
-import java.awt.GridLayout;
-
-import javax.swing.JPanel;
-
 import com.guimaker.colors.BasicColors;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class SubPanel {
 
