@@ -80,7 +80,6 @@ public class MainPanel {
 		else {
 			panel = new HorizontallyNonscrollablePanel();
 		}
-		panel.setFocusable(true);
 
 
 		if (color == null) {
@@ -177,7 +176,6 @@ public class MainPanel {
 			return;
 		}
 		updateView();
-		SwingUtilities.windowForComponent(elementToInsert).pack();
 	}
 
 	private void addElement (int row, int column, Container container, JComponent element){
@@ -498,11 +496,6 @@ public class MainPanel {
 		}
 		numberOfRows++;
 		updateView();
-		Window w = SwingUtilities.windowForComponent(components[0]);
-		if (w != null){
-			w.pack();
-		}
-
 	}
 
 	private void giveLastRowTheRestOfSpace() {
@@ -590,7 +583,7 @@ public class MainPanel {
 			}
 		}
 		updateView();
-		SwingUtilities.windowForComponent(panel).pack();
+
 	}
 
 	public void removeRowWithElements(Component... elements) {
