@@ -118,6 +118,10 @@ public class MainPanel {
 			if (componentsToFill.contains(element)) {
 				c.fill = fillType.getGridBagConstraintsFilling();
 				c.weightx = 1;
+				if (c.fill == GridBagConstraints.BOTH
+						|| c.fill == GridBagConstraints.VERTICAL) {
+					c.weighty = 1;
+				}
 			}
 			else {
 				c.weightx = 0;
@@ -434,7 +438,7 @@ public class MainPanel {
 			removeRow(rows.get(rows.size() - 1));
 		}
 		else if (numberOfRows > 0) {
-			removeRowInAColumnWay(numberOfRows-1);
+			removeRowInAColumnWay(numberOfRows - 1);
 		}
 
 	}
