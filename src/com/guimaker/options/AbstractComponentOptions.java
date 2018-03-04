@@ -11,7 +11,12 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 	private Color backgroundColor;
 	private String text;
 	private Dimension preferredSize;
+	private float fontSize;
 	private boolean hasPreferredSize;
+
+	public float getFontSize() {
+		return fontSize;
+	}
 
 	public Color getForegroundColor() {
 		return foregroundColor;
@@ -35,6 +40,11 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 
 	public Dimension getPreferredSize() {
 		return preferredSize;
+	}
+
+	public Options fontSize(float fontSize) {
+		this.fontSize = fontSize;
+		return getThis();
 	}
 
 	public Options opaque(boolean opaque) {

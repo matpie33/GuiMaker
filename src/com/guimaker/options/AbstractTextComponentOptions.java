@@ -13,7 +13,6 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	private int numberOfRows = 0;
 	private int numberOfColumns = 0;
 	private int maximumCharacters = 0;
-	private float fontSize;
 
 	AbstractTextComponentOptions() {
 		border(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -72,15 +71,6 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 
 	public boolean isDigitsOnly() {
 		return digitsOnly;
-	}
-
-	public float getFontSize() {
-		return fontSize;
-	}
-
-	public TextOptions fontSize(float fontSize) {
-		this.fontSize = fontSize;
-		return getThis();
 	}
 
 	public boolean isFocusable() {

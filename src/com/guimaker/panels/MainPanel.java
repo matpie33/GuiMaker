@@ -106,6 +106,7 @@ public class MainPanel {
 			numberOfColumns = elements.length;
 		}
 		for (JComponent element : elements) {
+			setWeightyToZeroForPreviousRow();
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
 			c.gridy = numberOfRows + rows.size();
@@ -113,7 +114,7 @@ public class MainPanel {
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, 0, yGap, xGap);
-			c.weighty = 0;
+			c.weighty = 1;
 
 			if (componentsToFill.contains(element)) {
 				c.fill = fillType.getGridBagConstraintsFilling();
@@ -130,6 +131,19 @@ public class MainPanel {
 			panel.add(element, c);
 		}
 		numberOfRows++;
+	}
+
+	private void setWeightyToZeroForPreviousRow() {
+		for (Component component : panel.getComponents()) {
+			GridBagLayout gridBagLayout = (GridBagLayout) panel.getLayout();
+			GridBagConstraints constraints = gridBagLayout
+					.getConstraints(component);
+			if (constraints.gridy == numberOfRows - 1 + rows.size()){
+				constraints.weighty = 0;
+				panel.remove(component);
+				panel.add(component, constraints);
+			}
+		}
 	}
 
 	public void insertElementBeforeOtherElement(
