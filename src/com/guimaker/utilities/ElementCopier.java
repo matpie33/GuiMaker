@@ -1,6 +1,7 @@
 package com.guimaker.utilities;
 
 import com.guimaker.enums.ComponentType;
+import com.guimaker.options.ComponentOptions;
 import com.guimaker.panels.GuiMaker;
 
 import javax.swing.*;
@@ -19,4 +20,11 @@ public class ElementCopier {
 		}
 		return copiedButton;
 	}
+
+	public static JLabel copyLabel (JLabel labelToCopy){
+		JLabel copiedLabel = GuiMaker.createLabel(new ComponentOptions());
+		copiedLabel.setText(labelToCopy.getText());
+		return copiedLabel;
+	}
+
 }
