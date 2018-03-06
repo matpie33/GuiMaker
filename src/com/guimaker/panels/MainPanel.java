@@ -105,6 +105,7 @@ public class MainPanel {
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
 		}
+		int indexOfElement = 0;
 		for (JComponent element : elements) {
 			setWeightyToZeroForPreviousRow();
 			GridBagConstraints c = new GridBagConstraints();
@@ -127,8 +128,13 @@ public class MainPanel {
 			else {
 				c.weightx = 0;
 			}
+			if (indexOfElement == elements.length - 1
+					&& indexOfElement == numberOfColumns - 1) {
+				c.weightx = 1;
+			}
 
 			panel.add(element, c);
+			indexOfElement++;
 		}
 		numberOfRows++;
 	}
@@ -138,8 +144,14 @@ public class MainPanel {
 			GridBagLayout gridBagLayout = (GridBagLayout) panel.getLayout();
 			GridBagConstraints constraints = gridBagLayout
 					.getConstraints(component);
-			if (constraints.gridy == numberOfRows - 1 + rows.size()){
+			if (constraints.gridy == numberOfRows - 1 + rows.size()) {
 				constraints.weighty = 0;
+				if ((constraints.weightx == 1
+						&& constraints.fill != GridBagConstraints.HORIZONTAL
+						&& constraints.fill != GridBagConstraints.BOTH)
+						&& constraints.gridx < numberOfColumns) {
+					constraints.weightx = 0;
+				}
 				panel.remove(component);
 				panel.add(component, constraints);
 			}
