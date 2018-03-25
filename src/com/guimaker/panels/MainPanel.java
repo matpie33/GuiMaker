@@ -471,7 +471,7 @@ public class MainPanel {
 
 	public void removeRow(int number) {
 		JComponent row = rows.get(number);
-		removeAndUpdateRows(row, number);
+		removeAndUpdateRows(row, number, true);
 	}
 
 	public void addElementsToLastRow(JComponent... elements) {
@@ -504,18 +504,36 @@ public class MainPanel {
 		row.add(comp, c);
 	}
 
-	private void removeRow(JComponent row) {
-		removeAndUpdateRows(row, rows.indexOf(row));
+	public void removeRows(int start, int end) {
+		for (int i = start; i <= end; i++) {
+			JComponent row = rows.get(start);
+			panel.remove(row);
+			rows.remove(row);
+		}
+		movePanels(Direction.BACKWARD, start, end - start);
+		if (shouldPutRowsHighestAsPossible) {
+			giveLastRowTheRestOfSpace();
+		}
+		updateView();
+
 	}
 
-	private void removeAndUpdateRows(JComponent row, int lastRowToUpdate) {
-		movePanels(Direction.BACKWARD, lastRowToUpdate);
+	private void removeRow(JComponent row) {
+		removeAndUpdateRows(row, rows.indexOf(row), true);
+	}
+
+	private void removeAndUpdateRows(JComponent row, int lastRowToUpdate,
+			boolean updateView) {
+		movePanels(Direction.BACKWARD, lastRowToUpdate, 1);
 		panel.remove(row);
 		rows.remove(row);
 		if (shouldPutRowsHighestAsPossible) {
 			giveLastRowTheRestOfSpace();
 		}
-		updateView();
+		if (updateView) {
+			updateView();
+		}
+
 	}
 
 	public void insertRowStartingFromColumn(int columnNumber, int rowNumber,
@@ -543,33 +561,37 @@ public class MainPanel {
 			return;
 		}
 		int lastRow = rows.size() - 1;
+		GridBagLayout g = (GridBagLayout) panel.getLayout();
 		GridBagConstraints cd = getConstraintsForRow(lastRow);
 		cd.weighty = 1;
-		panel.remove(rows.get(lastRow));
-		panel.add(rows.get(lastRow), cd);
+		g.setConstraints(rows.get(lastRow), cd);
 	}
 
 	private enum Direction {
 		FORWARD, BACKWARD;
 	}
 
-	private void movePanels(Direction direction, int startIndex) {
-
+	private void movePanels(Direction direction, int startIndex,
+			int absoluteIncrementDecrementValue) {
+		if (absoluteIncrementDecrementValue < 0) {
+			throw new IllegalArgumentException(
+					"Increment/decrement value should be positive");
+		}
 		for (int i = rows.size() - 1; i >= startIndex; i--) {
 			JComponent row = rows.get(i);
 			GridBagConstraints c = getConstraintsForRow(i);
 			if (direction.equals(Direction.FORWARD)) {
-				c.gridy++;
+				c.gridy += absoluteIncrementDecrementValue;
 			}
 			else if (direction.equals(Direction.BACKWARD)) {
-				c.gridy--;
+				c.gridy -= absoluteIncrementDecrementValue;
 			}
 			if (!shouldPutRowsHighestAsPossible) {
 				c.weighty = 0;
 			}
+			GridBagLayout g = (GridBagLayout) panel.getLayout();
+			g.setConstraints(row, c);
 
-			panel.remove(row);
-			panel.add(row, c);
 		}
 
 	}
@@ -591,9 +613,9 @@ public class MainPanel {
 		return p;
 	}
 
-	public void insertRow(int number, SimpleRow row) {
-		movePanels(Direction.FORWARD, number);
-		addRow(row, number);
+	public JComponent insertRow(int number, SimpleRow row) {
+		movePanels(Direction.FORWARD, number, 1);
+		return addRow(row, number);
 	}
 
 	public int getNumberOfRows() {

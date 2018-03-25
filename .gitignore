@@ -4,3 +4,4 @@ bin
 .settings/org.eclipse.jdt.core.prefs
 *.iml
 src/META-INF/MANIFEST.MF
+.idea
