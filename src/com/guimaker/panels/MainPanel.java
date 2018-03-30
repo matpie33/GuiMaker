@@ -504,13 +504,13 @@ public class MainPanel {
 		row.add(comp, c);
 	}
 
-	public void removeRows(int start, int end) {
+	public void removeRowsInclusive(int start, int end) {
 		for (int i = start; i <= end; i++) {
 			JComponent row = rows.get(start);
 			panel.remove(row);
 			rows.remove(row);
 		}
-		movePanels(Direction.BACKWARD, start, end - start);
+		movePanels(Direction.BACKWARD, start, end - start+1);
 		if (shouldPutRowsHighestAsPossible) {
 			giveLastRowTheRestOfSpace();
 		}
@@ -719,8 +719,7 @@ public class MainPanel {
 		panel.setBackground(color);
 	}
 
-	public void clearPanelColor(int rowNumber) {
-		JComponent panel = rows.get(rowNumber);
+	public void clearPanelColor(JComponent panel) {
 		panel.setOpaque(false);
 	}
 
