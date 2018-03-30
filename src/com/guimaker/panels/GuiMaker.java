@@ -46,7 +46,8 @@ public class GuiMaker {
 	private static KeyListener createTabListenerThatMovesFocusToNextComponent(
 			JTextComponent a) {
 		return new KeyAdapter() {
-			@Override public void keyPressed(KeyEvent e) {
+			@Override
+			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
 					a.transferFocus();
 					e.consume();

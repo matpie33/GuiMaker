@@ -2,7 +2,8 @@ package com.guimaker.options;
 
 import com.guimaker.enums.TextAlignment;
 
-public class TextPaneOptions extends AbstractTextComponentOptions<TextPaneOptions> {
+public class TextPaneOptions
+		extends AbstractTextComponentOptions<TextPaneOptions> {
 
 	private TextAlignment textAlignment;
 
@@ -16,7 +17,8 @@ public class TextPaneOptions extends AbstractTextComponentOptions<TextPaneOption
 		return textAlignment;
 	}
 
-	@Override public TextPaneOptions getThis() {
+	@Override
+	public TextPaneOptions getThis() {
 		return this;
 	}
 

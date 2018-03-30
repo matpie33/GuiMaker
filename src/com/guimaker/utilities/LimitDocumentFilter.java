@@ -18,8 +18,8 @@ public class LimitDocumentFilter extends DocumentFilter {
 	}
 
 	@Override
-	public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-			throws BadLocationException {
+	public void replace(FilterBypass fb, int offset, int length, String text,
+			AttributeSet attrs) throws BadLocationException {
 		int currentLength = fb.getDocument().getLength();
 		int overLimit = (currentLength + text.length()) - limit - length;
 		if (overLimit > 0) {

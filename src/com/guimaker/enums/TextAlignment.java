@@ -3,7 +3,8 @@ package com.guimaker.enums;
 import javax.swing.text.StyleConstants;
 
 public enum TextAlignment {
-	JUSTIFIED(StyleConstants.ALIGN_JUSTIFIED), CENTERED(StyleConstants.ALIGN_CENTER);
+	JUSTIFIED(StyleConstants.ALIGN_JUSTIFIED), CENTERED(
+			StyleConstants.ALIGN_CENTER);
 	private int styleConstant;
 
 	private TextAlignment(int styleConstant) {

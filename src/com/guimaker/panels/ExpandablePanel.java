@@ -1,6 +1,5 @@
 package com.guimaker.panels;
 
-import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.options.ComponentOptions;
@@ -36,12 +35,13 @@ public class ExpandablePanel extends MainPanel {
 	}
 
 	private void initialize(String title) {
-		titleLabel = GuiMaker
-				.createLabel(new ComponentOptions().text(title +" "+ EXPAND_HINT));
+		titleLabel = GuiMaker.createLabel(
+				new ComponentOptions().text(title + " " + EXPAND_HINT));
 		addRow(SimpleRowBuilder
 				.createRow(FillType.NONE, Anchor.WEST, titleLabel));
 		getPanel().addMouseListener(new MouseAdapter() {
-			@Override public void mouseReleased(MouseEvent e) {
+			@Override
+			public void mouseReleased(MouseEvent e) {
 				super.mouseReleased(e);
 				if (state.equals(State.SHRINKED)) {
 					expand();
@@ -51,7 +51,8 @@ public class ExpandablePanel extends MainPanel {
 				}
 			}
 
-			@Override public void mouseEntered(MouseEvent e) {
+			@Override
+			public void mouseEntered(MouseEvent e) {
 				super.mouseEntered(e);
 				getPanel().setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}

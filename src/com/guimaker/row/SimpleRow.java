@@ -44,7 +44,8 @@ public class SimpleRow {
 		return fillHorizontallySomeElements(componentsInRow);
 	}
 
-	public SimpleRow fillHorizontallySomeElements(JComponent... filledElements) {
+	public SimpleRow fillHorizontallySomeElements(
+			JComponent... filledElements) {
 		horizontallyFilledElements = filledElements;
 		return this;
 	}
@@ -80,7 +81,8 @@ public class SimpleRow {
 		return color;
 	}
 
-	public SimpleRow nextRow(FillType fillingType, Anchor anchor, JComponent... components) {
+	public SimpleRow nextRow(FillType fillingType, Anchor anchor,
+			JComponent... components) {
 		SimpleRow s = new SimpleRow(builder, fillingType, anchor, components);
 		builder.addRow(s);
 		return s;
@@ -95,7 +97,8 @@ public class SimpleRow {
 	}
 
 	public String toString() {
-		StringBuilder ret = new StringBuilder("Filling type?: " + fillType.name() + " \n");
+		StringBuilder ret = new StringBuilder(
+				"Filling type?: " + fillType.name() + " \n");
 		ret.append("horizontally filled: ");
 		for (JComponent c : horizontallyFilledElements) {
 			ret.append(c.getClass());

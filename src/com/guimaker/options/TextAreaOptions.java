@@ -1,6 +1,7 @@
 package com.guimaker.options;
 
-public class TextAreaOptions extends AbstractTextComponentOptions<TextAreaOptions> {
+public class TextAreaOptions
+		extends AbstractTextComponentOptions<TextAreaOptions> {
 
 	private boolean wrapStyleWord = true;
 	private boolean lineWrap = true;
@@ -10,7 +11,8 @@ public class TextAreaOptions extends AbstractTextComponentOptions<TextAreaOption
 		return moveToNextComponentWhenTabbed;
 	}
 
-	public TextAreaOptions moveToNextComponentWhenTabbed(boolean moveToNextComponentWhenTabbed) {
+	public TextAreaOptions moveToNextComponentWhenTabbed(
+			boolean moveToNextComponentWhenTabbed) {
 		this.moveToNextComponentWhenTabbed = moveToNextComponentWhenTabbed;
 		return getThis();
 	}
@@ -33,7 +35,8 @@ public class TextAreaOptions extends AbstractTextComponentOptions<TextAreaOption
 		return getThis();
 	}
 
-	@Override public TextAreaOptions getThis() {
+	@Override
+	public TextAreaOptions getThis() {
 		return this;
 	}
 

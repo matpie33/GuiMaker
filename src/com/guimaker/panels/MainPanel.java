@@ -510,7 +510,7 @@ public class MainPanel {
 			panel.remove(row);
 			rows.remove(row);
 		}
-		movePanels(Direction.BACKWARD, start, end - start+1);
+		movePanels(Direction.BACKWARD, start, end - start + 1);
 		if (shouldPutRowsHighestAsPossible) {
 			giveLastRowTheRestOfSpace();
 		}

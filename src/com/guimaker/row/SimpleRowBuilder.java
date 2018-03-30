@@ -31,7 +31,8 @@ public class SimpleRowBuilder {
 		return s;
 	}
 
-	public static SimpleRow createRow(FillType fillingType, JComponent... components) {
+	public static SimpleRow createRow(FillType fillingType,
+			JComponent... components) {
 		return createRow(fillingType, Anchor.NORTHWEST, components);
 	}
 

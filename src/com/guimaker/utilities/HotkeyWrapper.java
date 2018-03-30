@@ -26,7 +26,8 @@ public class HotkeyWrapper {
 		return keyMask != KeyModifiers.NONE.getKeyMask();
 	}
 
-	@Override public boolean equals(Object o) {
+	@Override
+	public boolean equals(Object o) {
 		if (o instanceof HotkeyWrapper == false) {
 			return false;
 		}
@@ -34,7 +35,8 @@ public class HotkeyWrapper {
 		return other.keyEvent == keyEvent && other.keyMask == keyMask;
 	}
 
-	@Override public int hashCode() {
+	@Override
+	public int hashCode() {
 		return Objects.hash(keyEvent, keyMask);
 	}
 
