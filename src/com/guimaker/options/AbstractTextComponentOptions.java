@@ -13,9 +13,14 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	private int numberOfRows = 0;
 	private int numberOfColumns = 0;
 	private int maximumCharacters = 0;
+	private String promptWhenEmpty = "";
 
 	AbstractTextComponentOptions() {
 		border(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+	}
+
+	public String getPromptWhenEmpty(){
+		return promptWhenEmpty;
 	}
 
 	public boolean isEditable() {
@@ -36,6 +41,11 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 
 	public int getMaximumCharacters() {
 		return maximumCharacters;
+	}
+
+	public TextOptions promptWhenEmpty(String promptWhenEmpty){
+		this.promptWhenEmpty = promptWhenEmpty;
+		return getThis();
 	}
 
 	public TextOptions focusable(boolean focusable) {

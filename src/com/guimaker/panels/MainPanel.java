@@ -158,49 +158,6 @@ public class MainPanel {
 		}
 	}
 
-	public void insertElementBeforeOtherElement(
-			JComponent elementBeforeWhichWeInsert, JComponent elementToInsert) {
-		insertElementBeforeOtherElement(panel, elementBeforeWhichWeInsert,
-				elementToInsert);
-
-	}
-
-	private void insertElementBeforeOtherElement(Container containerToCheck,
-			JComponent elementBeforeWhichWeInsert, JComponent elementToInsert) {
-		int elementBeforeWeInsertGridX = Integer.MAX_VALUE;
-		boolean found = false;
-		for (Component component : containerToCheck.getComponents()) {
-			LayoutManager layout = containerToCheck.getLayout();
-			GridBagLayout gridBagLayout = (GridBagLayout) layout;
-			GridBagConstraints constraints = gridBagLayout
-					.getConstraints(elementBeforeWhichWeInsert);
-			if (component instanceof JPanel) {
-				insertElementBeforeOtherElement((JPanel) component,
-						elementBeforeWhichWeInsert, elementToInsert);
-			}
-			else if (component == elementBeforeWhichWeInsert
-					|| constraints.gridx > elementBeforeWeInsertGridX) {
-				if (layout instanceof GridBagLayout) {
-					containerToCheck.remove(component);
-					if (!found) {
-						addElement(constraints.gridy, constraints.gridx,
-								containerToCheck, elementToInsert);
-						found = true;
-					}
-					constraints.gridx = constraints.gridx + 1;
-					containerToCheck.add(component, constraints);
-					if (elementBeforeWeInsertGridX == Integer.MAX_VALUE)
-						elementBeforeWeInsertGridX = constraints.gridx - 1;
-				}
-
-			}
-
-		}
-		if (!found) {
-			return;
-		}
-		updateView();
-	}
 
 	private void addElement(int row, int column, Container container,
 			JComponent element) {
@@ -611,6 +568,41 @@ public class MainPanel {
 		c.weighty = 1;
 		panel.add(p.getPanel(), c);
 		return p;
+	}
+
+	public void insertElementInPlaceOfElement(JComponent elementToAdd,
+			JComponent elementToReplace) {
+
+		for (JComponent row: rows){
+			if (row instanceof JPanel == false){
+				continue;
+			}
+			GridBagLayout layout = (GridBagLayout) row.getLayout();
+			GridBagConstraints firstElementToMoveConstraints = layout
+					.getConstraints(elementToReplace);
+			JPanel rowPanel = (JPanel) row;
+			for (Component c : rowPanel.getComponents()) {
+				GridBagConstraints currentConstraints = layout.getConstraints(c);
+				if (currentConstraints.gridx == firstElementToMoveConstraints.gridx &&
+						currentConstraints.gridy == firstElementToMoveConstraints.gridy){
+					row.remove(c);
+					row.add(elementToAdd, currentConstraints);
+					currentConstraints.gridx = currentConstraints.gridx + 1;
+					row.add(c, currentConstraints);
+				}
+				else if (currentConstraints.gridy
+						== firstElementToMoveConstraints.gridy
+						&& currentConstraints.gridx
+						> firstElementToMoveConstraints.gridx) {
+					currentConstraints.gridx = currentConstraints.gridx + 1;
+					row.remove(c);
+					row.add(c, currentConstraints);
+				}
+			}
+		}
+
+
+		updateView();
 	}
 
 	public JComponent insertRow(int number, SimpleRow row) {

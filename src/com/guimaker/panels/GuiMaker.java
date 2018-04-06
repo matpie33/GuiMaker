@@ -123,8 +123,20 @@ public class GuiMaker {
 			textComponent.setFont(
 					textComponent.getFont().deriveFont(options.getFontSize()));
 		}
+		if (!options.getPromptWhenEmpty().isEmpty()) {
+			String prompt = options.getPromptWhenEmpty();
+			textComponent.addFocusListener(
+					CommonActionsMaker.addPromptWhenEmpty(prompt));
+			if (options.getText().isEmpty()) {
+				CommonActionsMaker
+						.setTextFieldToPromptValue(textComponent, prompt);
+			}
+		}
+		if (options.getText() != null && !options.getText().isEmpty()){
+			textComponent.setText(options.getText());
+			textComponent.setForeground(options.getForegroundColor());
+		}
 		textComponent.setOpaque(options.isOpaque());
-		textComponent.setText(options.getText());
 		textComponent.setDisabledTextColor(Color.BLACK);
 		if (options.getMaximumCharacters() > 0) {
 			limitCharactersInTextComponent(textComponent,
@@ -133,7 +145,7 @@ public class GuiMaker {
 		if (options.getBackgroundColor() != null) {
 			textComponent.setBackground(options.getBackgroundColor());
 		}
-		textComponent.setForeground(options.getForegroundColor());
+
 
 	}
 

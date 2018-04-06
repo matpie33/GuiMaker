@@ -4,9 +4,9 @@ import com.guimaker.enums.ComponentType;
 import com.guimaker.panels.GuiMaker;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class CommonActionsMaker {
 
@@ -61,5 +61,35 @@ public class CommonActionsMaker {
 			component.getActionMap().put(actionName, action);
 		}
 	}
+
+	public static FocusListener addPromptWhenEmpty(String promptWhenEmpty) {
+		return new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (((JTextComponent) e.getSource()).getText()
+						.equals(promptWhenEmpty)) {
+					((JTextComponent) e.getSource()).setText("");
+					((JTextComponent) e.getSource()).setForeground(Color.BLACK);
+				}
+				super.focusGained(e);
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				JTextComponent textComponent = (JTextComponent) e.getSource();
+				if (textComponent.getText().isEmpty()) {
+					setTextFieldToPromptValue(textComponent, promptWhenEmpty);
+				}
+				super.focusLost(e);
+			}
+		};
+	}
+
+	public static void setTextFieldToPromptValue(JTextComponent textComponent,
+			String prompt) {
+		textComponent.setText(prompt);
+		textComponent.setForeground(Color.GRAY);
+	}
+
 
 }
