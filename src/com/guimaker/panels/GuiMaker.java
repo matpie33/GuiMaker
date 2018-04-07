@@ -18,16 +18,33 @@ public class GuiMaker {
 
 	public static JLabel createLabel(ComponentOptions options) {
 		JLabel label = new JLabel();
+		setGeneralComponentOptions(options, label);
+		label.setOpaque(false); //otherwise it will have white background
 		label.setText(options.getText());
-		label.setForeground(options.getForegroundColor());
-		label.setBackground(options.getBackgroundColor());
-		label.setBorder(options.getBorder());
+		return label;
+	}
+
+	private static void setGeneralComponentOptions(AbstractComponentOptions options,
+			JComponent component) {
+		component.setForeground(options.getForegroundColor());
+		if (options.getBackgroundColor() != null) {
+			component.setBackground(options.getBackgroundColor());
+		}
+		if (options.hasPreferredSize()) {
+			component.setPreferredSize(options.getPreferredSize());
+		}
+		//TODO assure that the options are not null i.e. give them default values, then remove the assertions from here
+		component.setOpaque(options.isOpaque());
+		component.setBorder(options.getBorder());
+		if (options.getFont() != null) {
+			component.setFont(options.getFont());
+		}
 		if (options.getFontSize() > 0) {
-			label.setFont(label.getFont().deriveFont(options.getFontSize())
-					.deriveFont(Font.PLAIN));
+			component.setFont(
+					component.getFont().deriveFont(options.getFontSize())
+							.deriveFont(Font.PLAIN));
 		}
 
-		return label;
 	}
 
 	public static JTextArea createTextArea(TextAreaOptions options) {
@@ -94,35 +111,26 @@ public class GuiMaker {
 
 	public static JScrollPane createScrollPane(ScrollPaneOptions options) {
 		JScrollPane scrollPane = new JScrollPane(options.getComponentToWrap());
-		scrollPane.setOpaque(options.isOpaque());
+		setGeneralComponentOptions(options, scrollPane);
 		if (options.getBackgroundColor() != null) {
 			scrollPane.getViewport()
 					.setBackground(options.getBackgroundColor());
 		}
-
-		scrollPane.setBorder(options.getBorder());
 		scrollPane.getVerticalScrollBar()
 				.setUnitIncrement(options.getUnitIncrement());
-		scrollPane.setPreferredSize(options.getPreferredSize());
 		return scrollPane;
 	}
 
 	private static void setTextComponentOptions(
 			AbstractTextComponentOptions options,
 			JTextComponent textComponent) {
+		setGeneralComponentOptions(options, textComponent);
 		textComponent.setEditable(options.isEditable());
 		textComponent.setEnabled(options.isEnabled());
-		textComponent.setBorder(options.getBorder());
 		textComponent.setFocusable(options.isFocusable());
 		if (!options.isEditable())
 			textComponent.setHighlighter(null);
-		if (options.hasPreferredSize()) {
-			textComponent.setPreferredSize(options.getPreferredSize());
-		}
-		if (options.getFontSize() > 0) {
-			textComponent.setFont(
-					textComponent.getFont().deriveFont(options.getFontSize()));
-		}
+
 		if (!options.getPromptWhenEmpty().isEmpty()) {
 			String prompt = options.getPromptWhenEmpty();
 			textComponent.addFocusListener(
@@ -132,20 +140,15 @@ public class GuiMaker {
 						.setTextFieldToPromptValue(textComponent, prompt);
 			}
 		}
-		if (options.getText() != null && !options.getText().isEmpty()){
+		if (options.getText() != null && !options.getText().isEmpty()) {
 			textComponent.setText(options.getText());
 			textComponent.setForeground(options.getForegroundColor());
 		}
-		textComponent.setOpaque(options.isOpaque());
 		textComponent.setDisabledTextColor(Color.BLACK);
 		if (options.getMaximumCharacters() > 0) {
 			limitCharactersInTextComponent(textComponent,
 					options.getMaximumCharacters(), options.isDigitsOnly());
 		}
-		if (options.getBackgroundColor() != null) {
-			textComponent.setBackground(options.getBackgroundColor());
-		}
-
 
 	}
 
