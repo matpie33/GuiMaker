@@ -13,9 +13,14 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 	private Dimension preferredSize;
 	private float fontSize;
 	private boolean hasPreferredSize;
+	private Font font;
 
 	public float getFontSize() {
 		return fontSize;
+	}
+
+	public Font getFont() {
+		return font;
 	}
 
 	public Color getForegroundColor() {
@@ -75,6 +80,11 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 	public Options preferredSize(Dimension preferredSize) {
 		this.preferredSize = preferredSize;
 		hasPreferredSize = true;
+		return getThis();
+	}
+
+	public Options font(Font font) {
+		this.font = font;
 		return getThis();
 	}
 
