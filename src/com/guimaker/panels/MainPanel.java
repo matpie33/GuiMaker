@@ -96,7 +96,7 @@ public class MainPanel {
 			JComponent... elements) {
 		addElementsInColumnStartingFromColumn(
 				Arrays.asList(new JComponent[] { componentToFill }),
-				FillType.BOTH, startingColumn, elements);
+				FillType.HORIZONTAL, startingColumn, elements);
 	}
 
 	public void addElementsInColumnStartingFromColumn(
@@ -718,5 +718,6 @@ public class MainPanel {
 	public int getIndexOfPanel(JComponent panel) {
 		return rows.indexOf(panel);
 	}
+
 
 }
