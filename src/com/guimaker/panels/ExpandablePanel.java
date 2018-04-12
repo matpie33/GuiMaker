@@ -3,7 +3,7 @@ package com.guimaker.panels;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.options.ComponentOptions;
-import com.guimaker.row.SimpleRow;
+import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ExpandablePanel extends MainPanel {
 	//TODO hold the rows builded with "add row in column" too
-	private List<SimpleRow> rows = new ArrayList<>();
+	private List<AbstractSimpleRow> rows = new ArrayList<>();
 	private State state;
 	private JLabel titleLabel;
 
@@ -60,7 +60,7 @@ public class ExpandablePanel extends MainPanel {
 
 	}
 
-	public void createRow(SimpleRow row) {
+	public void createRow(AbstractSimpleRow row) {
 		rows.add(row);
 	}
 
@@ -81,8 +81,8 @@ public class ExpandablePanel extends MainPanel {
 		titleLabelText = titleLabelText.replace(EXPAND_HINT, SHRINK_HINT);
 		titleLabel.setText(titleLabelText);
 		state = State.EXPANDED;
-		for (SimpleRow simpleRow : rows) {
-			super.addRow(simpleRow);
+		for (AbstractSimpleRow abstractSimpleRow : rows) {
+			super.addRow(abstractSimpleRow);
 		}
 		updateView();
 	}

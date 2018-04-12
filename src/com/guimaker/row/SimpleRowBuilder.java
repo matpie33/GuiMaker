@@ -4,50 +4,35 @@ import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SimpleRowBuilder {
 
-	private List<SimpleRow> rows;
-
-	private SimpleRowBuilder() {
-		rows = new ArrayList<>();
-	}
-
-	public List<SimpleRow> getRows() {
-		return rows;
-	}
-
-	public void addRow(SimpleRow row) {
-		rows.add(row);
-	}
-
 	public static SimpleRow createRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
-		SimpleRowBuilder builder = new SimpleRowBuilder();
-		SimpleRow s = new SimpleRow(builder, fillingType, anchor, components);
-		builder.addRow(s);
+		SimpleRow s = new SimpleRow(fillingType, anchor, components);
 		return s;
 	}
 
-	public static SimpleRow createRow(FillType fillingType,
+	public static AbstractSimpleRow createRow(FillType fillingType,
 			JComponent... components) {
 		return createRow(fillingType, Anchor.NORTHWEST, components);
 	}
 
-	public static SimpleRow createRowStartingFromColumn(int columnNumber,
-			FillType fillingType, Anchor anchor, JComponent... components) {
-		SimpleRow simpleRow = createRow(fillingType, anchor, components);
-		simpleRow.setColumnToPutRowInto(columnNumber);
-		return simpleRow;
+	public static AbstractSimpleRow createRowStartingFromColumn(
+			int columnNumber, FillType fillingType, Anchor anchor,
+			JComponent... components) {
+		AbstractSimpleRow abstractSimpleRow = createRow(fillingType, anchor,
+				components);
+		abstractSimpleRow.setColumnToPutRowInto(columnNumber);
+		return abstractSimpleRow;
 	}
 
-	public static SimpleRow createRowStartingFromColumn(int columnNumber,
-			FillType fillingType, JComponent... components) {
-		SimpleRow simpleRow = createRow(fillingType, components);
-		simpleRow.setColumnToPutRowInto(columnNumber);
-		return simpleRow;
+	public static AbstractSimpleRow createRowStartingFromColumn(
+			int columnNumber, FillType fillingType, JComponent... components) {
+		AbstractSimpleRow abstractSimpleRow = createRow(fillingType,
+				components);
+		abstractSimpleRow.setColumnToPutRowInto(columnNumber);
+		return abstractSimpleRow;
 	}
 
 }

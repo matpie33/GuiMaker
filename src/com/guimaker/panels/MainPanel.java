@@ -1,7 +1,8 @@
 package com.guimaker.panels;
 
 import com.guimaker.enums.FillType;
-import com.guimaker.row.SimpleRow;
+import com.guimaker.row.NextRow;
+import com.guimaker.row.AbstractSimpleRow;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -92,23 +93,23 @@ public class MainPanel {
 	}
 
 	public void addRowsOfElementsInColumnStartingFromColumn(
-			SimpleRow simpleRow) {
-		for (SimpleRow simpleRow1 : simpleRow.getBuilder().getRows()) {
-			addElementsInColumnStartingFromColumn(simpleRow1);
+			NextRow nextRow) {
+		for (AbstractSimpleRow abstractSimpleRow1 : nextRow.getAllRows()) {
+			addElementsInColumnStartingFromColumn(abstractSimpleRow1);
 		}
 	}
 
-	public void addElementsInColumnStartingFromColumn(SimpleRow simpleRow) {
-		JComponent[] elements = simpleRow.getComponents();
+	public void addElementsInColumnStartingFromColumn(AbstractSimpleRow abstractSimpleRow) {
+		JComponent[] elements = abstractSimpleRow.getComponents();
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
 		}
 		int indexOfElement = 0;
 		List<JComponent> verticallyFilledElements = Arrays
-				.asList(simpleRow.getVerticallyFilledElements());
+				.asList(abstractSimpleRow.getVerticallyFilledElements());
 		List<JComponent> horizontallyFilledElements = Arrays
-				.asList(simpleRow.getHorizontallyFilledElements());
-		int startingColumn = simpleRow.getColumnToPutRowInto();
+				.asList(abstractSimpleRow.getHorizontallyFilledElements());
+		int startingColumn = abstractSimpleRow.getColumnToPutRowInto();
 		for (JComponent element : elements) {
 
 			if (element == null) {
@@ -119,7 +120,7 @@ public class MainPanel {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
 			c.gridy = numberOfRows + rows.size();
-			c.anchor = simpleRow.getAnchor().getAnchor();
+			c.anchor = abstractSimpleRow.getAnchor().getAnchor();
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, 0, yGap, xGap);
@@ -172,19 +173,19 @@ public class MainPanel {
 
 	}
 
-	public JComponent addRows(SimpleRow simpleRows) {
+	public JComponent addRows(NextRow nextRow) {
 		JComponent panel = null;
-		for (SimpleRow row : simpleRows.getBuilder().getRows()) {
+		for (AbstractSimpleRow row : nextRow.getAllRows()) {
 			panel = addRow(row, rows.size());
 		}
 		return panel;
 	}
 
-	public JComponent addRow(SimpleRow simpleRows) {
-		return addRow(simpleRows, rows.size());
+	public JComponent addRow(AbstractSimpleRow abstractSimpleRows) {
+		return addRow(abstractSimpleRows, rows.size());
 	}
 
-	private JComponent addRow(SimpleRow row, int rowNumber) {
+	private JComponent addRow(AbstractSimpleRow row, int rowNumber) {
 		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
 				mapComponentToFilling(row), row.isUseAllExtraVerticalSpace());
 		if (panel == null) {
@@ -203,7 +204,7 @@ public class MainPanel {
 		return panel;
 	}
 
-	private Map<JComponent, Integer> mapComponentToFilling(SimpleRow row) {
+	private Map<JComponent, Integer> mapComponentToFilling(AbstractSimpleRow row) {
 		Map<JComponent, Integer> componentsFilling = new HashMap<JComponent, Integer>();
 		JComponent[] horizontal = row.getHorizontallyFilledElements();
 		List<JComponent> vertical = new ArrayList<JComponent>(
@@ -302,7 +303,7 @@ public class MainPanel {
 		return gbc;
 	}
 
-	private void createConstraintsAndAdd(JComponent p, SimpleRow row,
+	private void createConstraintsAndAdd(JComponent p, AbstractSimpleRow row,
 			int rowNumber) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridy = rowNumber;
@@ -590,7 +591,7 @@ public class MainPanel {
 		updateView();
 	}
 
-	public JComponent insertRow(int number, SimpleRow row) {
+	public JComponent insertRow(int number, AbstractSimpleRow row) {
 		movePanels(Direction.FORWARD, number, 1);
 		return addRow(row, number);
 	}
