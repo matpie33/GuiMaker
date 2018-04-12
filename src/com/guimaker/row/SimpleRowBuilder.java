@@ -36,4 +36,18 @@ public class SimpleRowBuilder {
 		return createRow(fillingType, Anchor.NORTHWEST, components);
 	}
 
+	public static SimpleRow createRowStartingFromColumn(int columnNumber,
+			FillType fillingType, Anchor anchor, JComponent... components) {
+		SimpleRow simpleRow = createRow(fillingType, anchor, components);
+		simpleRow.setColumnToPutRowInto(columnNumber);
+		return simpleRow;
+	}
+
+	public static SimpleRow createRowStartingFromColumn(int columnNumber,
+			FillType fillingType, JComponent... components) {
+		SimpleRow simpleRow = createRow(fillingType, components);
+		simpleRow.setColumnToPutRowInto(columnNumber);
+		return simpleRow;
+	}
+
 }

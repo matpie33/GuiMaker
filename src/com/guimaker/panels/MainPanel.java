@@ -91,42 +91,47 @@ public class MainPanel {
 		setBackground(originalBackgroundColor);
 	}
 
-	public void addElementsInColumnStartingFromColumn(
-			JComponent componentToFill, int startingColumn,
-			JComponent... elements) {
-		addElementsInColumnStartingFromColumn(
-				Arrays.asList(new JComponent[] { componentToFill }),
-				FillType.HORIZONTAL, startingColumn, elements);
+	public void addRowsOfElementsInColumnStartingFromColumn(
+			SimpleRow simpleRow) {
+		for (SimpleRow simpleRow1 : simpleRow.getBuilder().getRows()) {
+			addElementsInColumnStartingFromColumn(simpleRow1);
+		}
 	}
 
-	public void addElementsInColumnStartingFromColumn(
-			List<JComponent> componentsToFill, FillType fillType,
-			int startingColumn, JComponent... elements) {
+	public void addElementsInColumnStartingFromColumn(SimpleRow simpleRow) {
+		JComponent[] elements = simpleRow.getComponents();
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
 		}
 		int indexOfElement = 0;
+		List<JComponent> verticallyFilledElements = Arrays
+				.asList(simpleRow.getVerticallyFilledElements());
+		List<JComponent> horizontallyFilledElements = Arrays
+				.asList(simpleRow.getHorizontallyFilledElements());
+		int startingColumn = simpleRow.getColumnToPutRowInto();
 		for (JComponent element : elements) {
+
+			if (element == null) {
+				startingColumn++;
+				continue;
+			}
 			setWeightyToZeroForPreviousRow();
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
 			c.gridy = numberOfRows + rows.size();
-			c.anchor = GridBagConstraints.NORTHWEST;
+			c.anchor = simpleRow.getAnchor().getAnchor();
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, 0, yGap, xGap);
 			c.weighty = 1;
 
-			if (componentsToFill.contains(element)) {
-				c.fill = fillType.getGridBagConstraintsFilling();
+			if (horizontallyFilledElements.contains(element)) {
+				c.fill = FillType.HORIZONTAL.getGridBagConstraintsFilling();
 				c.weightx = 1;
-				if (c.fill == GridBagConstraints.BOTH
-						|| c.fill == GridBagConstraints.VERTICAL) {
-					c.weighty = 1;
-				}
+
 			}
-			else {
-				c.weightx = 0;
+			if (verticallyFilledElements.contains(element)) {
+				c.weighty = 1;
 			}
 			if (indexOfElement == elements.length - 1
 					&& indexOfElement == numberOfColumns - 1) {
@@ -158,7 +163,6 @@ public class MainPanel {
 		}
 	}
 
-
 	private void addElement(int row, int column, Container container,
 			JComponent element) {
 		GridBagConstraints constraints = initializeGridBagConstraints();
@@ -166,27 +170,6 @@ public class MainPanel {
 		constraints.gridy = row;
 		container.add(element, constraints);
 
-	}
-
-	public void addElementsInColumnStartingFromColumn(
-			JComponent componentToFill, int startingColumn, FillType fillType,
-			JComponent... elements) {
-		addElementsInColumnStartingFromColumn(
-				Arrays.asList(new JComponent[] { componentToFill }), fillType,
-				startingColumn, elements);
-	}
-
-	public void addElementsInColumnStartingFromColumn(
-			List<JComponent> componentsToFill, int startingColumn,
-			JComponent... elements) {
-		addElementsInColumnStartingFromColumn(componentsToFill, FillType.BOTH,
-				startingColumn, elements);
-	}
-
-	public void addElementsInColumnStartingFromColumn(int columnNumber,
-			JComponent... elements) {
-		addElementsInColumnStartingFromColumn(
-				Arrays.asList(new JComponent[] {}), columnNumber, elements);
 	}
 
 	public JComponent addRows(SimpleRow simpleRows) {
@@ -573,8 +556,8 @@ public class MainPanel {
 	public void insertElementInPlaceOfElement(JComponent elementToAdd,
 			JComponent elementToReplace) {
 
-		for (JComponent row: rows){
-			if (row instanceof JPanel == false){
+		for (JComponent row : rows) {
+			if (row instanceof JPanel == false) {
 				continue;
 			}
 			GridBagLayout layout = (GridBagLayout) row.getLayout();
@@ -582,9 +565,12 @@ public class MainPanel {
 					.getConstraints(elementToReplace);
 			JPanel rowPanel = (JPanel) row;
 			for (Component c : rowPanel.getComponents()) {
-				GridBagConstraints currentConstraints = layout.getConstraints(c);
-				if (currentConstraints.gridx == firstElementToMoveConstraints.gridx &&
-						currentConstraints.gridy == firstElementToMoveConstraints.gridy){
+				GridBagConstraints currentConstraints = layout
+						.getConstraints(c);
+				if (currentConstraints.gridx
+						== firstElementToMoveConstraints.gridx
+						&& currentConstraints.gridy
+						== firstElementToMoveConstraints.gridy) {
 					row.remove(c);
 					row.add(elementToAdd, currentConstraints);
 					currentConstraints.gridx = currentConstraints.gridx + 1;
@@ -600,7 +586,6 @@ public class MainPanel {
 				}
 			}
 		}
-
 
 		updateView();
 	}
@@ -718,6 +703,5 @@ public class MainPanel {
 	public int getIndexOfPanel(JComponent panel) {
 		return rows.indexOf(panel);
 	}
-
 
 }

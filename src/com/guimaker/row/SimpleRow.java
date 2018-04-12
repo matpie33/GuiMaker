@@ -18,6 +18,7 @@ public class SimpleRow {
 	private boolean borderEnabled;
 	private boolean useAllExtraVerticalSpace = false;
 	private SimpleRowBuilder builder;
+	private int columnToPutRowInto;
 
 	public Border getBorder() {
 		return border;
@@ -26,6 +27,10 @@ public class SimpleRow {
 	public SimpleRow setBorder(Border border) {
 		this.border = border;
 		return this;
+	}
+
+	public int getColumnToPutRowInto() {
+		return columnToPutRowInto;
 	}
 
 	private Border border;
@@ -84,6 +89,7 @@ public class SimpleRow {
 	public SimpleRow nextRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
 		SimpleRow s = new SimpleRow(builder, fillingType, anchor, components);
+		s.setColumnToPutRowInto(getColumnToPutRowInto());
 		builder.addRow(s);
 		return s;
 	}
@@ -155,4 +161,8 @@ public class SimpleRow {
 		return builder;
 	}
 
+	public SimpleRow setColumnToPutRowInto(int columnToPutRowInto) {
+		this.columnToPutRowInto = columnToPutRowInto;
+		return this;
+	}
 }
