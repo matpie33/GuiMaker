@@ -87,9 +87,9 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return color;
 	}
 
-	public NextRow nextRow(FillType fillingType, Anchor anchor,
+	public ComplexRow nextRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
-		NextRow s = new NextRow( fillingType, anchor, components);
+		ComplexRow s = new ComplexRow( fillingType, anchor, components);
 		s.setColumnToPutRowInto(getColumnToPutRowInto());
 		RowsHolder rowsHolder = new RowsHolder();
 		rowsHolder.addRow(this);
@@ -98,11 +98,11 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return s;
 	}
 
-	public NextRow nextRow(FillType fillingType, JComponent... components) {
+	public ComplexRow nextRow(FillType fillingType, JComponent... components) {
 		return nextRow(fillingType, anchor, components);
 	}
 
-	public NextRow nextRow(JComponent... components) {
+	public ComplexRow nextRow(JComponent... components) {
 		return nextRow(fillType, Anchor.NORTHWEST, components);
 	}
 

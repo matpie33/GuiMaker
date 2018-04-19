@@ -1,7 +1,7 @@
 package com.guimaker.panels;
 
 import com.guimaker.enums.FillType;
-import com.guimaker.row.NextRow;
+import com.guimaker.row.ComplexRow;
 import com.guimaker.row.AbstractSimpleRow;
 
 import javax.swing.*;
@@ -93,8 +93,8 @@ public class MainPanel {
 	}
 
 	public void addRowsOfElementsInColumnStartingFromColumn(
-			NextRow nextRow) {
-		for (AbstractSimpleRow abstractSimpleRow1 : nextRow.getAllRows()) {
+			ComplexRow complexRow) {
+		for (AbstractSimpleRow abstractSimpleRow1 : complexRow.getAllRows()) {
 			addElementsInColumnStartingFromColumn(abstractSimpleRow1);
 		}
 	}
@@ -173,9 +173,9 @@ public class MainPanel {
 
 	}
 
-	public JComponent addRows(NextRow nextRow) {
+	public JComponent addRows(ComplexRow complexRow) {
 		JComponent panel = null;
-		for (AbstractSimpleRow row : nextRow.getAllRows()) {
+		for (AbstractSimpleRow row : complexRow.getAllRows()) {
 			panel = addRow(row, rows.size());
 		}
 		return panel;

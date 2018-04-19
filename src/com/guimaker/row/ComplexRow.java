@@ -6,10 +6,10 @@ import com.guimaker.enums.FillType;
 import javax.swing.*;
 import java.util.List;
 
-public class NextRow extends AbstractSimpleRow<NextRow> {
+public class ComplexRow extends AbstractSimpleRow<ComplexRow> {
 	private RowsHolder rowsHolder;
 
-	public NextRow(FillType fillingType, Anchor anchor,
+	public ComplexRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
 		super(fillingType, anchor, components);
 	}
@@ -19,9 +19,9 @@ public class NextRow extends AbstractSimpleRow<NextRow> {
 	}
 
 	@Override
-	public NextRow nextRow(FillType fillingType, Anchor anchor,
+	public ComplexRow nextRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
-		NextRow s = new NextRow(fillingType, anchor, components);
+		ComplexRow s = new ComplexRow(fillingType, anchor, components);
 		s.setRowsHolder(rowsHolder);
 		s.setColumnToPutRowInto(getColumnToPutRowInto());
 		rowsHolder.addRow(s);
@@ -29,17 +29,17 @@ public class NextRow extends AbstractSimpleRow<NextRow> {
 	}
 
 	@Override
-	public NextRow nextRow(FillType fillingType, JComponent... components) {
+	public ComplexRow nextRow(FillType fillingType, JComponent... components) {
 		return nextRow(fillingType, getAnchor(), components);
 	}
 
 	@Override
-	public NextRow nextRow(JComponent... components) {
+	public ComplexRow nextRow(JComponent... components) {
 		return nextRow(getFillType(), Anchor.NORTHWEST, components);
 	}
 
 	@Override
-	public NextRow getThis() {
+	public ComplexRow getThis() {
 		return this;
 	}
 
