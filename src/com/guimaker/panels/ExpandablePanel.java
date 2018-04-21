@@ -35,7 +35,7 @@ public class ExpandablePanel extends MainPanel {
 	}
 
 	private void initialize(String title) {
-		titleLabel = GuiMaker.createLabel(
+		titleLabel = GuiElementsCreator.createLabel(
 				new ComponentOptions().text(title + " " + EXPAND_HINT));
 		addRow(SimpleRowBuilder
 				.createRow(FillType.NONE, Anchor.WEST, titleLabel));

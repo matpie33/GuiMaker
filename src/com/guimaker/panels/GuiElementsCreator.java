@@ -2,7 +2,7 @@ package com.guimaker.panels;
 
 import com.guimaker.enums.ComponentType;
 import com.guimaker.options.*;
-import com.guimaker.utilities.CommonActionsMaker;
+import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.HotkeyWrapper;
 import com.guimaker.utilities.KeyModifiers;
 import com.guimaker.utilities.LimitDocumentFilter;
@@ -14,7 +14,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class GuiMaker {
+public class GuiElementsCreator {
 
 	public static JLabel createLabel(ComponentOptions options) {
 		JLabel label = new JLabel();
@@ -79,7 +79,7 @@ public class GuiMaker {
 		AbstractButton component = createButtonlikeComponent(type, message,
 				actionOnClick);
 		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);
-		CommonActionsMaker
+		CommonActionsCreator
 				.addHotkey(hotkey, wrapper.getKeyMask(), actionOnClick,
 						component);
 		return component;
@@ -134,9 +134,9 @@ public class GuiMaker {
 		if (!options.getPromptWhenEmpty().isEmpty()) {
 			String prompt = options.getPromptWhenEmpty();
 			textComponent.addFocusListener(
-					CommonActionsMaker.addPromptWhenEmpty(prompt));
+					CommonActionsCreator.addPromptWhenEmpty(prompt));
 			if (options.getText().isEmpty()) {
-				CommonActionsMaker
+				CommonActionsCreator
 						.setTextFieldToPromptValue(textComponent, prompt);
 			}
 		}

@@ -2,7 +2,7 @@ package com.guimaker.utilities;
 
 import com.guimaker.enums.ComponentType;
 import com.guimaker.options.ComponentOptions;
-import com.guimaker.panels.GuiMaker;
+import com.guimaker.panels.GuiElementsCreator;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -11,7 +11,7 @@ public class ElementCopier {
 
 	public static AbstractButton copyButton(AbstractButton buttonToCopy) {
 		ActionListener[] actionListeners = buttonToCopy.getActionListeners();
-		AbstractButton copiedButton = GuiMaker
+		AbstractButton copiedButton = GuiElementsCreator
 				.createButtonlikeComponent(ComponentType.BUTTON,
 						buttonToCopy.getText(), null);
 		for (ActionListener actionListener : actionListeners) {
@@ -21,7 +21,7 @@ public class ElementCopier {
 	}
 
 	public static JLabel copyLabel(JLabel labelToCopy) {
-		JLabel copiedLabel = GuiMaker.createLabel(new ComponentOptions());
+		JLabel copiedLabel = GuiElementsCreator.createLabel(new ComponentOptions());
 		copiedLabel.setText(labelToCopy.getText());
 		return copiedLabel;
 	}

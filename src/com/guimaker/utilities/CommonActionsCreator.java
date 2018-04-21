@@ -1,18 +1,19 @@
 package com.guimaker.utilities;
 
 import com.guimaker.enums.ComponentType;
-import com.guimaker.panels.GuiMaker;
+import com.guimaker.panels.GuiElementsCreator;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 
-public class CommonActionsMaker {
+public class CommonActionsCreator {
 
 	public static AbstractButton createButtonDispose(String text,
 			int keyEventName, final Window window) {
-		return GuiMaker.createButtonlikeComponent(ComponentType.BUTTON, text,
+		return GuiElementsCreator
+				.createButtonlikeComponent(ComponentType.BUTTON, text,
 				createDisposeAction(window), keyEventName);
 	}
 
@@ -37,7 +38,7 @@ public class CommonActionsMaker {
 				dialog.setVisible(false);
 			}
 		};
-		return GuiMaker
+		return GuiElementsCreator
 				.createButtonlikeComponent(ComponentType.BUTTON, text, action,
 						keyEventName);
 	}
