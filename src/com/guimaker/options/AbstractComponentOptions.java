@@ -6,7 +6,7 @@ import java.awt.*;
 public abstract class AbstractComponentOptions<Options extends AbstractComponentOptions<Options>> {
 
 	private boolean opaque = true;
-	private Color foregroundColor = Color.BLACK;
+	private Color foregroundColor = Color.WHITE;
 	private Border border;
 	private Color backgroundColor;
 	private String text;

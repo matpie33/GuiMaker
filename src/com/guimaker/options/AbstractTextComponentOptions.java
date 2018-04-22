@@ -2,6 +2,7 @@ package com.guimaker.options;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.awt.*;
 
 public abstract class AbstractTextComponentOptions<TextOptions extends AbstractTextComponentOptions<TextOptions>>
 		extends AbstractComponentOptions<TextOptions> {
@@ -14,6 +15,7 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	private int numberOfColumns = 0;
 	private int maximumCharacters = 0;
 	private String promptWhenEmpty = "";
+	private boolean selectable = false;
 
 	AbstractTextComponentOptions() {
 		border(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -87,4 +89,12 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 		return focusable;
 	}
 
+	public TextOptions selectable(boolean selectable) {
+		this.selectable = selectable;
+		return getThis();
+	}
+
+	public boolean isSelectable() {
+		return selectable;
+	}
 }

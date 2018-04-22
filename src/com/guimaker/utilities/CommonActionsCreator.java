@@ -1,6 +1,7 @@
 package com.guimaker.utilities;
 
-import com.guimaker.enums.ComponentType;
+import com.guimaker.enums.ButtonType;
+import com.guimaker.options.ButtonOptions;
 import com.guimaker.panels.GuiElementsCreator;
 
 import javax.swing.*;
@@ -13,8 +14,8 @@ public class CommonActionsCreator {
 	public static AbstractButton createButtonDispose(String text,
 			int keyEventName, final Window window) {
 		return GuiElementsCreator
-				.createButtonlikeComponent(ComponentType.BUTTON, text,
-				createDisposeAction(window), keyEventName);
+				.createButtonlikeComponent(new ButtonOptions(ButtonType.BUTTON),
+						createDisposeAction(window), keyEventName);
 	}
 
 	public static AbstractAction createDisposeAction(final Window dialog) {
@@ -39,7 +40,8 @@ public class CommonActionsCreator {
 			}
 		};
 		return GuiElementsCreator
-				.createButtonlikeComponent(ComponentType.BUTTON, text, action,
+				.createButtonlikeComponent(new ButtonOptions(ButtonType.BUTTON),
+						action,
 						keyEventName);
 	}
 
@@ -70,7 +72,7 @@ public class CommonActionsCreator {
 				if (((JTextComponent) e.getSource()).getText()
 						.equals(promptWhenEmpty)) {
 					((JTextComponent) e.getSource()).setText("");
-					((JTextComponent) e.getSource()).setForeground(Color.BLACK);
+					((JTextComponent) e.getSource()).setForeground(Color.WHITE);
 				}
 				super.focusGained(e);
 			}
@@ -89,7 +91,7 @@ public class CommonActionsCreator {
 	public static void setTextFieldToPromptValue(JTextComponent textComponent,
 			String prompt) {
 		textComponent.setText(prompt);
-		textComponent.setForeground(Color.GRAY);
+		textComponent.setForeground(Color.WHITE);
 	}
 
 

@@ -1,6 +1,6 @@
 package com.guimaker.enums;
 
-public enum ComponentType {
+public enum ButtonType {
 
 	BUTTON, RADIOBUTTON, CHECKBOX
 

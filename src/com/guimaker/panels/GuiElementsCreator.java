@@ -1,6 +1,5 @@
 package com.guimaker.panels;
 
-import com.guimaker.enums.ComponentType;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.HotkeyWrapper;
@@ -10,9 +9,7 @@ import com.guimaker.utilities.LimitDocumentFilter;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 public class GuiElementsCreator {
 
@@ -24,8 +21,8 @@ public class GuiElementsCreator {
 		return label;
 	}
 
-	private static void setGeneralComponentOptions(AbstractComponentOptions options,
-			JComponent component) {
+	private static void setGeneralComponentOptions(
+			AbstractComponentOptions options, JComponent component) {
 		component.setForeground(options.getForegroundColor());
 		if (options.getBackgroundColor() != null) {
 			component.setBackground(options.getBackgroundColor());
@@ -35,7 +32,10 @@ public class GuiElementsCreator {
 		}
 		//TODO assure that the options are not null i.e. give them default values, then remove the assertions from here
 		component.setOpaque(options.isOpaque());
-		component.setBorder(options.getBorder());
+		if (options.getBorder() != null) {
+			component.setBorder(options.getBorder());
+		}
+
 		if (options.getFont() != null) {
 			component.setFont(options.getFont());
 		}
@@ -73,10 +73,10 @@ public class GuiElementsCreator {
 		};
 	}
 
-	private static AbstractButton createButtonlikeComponent(ComponentType type,
-			String message, AbstractAction actionOnClick, int hotkey,
+	private static AbstractButton createButtonlikeComponent(
+			ButtonOptions options, AbstractAction actionOnClick, int hotkey,
 			KeyModifiers keyModifier) {
-		AbstractButton component = createButtonlikeComponent(type, message,
+		AbstractButton component = createButtonlikeComponent(options,
 				actionOnClick);
 		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);
 		CommonActionsCreator
@@ -85,27 +85,32 @@ public class GuiElementsCreator {
 		return component;
 	}
 
-	public static AbstractButton createButtonlikeComponent(ComponentType type,
-			String message, AbstractAction actionOnClick) {
+	public static AbstractButton createButtonlikeComponent(
+			ButtonOptions options, AbstractAction actionOnClick) {
 		AbstractButton component;
-		switch (type) {
+		String text = options.getText();
+		switch (options.getButtonType()) {
 		case BUTTON:
-			component = new JButton(message);
+			component = new JButton(text);
 			break;
 		case RADIOBUTTON:
-			component = new JRadioButton(message);
+			component = new JRadioButton(text);
+			break;
+		case CHECKBOX:
+			component = new JCheckBox(text);
 			break;
 		default:
 			component = null;
 			break;
 		}
+		setGeneralComponentOptions(options, component);
 		component.addActionListener(actionOnClick);
 		return component;
 	}
 
-	public static AbstractButton createButtonlikeComponent(ComponentType type,
-			String message, AbstractAction actionOnClick, int hotkey) {
-		return createButtonlikeComponent(type, message, actionOnClick, hotkey,
+	public static AbstractButton createButtonlikeComponent(
+			ButtonOptions options, AbstractAction actionOnClick, int hotkey) {
+		return createButtonlikeComponent(options, actionOnClick, hotkey,
 				KeyModifiers.NONE);
 	}
 
@@ -115,6 +120,12 @@ public class GuiElementsCreator {
 		if (options.getBackgroundColor() != null) {
 			scrollPane.getViewport()
 					.setBackground(options.getBackgroundColor());
+		}
+		if (!options.isOpaque()) {
+			scrollPane.getViewport().setOpaque(false);
+		}
+		if (options.getBorder() == null) {
+			scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		}
 		scrollPane.getVerticalScrollBar()
 				.setUnitIncrement(options.getUnitIncrement());
@@ -128,6 +139,7 @@ public class GuiElementsCreator {
 		textComponent.setEditable(options.isEditable());
 		textComponent.setEnabled(options.isEnabled());
 		textComponent.setFocusable(options.isFocusable());
+
 		if (!options.isEditable())
 			textComponent.setHighlighter(null);
 
@@ -156,7 +168,30 @@ public class GuiElementsCreator {
 		JTextField textField = new JTextField(options.getText(),
 				options.getNumberOfColumns());
 		setTextComponentOptions(options, textField);
+		if (options.isEditable()) {
+			textField.setBorder(
+					BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
+		}
+		else {
+			textField.setBorder(null);
+		}
+		textField.setOpaque(false);
+		if (options.isSelectable()) {
+			changeCursorOnMouseEnter(textField);
+			textField.setBackground(Color.GRAY);
+		}
+		textField.setCaretColor(Color.WHITE);
 		return textField;
+	}
+
+	private static void changeCursorOnMouseEnter(JTextField textField) {
+		textField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				super.mouseEntered(e);
+				textField.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
 	}
 
 	private static void limitCharactersInTextComponent(JTextComponent textField,

@@ -15,7 +15,7 @@ public class MainPanel {
 	private List<JComponent> rows;
 	private JPanel panel;
 	private int gapBetweenRows = 4;
-	private int gapInsideRow = 3;
+	private int gapInsideRow = 10;
 	private int gapRightSide;
 	private final boolean shouldPutRowsHighestAsPossible;
 	private Border borderToUse;
