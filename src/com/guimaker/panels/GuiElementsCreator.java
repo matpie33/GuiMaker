@@ -138,6 +138,19 @@ public class GuiElementsCreator {
 		setGeneralComponentOptions(options, textComponent);
 		textComponent.setEditable(options.isEditable());
 		textComponent.setEnabled(options.isEnabled());
+		if (options.isEditable()) {
+			textComponent.setBorder(
+					BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
+		}
+		else {
+			textComponent.setBorder(null);
+		}
+		textComponent.setOpaque(false);
+		if (options.isSelectable()) {
+			changeCursorOnMouseEnter(textComponent);
+			textComponent.setBackground(Color.GRAY);
+		}
+		textComponent.setCaretColor(Color.WHITE);
 		textComponent.setFocusable(options.isFocusable());
 
 		if (!options.isEditable())
@@ -168,23 +181,11 @@ public class GuiElementsCreator {
 		JTextField textField = new JTextField(options.getText(),
 				options.getNumberOfColumns());
 		setTextComponentOptions(options, textField);
-		if (options.isEditable()) {
-			textField.setBorder(
-					BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
-		}
-		else {
-			textField.setBorder(null);
-		}
-		textField.setOpaque(false);
-		if (options.isSelectable()) {
-			changeCursorOnMouseEnter(textField);
-			textField.setBackground(Color.GRAY);
-		}
-		textField.setCaretColor(Color.WHITE);
+
 		return textField;
 	}
 
-	private static void changeCursorOnMouseEnter(JTextField textField) {
+	private static void changeCursorOnMouseEnter(JTextComponent textField) {
 		textField.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
