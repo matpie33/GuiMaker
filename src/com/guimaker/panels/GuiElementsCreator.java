@@ -137,7 +137,6 @@ public class GuiElementsCreator {
 			JTextComponent textComponent) {
 		setGeneralComponentOptions(options, textComponent);
 		textComponent.setEditable(options.isEditable());
-		textComponent.setEnabled(options.isEnabled());
 		if (options.isEditable()) {
 			textComponent.setBorder(
 					BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));

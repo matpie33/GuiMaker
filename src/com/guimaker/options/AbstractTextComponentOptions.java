@@ -8,7 +8,6 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 		extends AbstractComponentOptions<TextOptions> {
 
 	private boolean editable = true;
-	private boolean enabled = true;
 	private boolean focusable = true;
 	private boolean digitsOnly = false;
 	private int numberOfRows = 0;
@@ -29,9 +28,6 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 		return editable;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
 
 	public int getNumberOfRows() {
 		return numberOfRows;
@@ -57,11 +53,6 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 
 	public TextOptions editable(boolean editable) {
 		this.editable = editable;
-		return getThis();
-	}
-
-	public TextOptions enabled(boolean enabled) {
-		this.enabled = enabled;
 		return getThis();
 	}
 
