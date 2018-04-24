@@ -123,7 +123,7 @@ public class MainPanel {
 			c.anchor = abstractSimpleRow.getAnchor().getAnchor();
 			int xGap = gapInsideRow;
 			int yGap = gapBetweenRows;
-			c.insets = new Insets(yGap, 0, yGap, xGap);
+			c.insets = new Insets(yGap, xGap, yGap, xGap);
 			c.weighty = 1;
 
 			if (horizontallyFilledElements.contains(element)) {
