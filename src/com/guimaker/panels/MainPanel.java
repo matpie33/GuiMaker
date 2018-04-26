@@ -92,14 +92,14 @@ public class MainPanel {
 		setBackground(originalBackgroundColor);
 	}
 
-	public void addRowsOfElementsInColumnStartingFromColumn(
+	public void addRowsOfElementsInColumn(
 			ComplexRow complexRow) {
 		for (AbstractSimpleRow abstractSimpleRow1 : complexRow.getAllRows()) {
-			addElementsInColumnStartingFromColumn(abstractSimpleRow1);
+			addElementsInColumn(abstractSimpleRow1);
 		}
 	}
 
-	public void addElementsInColumnStartingFromColumn(AbstractSimpleRow abstractSimpleRow) {
+	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
 		JComponent[] elements = abstractSimpleRow.getComponents();
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
