@@ -14,7 +14,7 @@ public class HotkeyWrapper {
 		this.keyEvent = keyEvent;
 	}
 
-	public int getKeyMask() {
+	public int getKeyModifier() {
 		return keyMask;
 	}
 

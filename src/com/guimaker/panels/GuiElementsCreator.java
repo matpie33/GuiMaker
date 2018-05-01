@@ -80,7 +80,7 @@ public class GuiElementsCreator {
 				actionOnClick);
 		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);
 		CommonActionsCreator
-				.addHotkey(hotkey, wrapper.getKeyMask(), actionOnClick,
+				.addHotkey(hotkey, wrapper.getKeyModifier(), actionOnClick,
 						component);
 		return component;
 	}

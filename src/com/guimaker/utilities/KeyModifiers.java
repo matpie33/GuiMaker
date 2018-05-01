@@ -15,4 +15,13 @@ public enum KeyModifiers {
 		return keyMask;
 	}
 
+	public static KeyModifiers of(int keyMask) {
+		for (KeyModifiers keyModifiers : values()) {
+			if (keyModifiers.getKeyMask() == keyMask) {
+				return keyModifiers;
+			}
+		}
+		throw new IllegalArgumentException("Key mask doesnt exist: " + keyMask);
+	}
+
 }

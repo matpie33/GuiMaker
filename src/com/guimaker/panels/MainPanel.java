@@ -1,12 +1,18 @@
 package com.guimaker.panels;
 
 import com.guimaker.enums.FillType;
-import com.guimaker.row.ComplexRow;
+import com.guimaker.enums.PanelDisplayMode;
+import com.guimaker.inputSelection.InputSelectionManager;
+import com.guimaker.inputSelection.ListInputsSelectionManager;
+import com.guimaker.model.PanelConfiguration;
 import com.guimaker.row.AbstractSimpleRow;
+import com.guimaker.row.ComplexRow;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -24,6 +30,7 @@ public class MainPanel {
 	private int numberOfRows;
 	private Color originalBackgroundColor;
 	private boolean skipInsetsForExtremeEdges = false;
+	private InputSelectionManager inputSelectionManager;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -59,7 +66,13 @@ public class MainPanel {
 
 	public MainPanel(Color color, boolean putRowsHighestAsPossible,
 			boolean scrollHorizontally) {
+		this(color, putRowsHighestAsPossible, scrollHorizontally,
+				new PanelConfiguration(PanelDisplayMode.EDIT));
+	}
 
+	public MainPanel(Color color, boolean putRowsHighestAsPossible,
+			boolean scrollHorizontally, PanelConfiguration panelConfiguration) {
+		//TODO move all the params to panel configuration class
 		numberOfColumns = 0;
 		numberOfRows = 0;
 		originalBackgroundColor = color;
@@ -80,6 +93,8 @@ public class MainPanel {
 
 		panel.setLayout(new GridBagLayout());
 		rows = new LinkedList<>();
+		inputSelectionManager = new InputSelectionManager(
+				panelConfiguration.getPanelDisplayMode());
 
 	}
 
@@ -92,8 +107,7 @@ public class MainPanel {
 		setBackground(originalBackgroundColor);
 	}
 
-	public void addRowsOfElementsInColumn(
-			ComplexRow complexRow) {
+	public void addRowsOfElementsInColumn(ComplexRow complexRow) {
 		for (AbstractSimpleRow abstractSimpleRow1 : complexRow.getAllRows()) {
 			addElementsInColumn(abstractSimpleRow1);
 		}
@@ -204,7 +218,8 @@ public class MainPanel {
 		return panel;
 	}
 
-	private Map<JComponent, Integer> mapComponentToFilling(AbstractSimpleRow row) {
+	private Map<JComponent, Integer> mapComponentToFilling(
+			AbstractSimpleRow row) {
 		Map<JComponent, Integer> componentsFilling = new HashMap<JComponent, Integer>();
 		JComponent[] horizontal = row.getHorizontallyFilledElements();
 		List<JComponent> vertical = new ArrayList<JComponent>(
@@ -250,9 +265,15 @@ public class MainPanel {
 		gbc.gridy = 0;
 
 		int i = 0;
+		JTextComponent firstTextComponentInRow = null;
 		for (JComponent compo : components) {
 			if (compo == null) {
 				continue;
+			}
+			boolean isTextInput = manageTextInput(compo,
+					firstTextComponentInRow);
+			if (isTextInput && firstTextComponentInRow == null) {
+				firstTextComponentInRow = (JTextComponent) compo;
 			}
 			if (componentsFilling.containsKey(compo)) {
 				gbc.fill = componentsFilling.get(compo);
@@ -290,6 +311,24 @@ public class MainPanel {
 		}
 
 		return p;
+	}
+
+	private boolean manageTextInput(JComponent compo,
+			JTextComponent firstTextComponentInRow) {
+
+		if (compo instanceof JTextComponent) {
+			JTextComponent input = (JTextComponent) compo;
+			inputSelectionManager.addInput(input, firstTextComponentInRow);
+			compo.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked (MouseEvent e){
+					inputSelectionManager.toggleSelection(input);
+				}
+			});
+			return true;
+		}
+		return false;
+
 	}
 
 	private GridBagConstraints initializeGridBagConstraints() {
@@ -508,6 +547,27 @@ public class MainPanel {
 		g.setConstraints(rows.get(lastRow), cd);
 	}
 
+	public JTextComponent getSelectedInput() {
+		return inputSelectionManager.getSelectedInput();
+	}
+
+	public boolean hasSelectedInput() {
+		return inputSelectionManager.hasSelectedInput();
+	}
+
+	public int getSelectedInputIndex() {
+		return inputSelectionManager.getSelectedInputIndex();
+	}
+
+	public void selectInputInColumn(int columnNumber) {
+		inputSelectionManager.selectInputInColumn(columnNumber);
+	}
+
+	public void addManager(
+			ListInputsSelectionManager listInputsSelectionManager) {
+		inputSelectionManager.addManager(listInputsSelectionManager);
+	}
+
 	private enum Direction {
 		FORWARD, BACKWARD;
 	}
@@ -704,5 +764,14 @@ public class MainPanel {
 	public int getIndexOfPanel(JComponent panel) {
 		return rows.indexOf(panel);
 	}
+
+	public void selectNextInputInSameRow() {
+		inputSelectionManager.selectNextInputInSameRow();
+	}
+
+	public void selectPreviousInputInSameRow() {
+		inputSelectionManager.selectPreviousInputInSameRow();
+	}
+
 
 }
