@@ -136,6 +136,7 @@ public class GuiElementsCreator {
 			AbstractTextComponentOptions options,
 			JTextComponent textComponent) {
 		setGeneralComponentOptions(options, textComponent);
+		removeEnterKeyBehaviourOfInput(textComponent);
 		textComponent.setEditable(options.isEditable());
 		if (options.isEditable()) {
 			textComponent.setBorder(
@@ -209,6 +210,11 @@ public class GuiElementsCreator {
 				textPaneOptions.getTextAlignment().getStyleConstant());
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		return textPane;
+	}
+
+	private static void removeEnterKeyBehaviourOfInput(JTextComponent input) {
+		InputMap inputMap = input.getInputMap();
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "");
 	}
 
 	public static JScrollPane createTextPaneWrappedInScrollPane(
