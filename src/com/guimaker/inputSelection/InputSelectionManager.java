@@ -60,9 +60,8 @@ public class InputSelectionManager {
 				.getInputsList().indexOf(currentlySelectedComponent);
 		if (rowContainingCurrentlySelectedInput.getInputsList().size()
 				> indexOfCurrentlySelectedInput + 1) {
-			rowContainingCurrentlySelectedInput.getInputsList()
-					.get(indexOfCurrentlySelectedInput + 1)
-					.requestFocusInWindow();
+			selectInput(rowContainingCurrentlySelectedInput.getInputsList()
+					.get(indexOfCurrentlySelectedInput + 1));
 		}
 		else {
 			notifyThatNextDoesntExist(MoveDirection.RIGHT);
@@ -82,53 +81,8 @@ public class InputSelectionManager {
 		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
 				.getInputsList().indexOf(currentlySelectedComponent);
 		if (indexOfCurrentlySelectedInput > 0) {
-			rowContainingCurrentlySelectedInput.getInputsList()
-					.get(indexOfCurrentlySelectedInput - 1)
-					.requestFocusInWindow();
-		}
-	}
-
-	public void selectInputBelowCurrent() {
-		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap
-				.get(currentlySelectedComponent);
-		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
-				.getInputsList().indexOf(currentlySelectedComponent);
-		int rowNumberOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
-				.getRowNumber();
-		TextInputsList rowBelowCurrent = getRowByNumber(
-				rowNumberOfCurrentlySelectedInput + 1);
-		if (rowBelowCurrent == null) {
-			notifyThatNextDoesntExist(MoveDirection.BELOW);
-		}
-		else {
-			List<JTextComponent> inputsBelowCurrent = rowBelowCurrent
-					.getInputsList();
-			if (inputsBelowCurrent.size() >= indexOfCurrentlySelectedInput) {
-				selectInput(
-						inputsBelowCurrent.get(indexOfCurrentlySelectedInput));
-			}
-			else {
-				selectInput(
-						inputsBelowCurrent.get(inputsBelowCurrent.size() - 1));
-			}
-
-		}
-
-	}
-
-	public void selectInputAboveCurrent() {
-		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap
-				.get(currentlySelectedComponent);
-		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
-				.getInputsList().indexOf(currentlySelectedComponent);
-		int rowNumberOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
-				.getRowNumber();
-		TextInputsList rowBelowCurrent = getRowByNumber(
-				rowNumberOfCurrentlySelectedInput - 1);
-		if (rowBelowCurrent != null) {
-			List<JTextComponent> inputsBelowCurrent = rowBelowCurrent
-					.getInputsList();
-			selectInput(inputsBelowCurrent.get(indexOfCurrentlySelectedInput));
+			selectInput(rowContainingCurrentlySelectedInput.getInputsList()
+					.get(indexOfCurrentlySelectedInput - 1));
 		}
 	}
 
@@ -187,7 +141,7 @@ public class InputSelectionManager {
 		List<JTextComponent> inputsList = inputToRowMap.entrySet().iterator()
 				.next().getValue().getInputsList();
 		if (inputsList.size() > columnNumber) {
-			inputsList.get(columnNumber).requestFocusInWindow();
+			selectInput(inputsList.get(columnNumber));
 		}
 
 	}

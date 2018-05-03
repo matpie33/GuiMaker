@@ -12,8 +12,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -34,6 +34,7 @@ public class MainPanel {
 	private Color originalBackgroundColor;
 	private boolean skipInsetsForExtremeEdges = false;
 	private InputSelectionManager inputSelectionManager;
+	private PanelDisplayMode displayMode;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -96,8 +97,8 @@ public class MainPanel {
 
 		panel.setLayout(new GridBagLayout());
 		rows = new LinkedList<>();
-		inputSelectionManager = new InputSelectionManager(
-				panelConfiguration.getPanelDisplayMode());
+		displayMode = panelConfiguration.getPanelDisplayMode();
+		inputSelectionManager = new InputSelectionManager(displayMode);
 
 	}
 
@@ -322,12 +323,28 @@ public class MainPanel {
 		if (compo instanceof JTextComponent) {
 			JTextComponent input = (JTextComponent) compo;
 			inputSelectionManager.addInput(input, firstTextComponentInRow);
-			compo.addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusGained(FocusEvent e) {
-					inputSelectionManager.toggleSelection(input);
-				}
-			});
+			if (displayMode.equals(PanelDisplayMode.EDIT)) {
+				compo.addFocusListener(new FocusListener() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						inputSelectionManager.selectInput(input);
+					}
+
+					@Override
+					public void focusLost(FocusEvent e) {
+						inputSelectionManager.deselectInput(input);
+					}
+				});
+			}
+			else {
+				compo.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						inputSelectionManager.toggleSelection(input);
+					}
+				});
+			}
+
 			return true;
 		}
 		return false;
