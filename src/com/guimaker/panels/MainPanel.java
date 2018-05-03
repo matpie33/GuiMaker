@@ -12,7 +12,10 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
@@ -319,9 +322,9 @@ public class MainPanel {
 		if (compo instanceof JTextComponent) {
 			JTextComponent input = (JTextComponent) compo;
 			inputSelectionManager.addInput(input, firstTextComponentInRow);
-			compo.addMouseListener(new MouseAdapter() {
+			compo.addFocusListener(new FocusAdapter() {
 				@Override
-				public void mouseClicked (MouseEvent e){
+				public void focusGained(FocusEvent e) {
 					inputSelectionManager.toggleSelection(input);
 				}
 			});
@@ -617,6 +620,7 @@ public class MainPanel {
 	public void insertElementInPlaceOfElement(JComponent elementToAdd,
 			JComponent elementToReplace) {
 
+		boolean first = true;
 		for (JComponent row : rows) {
 			if (row instanceof JPanel == false) {
 				continue;
@@ -628,6 +632,13 @@ public class MainPanel {
 			for (Component c : rowPanel.getComponents()) {
 				GridBagConstraints currentConstraints = layout
 						.getConstraints(c);
+				if (elementToAdd instanceof JTextComponent
+						&& currentConstraints.gridy
+						== firstElementToMoveConstraints.gridy
+						&& c instanceof JTextComponent && first) {
+					manageTextInput(elementToAdd, (JTextComponent) c);
+					first = false;
+				}
 				if (currentConstraints.gridx
 						== firstElementToMoveConstraints.gridx
 						&& currentConstraints.gridy
@@ -772,6 +783,5 @@ public class MainPanel {
 	public void selectPreviousInputInSameRow() {
 		inputSelectionManager.selectPreviousInputInSameRow();
 	}
-
 
 }

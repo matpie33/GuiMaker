@@ -60,8 +60,9 @@ public class InputSelectionManager {
 				.getInputsList().indexOf(currentlySelectedComponent);
 		if (rowContainingCurrentlySelectedInput.getInputsList().size()
 				> indexOfCurrentlySelectedInput + 1) {
-			selectInput(rowContainingCurrentlySelectedInput.getInputsList()
-					.get(indexOfCurrentlySelectedInput + 1));
+			rowContainingCurrentlySelectedInput.getInputsList()
+					.get(indexOfCurrentlySelectedInput + 1)
+					.requestFocusInWindow();
 		}
 		else {
 			notifyThatNextDoesntExist(MoveDirection.RIGHT);
@@ -81,8 +82,9 @@ public class InputSelectionManager {
 		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
 				.getInputsList().indexOf(currentlySelectedComponent);
 		if (indexOfCurrentlySelectedInput > 0) {
-			selectInput(rowContainingCurrentlySelectedInput.getInputsList()
-					.get(indexOfCurrentlySelectedInput - 1));
+			rowContainingCurrentlySelectedInput.getInputsList()
+					.get(indexOfCurrentlySelectedInput - 1)
+					.requestFocusInWindow();
 		}
 	}
 
@@ -139,8 +141,8 @@ public class InputSelectionManager {
 		return null;
 	}
 
-	private void selectInput(JTextComponent input) {
-		if (manager != null){
+	public void selectInput(JTextComponent input) {
+		if (manager != null) {
 			manager.clearOtherInputsManagersSelections();
 		}
 		if (currentlySelectedComponent != null) {
@@ -184,8 +186,8 @@ public class InputSelectionManager {
 	public void selectInputInColumn(int columnNumber) {
 		List<JTextComponent> inputsList = inputToRowMap.entrySet().iterator()
 				.next().getValue().getInputsList();
-		if (inputsList.size()> columnNumber){
-			selectInput(inputsList.get(columnNumber));
+		if (inputsList.size() > columnNumber) {
+			inputsList.get(columnNumber).requestFocusInWindow();
 		}
 
 	}
