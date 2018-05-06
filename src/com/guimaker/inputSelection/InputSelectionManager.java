@@ -71,7 +71,7 @@ public class InputSelectionManager {
 
 	private void notifyThatNextDoesntExist(MoveDirection moveDirection) {
 		switchBetweenInputsFailListeners.forEach(listener -> listener
-				.switchFailed(currentlySelectedComponent, moveDirection));
+				.switchBetweenInputsFailed(currentlySelectedComponent, moveDirection));
 
 	}
 

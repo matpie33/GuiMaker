@@ -85,6 +85,10 @@ public class GuiElementsCreator {
 		return component;
 	}
 
+	public static AbstractButton createButtonLikeComponent (ButtonOptions options){
+		return createButtonlikeComponent(options, null);
+	}
+
 	public static AbstractButton createButtonlikeComponent(
 			ButtonOptions options, AbstractAction actionOnClick) {
 		AbstractButton component;
@@ -181,7 +185,6 @@ public class GuiElementsCreator {
 		JTextField textField = new JTextField(options.getText(),
 				options.getNumberOfColumns());
 		setTextComponentOptions(options, textField);
-
 		return textField;
 	}
 

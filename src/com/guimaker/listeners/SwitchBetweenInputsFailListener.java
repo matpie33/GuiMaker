@@ -6,6 +6,6 @@ import javax.swing.text.JTextComponent;
 
 public interface SwitchBetweenInputsFailListener {
 
-	public void switchFailed (JTextComponent input, MoveDirection direction);
+	public void switchBetweenInputsFailed(JTextComponent input, MoveDirection direction);
 
 }

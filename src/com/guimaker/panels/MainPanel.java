@@ -4,6 +4,7 @@ import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.inputSelection.InputSelectionManager;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
+import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.ComplexRow;
@@ -100,6 +101,11 @@ public class MainPanel {
 		displayMode = panelConfiguration.getPanelDisplayMode();
 		inputSelectionManager = new InputSelectionManager(displayMode);
 
+	}
+
+	public void addSwitchBetweenInputsFailedListener(
+			SwitchBetweenInputsFailListener listener) {
+		inputSelectionManager.addSwitchBetweenInputsFailListener(listener);
 	}
 
 	public void setSkipInsetsForExtremeEdges(
@@ -297,7 +303,8 @@ public class MainPanel {
 				gbc.weightx = 0;
 				gbc.weighty = 0;
 			}
-			if (i == components.length - 1) {
+			if (i == components.length - 1
+					&& gbc.fill != GridBagConstraints.HORIZONTAL) {
 				gbc.weightx = 1;
 			}
 			if (skipInsetsForExtremeEdges) {

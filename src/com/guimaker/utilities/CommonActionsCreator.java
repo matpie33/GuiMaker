@@ -71,7 +71,7 @@ public class CommonActionsCreator {
 			public void focusGained(FocusEvent e) {
 				if (((JTextComponent) e.getSource()).getText()
 						.equals(promptWhenEmpty)) {
-					((JTextComponent) e.getSource()).setText("");
+					((JTextComponent) e.getSource()).selectAll();
 					((JTextComponent) e.getSource()).setForeground(Color.WHITE);
 				}
 				super.focusGained(e);
