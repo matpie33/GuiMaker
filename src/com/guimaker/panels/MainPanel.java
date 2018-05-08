@@ -149,6 +149,9 @@ public class MainPanel {
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, xGap, yGap, xGap);
 			c.weighty = 1;
+			if (displayMode.equals(PanelDisplayMode.VIEW)){
+				element.setEnabled(false);
+			}
 
 			if (horizontallyFilledElements.contains(element)) {
 				c.fill = FillType.HORIZONTAL.getGridBagConstraintsFilling();
@@ -284,6 +287,9 @@ public class MainPanel {
 					firstTextComponentInRow);
 			if (isTextInput && firstTextComponentInRow == null) {
 				firstTextComponentInRow = (JTextComponent) compo;
+			}
+			if (displayMode.equals(PanelDisplayMode.VIEW)){
+				compo.setEnabled(false);
 			}
 			if (componentsFilling.containsKey(compo)) {
 				gbc.fill = componentsFilling.get(compo);
@@ -593,6 +599,37 @@ public class MainPanel {
 	public void addManager(
 			ListInputsSelectionManager listInputsSelectionManager) {
 		inputSelectionManager.addManager(listInputsSelectionManager);
+	}
+
+	public void toggleEnabledState() {
+		boolean enableAllInputs = displayMode.equals(PanelDisplayMode.VIEW);
+		toggleDisplayMode(enableAllInputs);
+		for (JComponent row : rows) {
+			if (row instanceof JPanel) {
+				enableOrDisableAllElementsInPanel((JPanel) row, enableAllInputs);
+			}
+		}
+	}
+
+	private void toggleDisplayMode(boolean enable) {
+		if (enable){
+			displayMode = PanelDisplayMode.EDIT;
+		}
+		else{
+			displayMode = PanelDisplayMode.VIEW;
+		}
+	}
+
+	private void enableOrDisableAllElementsInPanel(JPanel panel,
+			boolean enableInputs) {
+		for (Component element : panel.getComponents()) {
+			if (element instanceof JPanel) {
+				enableOrDisableAllElementsInPanel((JPanel) element, enableInputs);
+			}
+			else {
+				element.setEnabled(enableInputs);
+			}
+		}
 	}
 
 	private enum Direction {

@@ -85,7 +85,8 @@ public class GuiElementsCreator {
 		return component;
 	}
 
-	public static AbstractButton createButtonLikeComponent (ButtonOptions options){
+	public static AbstractButton createButtonLikeComponent(
+			ButtonOptions options) {
 		return createButtonlikeComponent(options, null);
 	}
 
@@ -179,6 +180,42 @@ public class GuiElementsCreator {
 					options.getMaximumCharacters(), options.isDigitsOnly());
 		}
 
+	}
+
+	public static JComboBox createCombobox(ComboboxOptions options) {
+		JComboBox comboBox = new JComboBox();
+		setGeneralComponentOptions(options, comboBox);
+		options.getComboboxValues().forEach(value -> comboBox.addItem(value));
+		comboBox.setPrototypeDisplayValue("________");
+		ListCellRenderer defaultRenderer = comboBox.getRenderer();
+		setBackgroundColorOnSelection(options, comboBox, defaultRenderer);
+		return comboBox;
+	}
+
+	private static void setBackgroundColorOnSelection(ComboboxOptions options,
+			JComboBox comboBox, ListCellRenderer defaultRenderer) {
+		comboBox.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList list,
+					Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Component c = defaultRenderer.getListCellRendererComponent(list, value,
+						index, isSelected, cellHasFocus);
+				Color backgroundColor = options.getBackgroundColor();
+				if (c instanceof JLabel) {
+					if (isSelected) {
+						c.setBackground(Color.WHITE);
+					} else {
+						c.setBackground(backgroundColor);
+					}
+				} else {
+					c.setBackground(backgroundColor);
+					c = super.getListCellRendererComponent(list, value, index, isSelected,
+							cellHasFocus);
+				}
+				return c;
+			}
+		});
 	}
 
 	public static JTextField createTextField(TextComponentOptions options) {

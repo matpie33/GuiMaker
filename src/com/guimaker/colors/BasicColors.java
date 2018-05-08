@@ -15,5 +15,6 @@ public class BasicColors {
 	public static final Color MEDIUM_BLUE = new Color(0, 0, 145);
 	public static final Color WATER_BLUE = new Color(0, 98, 145);
 	public static final Color MEDIUM_PURPLE = new Color(44, 6, 106);
+	public static final Color LIGHT_BLUE_2 = new Color(81, 81, 255);
 
 }
