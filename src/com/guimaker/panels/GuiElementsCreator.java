@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 
 public class GuiElementsCreator {
 
@@ -186,10 +187,26 @@ public class GuiElementsCreator {
 		JComboBox comboBox = new JComboBox();
 		setGeneralComponentOptions(options, comboBox);
 		options.getComboboxValues().forEach(value -> comboBox.addItem(value));
-		comboBox.setPrototypeDisplayValue("________");
+		comboBox.setPrototypeDisplayValue(
+				options.getComboboxValues().isEmpty() ?
+						"________" :
+						longestOfStrings(options.getComboboxValues()));
 		ListCellRenderer defaultRenderer = comboBox.getRenderer();
 		setBackgroundColorOnSelection(options, comboBox, defaultRenderer);
 		return comboBox;
+	}
+
+	private static String longestOfStrings(List<String> strings) {
+		int maxLength = 0;
+		int indexOfLongestString = 0;
+		for (int i = 0; i < strings.size(); i++) {
+			String s = strings.get(i);
+			if (s.length() > maxLength) {
+				maxLength = s.length();
+				indexOfLongestString = i;
+			}
+		}
+		return strings.get(indexOfLongestString);
 	}
 
 	private static void setBackgroundColorOnSelection(ComboboxOptions options,
@@ -199,19 +216,22 @@ public class GuiElementsCreator {
 			public Component getListCellRendererComponent(JList list,
 					Object value, int index, boolean isSelected,
 					boolean cellHasFocus) {
-				Component c = defaultRenderer.getListCellRendererComponent(list, value,
-						index, isSelected, cellHasFocus);
+				Component c = defaultRenderer
+						.getListCellRendererComponent(list, value, index,
+								isSelected, cellHasFocus);
 				Color backgroundColor = options.getBackgroundColor();
 				if (c instanceof JLabel) {
 					if (isSelected) {
 						c.setBackground(Color.WHITE);
-					} else {
+					}
+					else {
 						c.setBackground(backgroundColor);
 					}
-				} else {
+				}
+				else {
 					c.setBackground(backgroundColor);
-					c = super.getListCellRendererComponent(list, value, index, isSelected,
-							cellHasFocus);
+					c = super.getListCellRendererComponent(list, value, index,
+							isSelected, cellHasFocus);
 				}
 				return c;
 			}
