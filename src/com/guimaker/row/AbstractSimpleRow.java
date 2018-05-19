@@ -19,6 +19,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	private boolean useAllExtraVerticalSpace = false;
 	private int columnToPutRowInto;
 	private Border border;
+	private boolean shouldAddRow = true;
 
 	public Border getBorder() {
 		return border;
@@ -37,8 +38,8 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return fillType;
 	}
 
-	public AbstractSimpleRow( FillType fillingType,
-			Anchor anchor, JComponent... components) {
+	public AbstractSimpleRow(FillType fillingType, Anchor anchor,
+			JComponent... components) {
 		fillType = fillingType;
 		this.anchor = anchor;
 		this.componentsInRow = components;
@@ -50,9 +51,13 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return fillHorizontallySomeElements(componentsInRow);
 	}
 
-	public Row fillHorizontallySomeElements(
-			JComponent... filledElements) {
+	public Row fillHorizontallySomeElements(JComponent... filledElements) {
 		horizontallyFilledElements = filledElements;
+		return getThis();
+	}
+
+	public Row onlyAddIf(boolean condition) {
+		shouldAddRow = condition;
 		return getThis();
 	}
 
@@ -87,9 +92,13 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return color;
 	}
 
+	public boolean shouldAddRow() {
+		return shouldAddRow;
+	}
+
 	public ComplexRow nextRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
-		ComplexRow s = new ComplexRow( fillingType, anchor, components);
+		ComplexRow s = new ComplexRow(fillingType, anchor, components);
 		s.setColumnToPutRowInto(getColumnToPutRowInto());
 		RowsHolder rowsHolder = new RowsHolder();
 		rowsHolder.addRow(this);

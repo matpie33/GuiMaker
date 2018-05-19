@@ -124,6 +124,9 @@ public class MainPanel {
 	}
 
 	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
+		if (!abstractSimpleRow.shouldAddRow()){
+			return;
+		}
 		JComponent[] elements = abstractSimpleRow.getComponents();
 		if (numberOfColumns < elements.length) {
 			numberOfColumns = elements.length;
@@ -213,6 +216,9 @@ public class MainPanel {
 	}
 
 	private JComponent addRow(AbstractSimpleRow row, int rowNumber) {
+		if (!row.shouldAddRow()){
+			return null;
+		}
 		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
 				mapComponentToFilling(row), row.isUseAllExtraVerticalSpace());
 		if (panel == null) {

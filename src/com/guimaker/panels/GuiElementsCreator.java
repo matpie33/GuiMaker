@@ -175,7 +175,7 @@ public class GuiElementsCreator {
 			textComponent.setText(options.getText());
 			textComponent.setForeground(options.getForegroundColor());
 		}
-		textComponent.setDisabledTextColor(Color.BLACK);
+		textComponent.setDisabledTextColor(Color.WHITE);
 		if (options.getMaximumCharacters() > 0) {
 			limitCharactersInTextComponent(textComponent,
 					options.getMaximumCharacters(), options.isDigitsOnly());
