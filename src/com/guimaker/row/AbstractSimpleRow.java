@@ -112,7 +112,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	}
 
 	public ComplexRow nextRow(JComponent... components) {
-		return nextRow(fillType, Anchor.NORTHWEST, components);
+		return nextRow(fillType, getAnchor(), components);
 	}
 
 	public String toString() {

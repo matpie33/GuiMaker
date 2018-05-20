@@ -8,6 +8,7 @@ import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.ComplexRow;
+import com.guimaker.row.SimpleRowBuilder;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -36,6 +37,7 @@ public class MainPanel {
 	private boolean skipInsetsForExtremeEdges = false;
 	private InputSelectionManager inputSelectionManager;
 	private PanelDisplayMode displayMode;
+	private ColumnPanelCreator columnPanelCreator;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -77,6 +79,9 @@ public class MainPanel {
 
 	public MainPanel(Color color, boolean putRowsHighestAsPossible,
 			boolean scrollHorizontally, PanelConfiguration panelConfiguration) {
+		columnPanelCreator = new ColumnPanelCreator(
+				panelConfiguration.getPanelDisplayMode(), gapInsideRow,
+				gapBetweenRows);
 		//TODO move all the params to panel configuration class
 		numberOfColumns = 0;
 		numberOfRows = 0;
@@ -124,74 +129,12 @@ public class MainPanel {
 	}
 
 	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
-		if (!abstractSimpleRow.shouldAddRow()){
-			return;
+		if (!columnPanelCreator.isInitialized()) {
+			columnPanelCreator.initializePanel();
+			addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+					columnPanelCreator.getPanel()));
 		}
-		JComponent[] elements = abstractSimpleRow.getComponents();
-		if (numberOfColumns < elements.length) {
-			numberOfColumns = elements.length;
-		}
-		int indexOfElement = 0;
-		List<JComponent> verticallyFilledElements = Arrays
-				.asList(abstractSimpleRow.getVerticallyFilledElements());
-		List<JComponent> horizontallyFilledElements = Arrays
-				.asList(abstractSimpleRow.getHorizontallyFilledElements());
-		int startingColumn = abstractSimpleRow.getColumnToPutRowInto();
-		for (JComponent element : elements) {
-
-			if (element == null) {
-				startingColumn++;
-				continue;
-			}
-			setWeightyToZeroForPreviousRow();
-			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = startingColumn++;
-			c.gridy = numberOfRows + rows.size();
-			c.anchor = abstractSimpleRow.getAnchor().getAnchor();
-			int xGap = gapInsideRow;
-			int yGap = gapBetweenRows;
-			c.insets = new Insets(yGap, xGap, yGap, xGap);
-			c.weighty = 1;
-			if (displayMode.equals(PanelDisplayMode.VIEW)){
-				element.setEnabled(false);
-			}
-
-			if (horizontallyFilledElements.contains(element)) {
-				c.fill = FillType.HORIZONTAL.getGridBagConstraintsFilling();
-				c.weightx = 1;
-
-			}
-			if (verticallyFilledElements.contains(element)) {
-				c.weighty = 1;
-			}
-			if (indexOfElement == elements.length - 1
-					&& indexOfElement == numberOfColumns - 1) {
-				c.weightx = 1;
-			}
-
-			panel.add(element, c);
-			indexOfElement++;
-		}
-		numberOfRows++;
-	}
-
-	private void setWeightyToZeroForPreviousRow() {
-		for (Component component : panel.getComponents()) {
-			GridBagLayout gridBagLayout = (GridBagLayout) panel.getLayout();
-			GridBagConstraints constraints = gridBagLayout
-					.getConstraints(component);
-			if (constraints.gridy == numberOfRows - 1 + rows.size()) {
-				constraints.weighty = 0;
-				if ((constraints.weightx == 1
-						&& constraints.fill != GridBagConstraints.HORIZONTAL
-						&& constraints.fill != GridBagConstraints.BOTH)
-						&& constraints.gridx < numberOfColumns) {
-					constraints.weightx = 0;
-				}
-				panel.remove(component);
-				panel.add(component, constraints);
-			}
-		}
+		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
 	}
 
 	private void addElement(int row, int column, Container container,
@@ -216,7 +159,7 @@ public class MainPanel {
 	}
 
 	private JComponent addRow(AbstractSimpleRow row, int rowNumber) {
-		if (!row.shouldAddRow()){
+		if (!row.shouldAddRow()) {
 			return null;
 		}
 		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
@@ -282,6 +225,7 @@ public class MainPanel {
 		GridBagConstraints gbc = initializeGridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
 
 		int i = 0;
 		JTextComponent firstTextComponentInRow = null;
@@ -294,7 +238,7 @@ public class MainPanel {
 			if (isTextInput && firstTextComponentInRow == null) {
 				firstTextComponentInRow = (JTextComponent) compo;
 			}
-			if (displayMode.equals(PanelDisplayMode.VIEW)){
+			if (displayMode.equals(PanelDisplayMode.VIEW)) {
 				compo.setEnabled(false);
 			}
 			if (componentsFilling.containsKey(compo)) {
@@ -612,16 +556,17 @@ public class MainPanel {
 		toggleDisplayMode(enableAllInputs);
 		for (JComponent row : rows) {
 			if (row instanceof JPanel) {
-				enableOrDisableAllElementsInPanel((JPanel) row, enableAllInputs);
+				enableOrDisableAllElementsInPanel((JPanel) row,
+						enableAllInputs);
 			}
 		}
 	}
 
 	private void toggleDisplayMode(boolean enable) {
-		if (enable){
+		if (enable) {
 			displayMode = PanelDisplayMode.EDIT;
 		}
-		else{
+		else {
 			displayMode = PanelDisplayMode.VIEW;
 		}
 	}
@@ -630,7 +575,8 @@ public class MainPanel {
 			boolean enableInputs) {
 		for (Component element : panel.getComponents()) {
 			if (element instanceof JPanel) {
-				enableOrDisableAllElementsInPanel((JPanel) element, enableInputs);
+				enableOrDisableAllElementsInPanel((JPanel) element,
+						enableInputs);
 			}
 			else {
 				element.setEnabled(enableInputs);
@@ -803,6 +749,7 @@ public class MainPanel {
 	}
 
 	public void clear() {
+		columnPanelCreator.clear();
 		panel.removeAll();
 		rows.clear();
 	}

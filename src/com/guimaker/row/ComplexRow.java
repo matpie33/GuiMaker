@@ -35,7 +35,7 @@ public class ComplexRow extends AbstractSimpleRow<ComplexRow> {
 
 	@Override
 	public ComplexRow nextRow(JComponent... components) {
-		return nextRow(getFillType(), Anchor.NORTHWEST, components);
+		return nextRow(getFillType(), getAnchor(), components);
 	}
 
 	@Override
