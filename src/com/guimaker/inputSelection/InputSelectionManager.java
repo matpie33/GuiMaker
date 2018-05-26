@@ -54,6 +54,11 @@ public class InputSelectionManager {
 	}
 
 	public void selectNextInputInSameRow() {
+		if (currentlySelectedComponent == null) {
+			selectInput(inputToRowMap.values().iterator().next().getInputsList()
+					.get(0));
+			return;
+		}
 		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap
 				.get(currentlySelectedComponent);
 		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
@@ -71,7 +76,8 @@ public class InputSelectionManager {
 
 	private void notifyThatNextDoesntExist(MoveDirection moveDirection) {
 		switchBetweenInputsFailListeners.forEach(listener -> listener
-				.switchBetweenInputsFailed(currentlySelectedComponent, moveDirection));
+				.switchBetweenInputsFailed(currentlySelectedComponent,
+						moveDirection));
 
 	}
 
