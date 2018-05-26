@@ -1,5 +1,6 @@
 package com.guimaker.panels;
 
+import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.inputSelection.InputSelectionManager;
@@ -132,6 +133,7 @@ public class MainPanel {
 		if (!columnPanelCreator.isInitialized()) {
 			columnPanelCreator.initializePanel();
 			addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+					Anchor.NORTHWEST,
 					columnPanelCreator.getPanel()));
 		}
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
