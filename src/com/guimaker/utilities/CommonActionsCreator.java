@@ -41,8 +41,7 @@ public class CommonActionsCreator {
 		};
 		return GuiElementsCreator
 				.createButtonlikeComponent(new ButtonOptions(ButtonType.BUTTON),
-						action,
-						keyEventName);
+						action, keyEventName);
 	}
 
 	public static void addHotkey(int keyEvent, int keyModifier,
@@ -52,6 +51,12 @@ public class CommonActionsCreator {
 				.put(KeyStroke.getKeyStroke(keyEvent, keyModifier),
 						KeyEvent.getKeyText(keyEvent));
 		component.getActionMap().put(KeyEvent.getKeyText(keyEvent), a);
+	}
+
+	public static void addHotkey(HotkeyWrapper hotkeyWrapper, AbstractAction a,
+			JComponent component) {
+		addHotkey(hotkeyWrapper.getKeyEvent(), hotkeyWrapper.getKeyModifier(),
+				a, component);
 	}
 
 	public static void makeBindings(JComponent component, KeyStroke key,
@@ -93,6 +98,5 @@ public class CommonActionsCreator {
 		textComponent.setText(prompt);
 		textComponent.setForeground(Color.WHITE);
 	}
-
 
 }
