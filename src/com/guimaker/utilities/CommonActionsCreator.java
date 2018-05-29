@@ -7,7 +7,10 @@ import com.guimaker.panels.GuiElementsCreator;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class CommonActionsCreator {
 
@@ -47,10 +50,11 @@ public class CommonActionsCreator {
 	public static void addHotkey(int keyEvent, int keyModifier,
 			AbstractAction a, JComponent component) {
 
+		KeyStroke keyStroke = KeyStroke.getKeyStroke(keyEvent, keyModifier);
+		String keyRepresentation = keyStroke.toString();
 		component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-				.put(KeyStroke.getKeyStroke(keyEvent, keyModifier),
-						KeyEvent.getKeyText(keyEvent));
-		component.getActionMap().put(KeyEvent.getKeyText(keyEvent), a);
+				.put(keyStroke, keyRepresentation);
+		component.getActionMap().put(keyRepresentation, a);
 	}
 
 	public static void addHotkey(HotkeyWrapper hotkeyWrapper, AbstractAction a,

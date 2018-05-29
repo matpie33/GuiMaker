@@ -82,6 +82,12 @@ public class InputSelectionManager {
 	}
 
 	public void selectPreviousInputInSameRow() {
+		if (currentlySelectedComponent == null) {
+			List<JTextComponent> inputsList = inputToRowMap.values().iterator()
+					.next().getInputsList();
+			selectInput(inputsList.get(inputsList.size()-1));
+			return;
+		}
 		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap
 				.get(currentlySelectedComponent);
 		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
@@ -89,6 +95,9 @@ public class InputSelectionManager {
 		if (indexOfCurrentlySelectedInput > 0) {
 			selectInput(rowContainingCurrentlySelectedInput.getInputsList()
 					.get(indexOfCurrentlySelectedInput - 1));
+		}
+		else{
+			notifyThatNextDoesntExist(MoveDirection.LEFT);
 		}
 	}
 

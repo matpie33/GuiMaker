@@ -586,6 +586,10 @@ public class MainPanel {
 		}
 	}
 
+	public void clearSelectedInput() {
+		inputSelectionManager.deselectCurrentInput();
+	}
+
 	private enum Direction {
 		FORWARD, BACKWARD;
 	}
