@@ -78,6 +78,9 @@ public class MainPanel {
 				new PanelConfiguration(PanelDisplayMode.EDIT));
 	}
 
+	//TODO "do not create many top level containers (JPanel?), instead reuse existing
+	// by calling removAll" - try to optimize drawing
+
 	public MainPanel(Color color, boolean putRowsHighestAsPossible,
 			boolean scrollHorizontally, PanelConfiguration panelConfiguration) {
 		columnPanelCreator = new ColumnPanelCreator(
