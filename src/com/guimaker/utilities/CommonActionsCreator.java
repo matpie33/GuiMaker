@@ -50,17 +50,17 @@ public class CommonActionsCreator {
 	public static void addHotkey(int keyEvent, int keyModifier,
 			AbstractAction a, JComponent component) {
 
-		KeyStroke keyStroke = KeyStroke.getKeyStroke(keyEvent, keyModifier);
-		String keyRepresentation = keyStroke.toString();
-		component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-				.put(keyStroke, keyRepresentation);
-		component.getActionMap().put(keyRepresentation, a);
 	}
 
 	public static void addHotkey(HotkeyWrapper hotkeyWrapper, AbstractAction a,
 			JComponent component) {
-		addHotkey(hotkeyWrapper.getKeyEvent(), hotkeyWrapper.getKeyModifier(),
-				a, component);
+		int keyEvent = hotkeyWrapper.getKeyEvent();
+		KeyStroke keyStroke = KeyStroke
+				.getKeyStroke(keyEvent, hotkeyWrapper.getKeyModifier());
+		String keyRepresentation = keyStroke.toString();
+		component.getInputMap(hotkeyWrapper.getConditionForHotkey())
+				.put(keyStroke, keyRepresentation);
+		component.getActionMap().put(keyRepresentation, a);
 	}
 
 	public static void makeBindings(JComponent component, KeyStroke key,

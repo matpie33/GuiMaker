@@ -14,6 +14,16 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 	private float fontSize;
 	private boolean hasPreferredSize;
 	private Font font;
+	private boolean enabled = true;
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public Options setEnabled(boolean enabled) {
+		this.enabled = enabled;
+		return getThis();
+	}
 
 	public float getFontSize() {
 		return fontSize;

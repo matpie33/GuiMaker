@@ -1,13 +1,27 @@
 package com.guimaker.utilities;
 
+import com.guimaker.enums.ConditionForHotkey;
+
 import java.util.Objects;
 
 public class HotkeyWrapper {
 	private int keyEvent, keyMask;
+	private ConditionForHotkey conditionForHotkey;
 
 	public HotkeyWrapper(KeyModifiers keyModifier, int keyEvent) {
+		this(keyModifier, keyEvent,
+				ConditionForHotkey.COMPONENT_IN_FOCUSED_WINDOW);
+	}
+
+	public HotkeyWrapper(KeyModifiers keyModifier, int keyEvent,
+			ConditionForHotkey conditionForHotkey) {
 		this.keyEvent = keyEvent;
-		keyMask = keyModifier.getKeyMask();
+		this.keyMask = keyModifier.getKeyMask();
+		this.conditionForHotkey = conditionForHotkey;
+	}
+
+	public int getConditionForHotkey() {
+		return conditionForHotkey.getIntValue();
 	}
 
 	public HotkeyWrapper(int keyEvent) {

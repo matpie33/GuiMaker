@@ -135,9 +135,9 @@ public class MainPanel {
 	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
 		if (!columnPanelCreator.isInitialized()) {
 			columnPanelCreator.initializePanel();
-			addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
-					Anchor.NORTHWEST,
-					columnPanelCreator.getPanel()));
+			addRow(SimpleRowBuilder
+					.createRow(FillType.HORIZONTAL, Anchor.NORTHWEST,
+							columnPanelCreator.getPanel()));
 		}
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
 	}

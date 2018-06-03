@@ -1,5 +1,6 @@
 package com.guimaker.panels;
 
+import com.guimaker.enums.ConditionForHotkey;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.HotkeyWrapper;
@@ -8,6 +9,7 @@ import com.guimaker.utilities.LimitDocumentFilter;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -31,6 +33,7 @@ public class GuiElementsCreator {
 		if (options.hasPreferredSize()) {
 			component.setPreferredSize(options.getPreferredSize());
 		}
+		component.setEnabled(options.isEnabled());
 		//TODO assure that the options are not null i.e. give them default values, then remove the assertions from here
 		component.setOpaque(options.isOpaque());
 		if (options.getBorder() != null) {
@@ -143,6 +146,8 @@ public class GuiElementsCreator {
 			JTextComponent textComponent) {
 		setGeneralComponentOptions(options, textComponent);
 		removeEnterKeyBehaviourOfInput(textComponent);
+		addUndoRedoActions(textComponent);
+
 		textComponent.setEditable(options.isEditable());
 		if (options.isEditable()) {
 			textComponent.setBorder(
@@ -183,14 +188,42 @@ public class GuiElementsCreator {
 
 	}
 
+	private static void addUndoRedoActions(JTextComponent textComponent) {
+		UndoManager undoManager = new UndoManager();
+		textComponent.getDocument().addUndoableEditListener(undoManager);
+		AbstractAction undo = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (undoManager.canUndo()) {
+					undoManager.undo();
+				}
+			}
+		};
+
+		CommonActionsCreator.addHotkey(
+				new HotkeyWrapper(KeyModifiers.CONTROL, KeyEvent.VK_Z,
+						ConditionForHotkey.COMPONENT_FOCUSED), undo,
+				textComponent);
+
+		AbstractAction redo = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (undoManager.canRedo()) {
+					undoManager.redo();
+				}
+			}
+		};
+
+		CommonActionsCreator.addHotkey(
+				new HotkeyWrapper(KeyModifiers.CONTROL, KeyEvent.VK_Y,
+						ConditionForHotkey.COMPONENT_FOCUSED), redo,
+				textComponent);
+	}
+
 	public static JComboBox createCombobox(ComboboxOptions options) {
 		JComboBox comboBox = new JComboBox();
 		setGeneralComponentOptions(options, comboBox);
 		options.getComboboxValues().forEach(value -> comboBox.addItem(value));
-		comboBox.setPrototypeDisplayValue(
-				options.getComboboxValues().isEmpty() ?
-						"________" :
-						longestOfStrings(options.getComboboxValues()));
 		ListCellRenderer defaultRenderer = comboBox.getRenderer();
 		setBackgroundColorOnSelection(options, comboBox, defaultRenderer);
 		return comboBox;
