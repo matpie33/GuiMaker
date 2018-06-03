@@ -13,6 +13,10 @@ public class HotkeyWrapper {
 				ConditionForHotkey.COMPONENT_IN_FOCUSED_WINDOW);
 	}
 
+	public HotkeyWrapper(int keyEvent) {
+		this(KeyModifiers.NONE, keyEvent);
+	}
+
 	public HotkeyWrapper(KeyModifiers keyModifier, int keyEvent,
 			ConditionForHotkey conditionForHotkey) {
 		this.keyEvent = keyEvent;
@@ -24,9 +28,7 @@ public class HotkeyWrapper {
 		return conditionForHotkey.getIntValue();
 	}
 
-	public HotkeyWrapper(int keyEvent) {
-		this.keyEvent = keyEvent;
-	}
+
 
 	public int getKeyModifier() {
 		return keyMask;

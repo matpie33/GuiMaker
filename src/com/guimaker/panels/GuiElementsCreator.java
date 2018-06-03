@@ -83,9 +83,7 @@ public class GuiElementsCreator {
 		AbstractButton component = createButtonlikeComponent(options,
 				actionOnClick);
 		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);
-		CommonActionsCreator
-				.addHotkey(hotkey, wrapper.getKeyModifier(), actionOnClick,
-						component);
+		CommonActionsCreator.addHotkey(wrapper, actionOnClick, component);
 		return component;
 	}
 

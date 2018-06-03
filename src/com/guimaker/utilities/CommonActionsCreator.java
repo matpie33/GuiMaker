@@ -47,11 +47,6 @@ public class CommonActionsCreator {
 						action, keyEventName);
 	}
 
-	public static void addHotkey(int keyEvent, int keyModifier,
-			AbstractAction a, JComponent component) {
-
-	}
-
 	public static void addHotkey(HotkeyWrapper hotkeyWrapper, AbstractAction a,
 			JComponent component) {
 		int keyEvent = hotkeyWrapper.getKeyEvent();
