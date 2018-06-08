@@ -15,13 +15,12 @@ public class ColumnPanelCreator {
 	private int numberOfColumns;
 	private int numberOfRows;
 	private PanelDisplayMode panelDisplayMode;
-	private int gapInsideRow;
 	private int gapBetweenRows;
+	private int gapsBetweenColumns;
 
 	public ColumnPanelCreator(PanelDisplayMode panelDisplayMode,
-			int gapInsideRow, int gapBetweenRows) {
+			int gapBetweenRows) {
 		this.panelDisplayMode = panelDisplayMode;
-		this.gapInsideRow = gapInsideRow;
 		this.gapBetweenRows = gapBetweenRows;
 	}
 
@@ -62,7 +61,7 @@ public class ColumnPanelCreator {
 			c.gridx = startingColumn++;
 			c.gridy = numberOfRows;
 			c.anchor = abstractSimpleRow.getAnchor().getAnchor();
-			int xGap = gapInsideRow;
+			int xGap = gapsBetweenColumns;
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, xGap, yGap, xGap);
 			c.weighty = 1;
@@ -95,5 +94,9 @@ public class ColumnPanelCreator {
 			wrappingPanel = null;
 		}
 
+	}
+
+	public void setGapsBetweenColumns(int gapsBetweenColumns) {
+		this.gapsBetweenColumns = gapsBetweenColumns;
 	}
 }

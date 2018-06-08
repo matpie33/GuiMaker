@@ -39,6 +39,7 @@ public class MainPanel {
 	private InputSelectionManager inputSelectionManager;
 	private PanelDisplayMode displayMode;
 	private ColumnPanelCreator columnPanelCreator;
+	private int gapsBetweenColumns;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -84,8 +85,7 @@ public class MainPanel {
 	public MainPanel(Color color, boolean putRowsHighestAsPossible,
 			boolean scrollHorizontally, PanelConfiguration panelConfiguration) {
 		columnPanelCreator = new ColumnPanelCreator(
-				panelConfiguration.getPanelDisplayMode(), gapInsideRow,
-				gapBetweenRows);
+				panelConfiguration.getPanelDisplayMode(), gapBetweenRows);
 		//TODO move all the params to panel configuration class
 		numberOfColumns = 0;
 		numberOfRows = 0;
@@ -110,6 +110,10 @@ public class MainPanel {
 		displayMode = panelConfiguration.getPanelDisplayMode();
 		inputSelectionManager = new InputSelectionManager(displayMode);
 
+	}
+
+	public void setGapsBetweenColumns(int gapBetweenColumns) {
+		columnPanelCreator.setGapsBetweenColumns(gapBetweenColumns);
 	}
 
 	public void addSwitchBetweenInputsFailedListener(
