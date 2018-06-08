@@ -32,14 +32,12 @@ public class MainPanel {
 	private final boolean shouldPutRowsHighestAsPossible;
 	private Border borderToUse;
 	private Color rowColor;
-	private int numberOfColumns;
 	private int numberOfRows;
 	private Color originalBackgroundColor;
 	private boolean skipInsetsForExtremeEdges = false;
 	private InputSelectionManager inputSelectionManager;
 	private PanelDisplayMode displayMode;
 	private ColumnPanelCreator columnPanelCreator;
-	private int gapsBetweenColumns;
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -87,7 +85,6 @@ public class MainPanel {
 		columnPanelCreator = new ColumnPanelCreator(
 				panelConfiguration.getPanelDisplayMode(), gapBetweenRows);
 		//TODO move all the params to panel configuration class
-		numberOfColumns = 0;
 		numberOfRows = 0;
 		originalBackgroundColor = color;
 		shouldPutRowsHighestAsPossible = putRowsHighestAsPossible;
