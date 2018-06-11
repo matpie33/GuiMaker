@@ -154,7 +154,6 @@ public class GuiElementsCreator {
 		else {
 			textComponent.setBorder(null);
 		}
-		textComponent.setOpaque(false);
 		if (options.isSelectable()) {
 			changeCursorOnMouseEnter(textComponent);
 			textComponent.setBackground(Color.GRAY);

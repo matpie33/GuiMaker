@@ -18,6 +18,7 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 
 	AbstractTextComponentOptions() {
 		border(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		opaque(false);
 	}
 
 	public String getPromptWhenEmpty(){

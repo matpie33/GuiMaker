@@ -6,6 +6,7 @@ public class BasicColors {
 
 	public static final Color DARK_GREEN = new Color(0, 200, 50);
 	public static final Color DARK_BLUE = new Color(140, 80, 230);
+	public static final Color PURPLE = new Color(97, 0, 145);
 	public static final Color VERY_BLUE = new Color(0, 0, 102);
 	public static final Color LIGHT_BLUE = new Color(0, 120, 200);
 	public static final Color VERY_LIGHT_BLUE = new Color(140, 196, 237);
@@ -16,5 +17,6 @@ public class BasicColors {
 	public static final Color WATER_BLUE = new Color(0, 98, 145);
 	public static final Color MEDIUM_PURPLE = new Color(44, 6, 106);
 	public static final Color LIGHT_BLUE_2 = new Color(81, 81, 255);
+	public static final Color LIGHT_BLUE_3 = new Color(15, 15, 160);
 
 }

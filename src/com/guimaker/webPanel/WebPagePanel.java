@@ -92,7 +92,7 @@ public class WebPagePanel {
 	}
 
 	private void initiatePanels() {
-		messagePanel = new MainPanel(BasicColors.MEDIUM_BLUE);
+		messagePanel = new MainPanel(null);
 		messageComponent = GuiElementsCreator
 				.createTextPane(new TextPaneOptions().
 						text(Prompts.LOADING_PAGE).fontSize(20)

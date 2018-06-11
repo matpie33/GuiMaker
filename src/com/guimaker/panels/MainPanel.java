@@ -38,6 +38,11 @@ public class MainPanel {
 	private InputSelectionManager inputSelectionManager;
 	private PanelDisplayMode displayMode;
 	private ColumnPanelCreator columnPanelCreator;
+	private static Color defaultColor;
+
+	public static void setDefaultColor (Color defaultColor){
+		MainPanel.defaultColor = defaultColor;
+	}
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
@@ -96,7 +101,12 @@ public class MainPanel {
 		}
 
 		if (color == null) {
-			panel.setOpaque(false);
+			if (defaultColor == null){
+				panel.setOpaque(false);
+			}
+			else{
+				panel.setBackground(defaultColor);
+			}
 		}
 		else {
 			panel.setBackground(color);

@@ -8,11 +8,13 @@ import java.awt.*;
 public class ButtonOptions extends AbstractComponentOptions<ButtonOptions> {
 
 	private ButtonType buttonType;
-	private final Color backgroundColor = BasicColors.MEDIUM_PURPLE;
+	private final Color backgroundColor = BasicColors.PURPLE;
 
 	public ButtonOptions (ButtonType buttonType){
 		opaque(false);
-		backgroundColor(backgroundColor);
+		if (buttonType.equals(ButtonType.BUTTON)){
+			backgroundColor(backgroundColor);
+		}
 		this.buttonType = buttonType;
 	}
 

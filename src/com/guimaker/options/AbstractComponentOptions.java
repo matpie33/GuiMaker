@@ -79,6 +79,7 @@ public abstract class AbstractComponentOptions<Options extends AbstractComponent
 
 	public Options backgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
+		opaque(true);
 		return getThis();
 	}
 
