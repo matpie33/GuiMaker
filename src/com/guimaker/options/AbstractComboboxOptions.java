@@ -13,7 +13,7 @@ public abstract class AbstractComboboxOptions<Options extends AbstractComboboxOp
 	private List<String> comboboxValues = new ArrayList<>();
 
 	public AbstractComboboxOptions() {
-		backgroundColor(BasicColors.PURPLE);
+		backgroundColor(BasicColors.PURPLE_DARK_1);
 		border(BorderFactory.createLineBorder(Color.WHITE));
 	}
 

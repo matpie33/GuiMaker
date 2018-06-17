@@ -20,7 +20,7 @@ public class ConnectionFailMessagePage implements ConnectionFailPageHandler {
 	private JTextComponent messageComponent;
 
 	public ConnectionFailMessagePage(AbstractButton buttonReload) {
-		messagePanel = new MainPanel(BasicColors.MEDIUM_BLUE);
+		messagePanel = new MainPanel(BasicColors.BLUE_DARK_3);
 		messageComponent = GuiElementsCreator.createTextPane(new TextPaneOptions().
 				text(Prompts.CONNECTION_ERROR).fontSize(20)
 				.textAlignment(TextAlignment.CENTERED).editable(false));

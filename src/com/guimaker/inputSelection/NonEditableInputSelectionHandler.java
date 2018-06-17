@@ -8,7 +8,7 @@ import java.awt.*;
 public class NonEditableInputSelectionHandler implements InputSelectionHandler {
 
 	public static final Color NOT_SELECTED_COLOR = Color.GRAY;
-	public static final Color SELECTED_COLOR = BasicColors.DARK_BLUE;
+	public static final Color SELECTED_COLOR = BasicColors.PURPLE_NORMAL_1;
 
 	@Override
 	public void markInputAsSelected(JTextComponent input) {
