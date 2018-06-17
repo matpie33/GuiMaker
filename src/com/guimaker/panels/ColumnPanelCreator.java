@@ -64,7 +64,8 @@ public class ColumnPanelCreator {
 			int xGap = gapsBetweenColumns;
 			int yGap = gapBetweenRows;
 			c.insets = new Insets(yGap, xGap, yGap, xGap);
-			c.weighty = 1;
+			c.weighty = 0;
+			c.weightx = 0;
 			if (panelDisplayMode.equals(PanelDisplayMode.VIEW)) {
 				element.setEnabled(false);
 			}
@@ -75,6 +76,7 @@ public class ColumnPanelCreator {
 
 			}
 			if (verticallyFilledElements.contains(element)) {
+				c.fill = FillType.VERTICAL.getGridBagConstraintsFilling();
 				c.weighty = 1;
 			}
 			if (indexOfElement == elements.length - 1

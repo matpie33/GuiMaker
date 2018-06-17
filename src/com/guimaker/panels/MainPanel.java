@@ -1,6 +1,5 @@
 package com.guimaker.panels;
 
-import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.inputSelection.InputSelectionManager;
@@ -40,7 +39,7 @@ public class MainPanel {
 	private ColumnPanelCreator columnPanelCreator;
 	private static Color defaultColor;
 
-	public static void setDefaultColor (Color defaultColor){
+	public static void setDefaultColor(Color defaultColor) {
 		MainPanel.defaultColor = defaultColor;
 	}
 
@@ -101,10 +100,10 @@ public class MainPanel {
 		}
 
 		if (color == null) {
-			if (defaultColor == null){
+			if (defaultColor == null) {
 				panel.setOpaque(false);
 			}
-			else{
+			else {
 				panel.setBackground(defaultColor);
 			}
 		}
@@ -147,8 +146,7 @@ public class MainPanel {
 		if (!columnPanelCreator.isInitialized()) {
 			columnPanelCreator.initializePanel();
 			addRow(SimpleRowBuilder
-					.createRow(FillType.HORIZONTAL, Anchor.NORTHWEST,
-							columnPanelCreator.getPanel()));
+					.createRow(FillType.HORIZONTAL, columnPanelCreator.getPanel()));
 		}
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
 	}
@@ -769,6 +767,7 @@ public class MainPanel {
 	}
 
 	public void clear() {
+
 		columnPanelCreator.clear();
 		panel.removeAll();
 		rows.clear();
