@@ -40,6 +40,10 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 
 	public AbstractSimpleRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
+		if (fillingType.equals(FillType.BOTH)){
+			verticallyFilledElements = components;
+			horizontallyFilledElements = components;
+		}
 		fillType = fillingType;
 		this.anchor = anchor;
 		this.componentsInRow = components;

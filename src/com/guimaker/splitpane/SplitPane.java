@@ -4,12 +4,14 @@ import com.guimaker.enums.SplitPanePanelLocation;
 import com.guimaker.model.SplitPanePanelData;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SplitPane {
 
-	private Map<JComponent, SplitPanePanelData> contentPanelsWithInformation = new LinkedHashMap<>();
+	private Map<SplitPanePanelLocation, List<SplitPanePanelData>> contentPanelsWithInformation = new LinkedHashMap<>();
 	private SplitPanePainter splitPanePainter = new SplitPanePainter();
 
 	public SplitPane(JComponent centerComponent, String title) {
@@ -17,8 +19,16 @@ public class SplitPane {
 	}
 
 	public SplitPane(JComponent centerComponent, String title, Double weightY) {
+		initialize();
 		addComponent(centerComponent, title, weightY,
 				SplitPanePanelLocation.CENTER);
+
+	}
+
+	private void initialize (){
+		contentPanelsWithInformation.put(SplitPanePanelLocation.LEFT, new ArrayList<>());
+		contentPanelsWithInformation.put(SplitPanePanelLocation.CENTER, new ArrayList<>());
+		contentPanelsWithInformation.put(SplitPanePanelLocation.RIGHT, new ArrayList<>());
 	}
 
 	private void validateWeight(Double weightY) {
@@ -31,8 +41,10 @@ public class SplitPane {
 	private void addComponent(JComponent component, String title,
 			Double weightY, SplitPanePanelLocation splitPanePanelLocation) {
 		validateWeight(weightY);
-		contentPanelsWithInformation.put(component,
-				new SplitPanePanelData(title, weightY, splitPanePanelLocation));
+		List<SplitPanePanelData> splitPanePanelData = contentPanelsWithInformation
+				.get(splitPanePanelLocation);
+		splitPanePanelData
+				.add(new SplitPanePanelData(title, weightY, component));
 	}
 
 	public void addCenterComponent(JComponent centerComponent, String title) {

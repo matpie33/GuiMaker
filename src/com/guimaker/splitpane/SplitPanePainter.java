@@ -3,21 +3,19 @@ package com.guimaker.splitpane;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.SplitPanePanelLocation;
-import com.guimaker.model.SplitPanePanelConstraints;
 import com.guimaker.model.SplitPanePanelData;
 import com.guimaker.model.SplitPaneWeightsX;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
-import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -85,24 +83,40 @@ public class SplitPanePainter {
 		panelColumnNumberToWeightX.put(2, recalculatedWeights.getRightPanel());
 	}
 
-	private Map<MainPanel, Integer> createColumnPanels(
-			List<SplitPanePanelConstraints> splitPanePanelConstraintsList) {
-		Map<MainPanel, Integer> columnPanelsWithColumnNumber = new LinkedHashMap<>();
-		for (SplitPanePanelConstraints panelConstraints : splitPanePanelConstraintsList) {
-			//sort panels: first left, then center, then right
-			MainPanel panel = createColumnPanel(panelConstraints.getLocation());
-			JLabel title = createTitleLabel("title");
-			panel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL, title,
-					createButtonCollapsePanel()).setColor(Color.GRAY)
-					.fillHorizontallySomeElements(title)
-					.setBorder(createBorderBottom()));
-			panel.addRow(SimpleRowBuilder
-					.createRow(panelConstraints.getFillType(),
-							panelConstraints.getContent()));
-			columnPanelsWithColumnNumber
-					.put(panel, panelConstraints.getColumnNumber());
+	private List<MainPanel> createColumnPanels(
+			Map<SplitPanePanelLocation, List<SplitPanePanelData>> splitPanePanelLocations) {
+		List<MainPanel> wrappingPanels = new ArrayList<>();
+		for (Map.Entry<SplitPanePanelLocation, List<SplitPanePanelData>> panels : splitPanePanelLocations
+				.entrySet()) {
+			MainPanel wrappingPanel = createColumnPanel(panels.getKey());
+			MainPanel panel = null;
+			for (SplitPanePanelData splitPanePanelData : panels.getValue()) {
+				panel = createColumnPanel(panels.getKey());
+				JLabel title = createTitleLabel(splitPanePanelData.getTitle());
+				panel.addRow(SimpleRowBuilder
+						.createRow(FillType.HORIZONTAL, title,
+								createButtonCollapsePanel())
+						.setColor(Color.GRAY)
+						.fillHorizontallySomeElements(title)
+						.setBorder(createBorderBottom()));
+				panel.addRow(SimpleRowBuilder.createRow(FillType.BOTH,
+						splitPanePanelData.getContent()));
+				wrappingPanel.addRow(SimpleRowBuilder
+						.createRow(FillType.BOTH, panel.getPanel()));
+			}
+			if (panel == null) {
+				continue;
+			}
+
+			if (panels.getValue().size() == 1) {
+				wrappingPanels.add(panel);
+			}
+			else {
+				wrappingPanels.add(wrappingPanel);
+			}
+
 		}
-		return columnPanelsWithColumnNumber;
+		return wrappingPanels;
 	}
 
 	private Border createBorderBottom() {
@@ -124,23 +138,21 @@ public class SplitPanePainter {
 				splitPaneActionsCreator.createActionCollapsePanel());
 	}
 
-	public void paint(Map<JComponent, SplitPanePanelData> panels) {
-		List<SplitPanePanelConstraints> panelsConstraints = panelConstraintsCreator
-				.getConstraints(panels);
-		Map<MainPanel, Integer> columnPanels = createColumnPanels(
-				panelsConstraints);
+	public void paint(
+			Map<SplitPanePanelLocation, List<SplitPanePanelData>> panels) {
+		List<MainPanel> columnPanels = createColumnPanels(panels);
 		addColumnPanels(columnPanels);
 
 	}
 
-	private void addColumnPanels(Map<MainPanel, Integer> columnPanels) {
-		JPanel[] panels = columnPanels.keySet().stream()
-				.map(mainPanel -> mainPanel.getPanel())
-				.collect(Collectors.toList()).toArray(new JPanel[] {});
-		AbstractSimpleRow row = SimpleRowBuilder
-				.createRow(FillType.VERTICAL, panels).fillAllVertically();
+	private void addColumnPanels(List<MainPanel> columnPanels) {
 
-		rootSplitPanePanel.addElementsInColumn(row.setColumnToPutRowInto(0));
+		rootSplitPanePanel.addElementsInColumn(SimpleRowBuilder
+				.createRow(FillType.BOTH,
+						columnPanels.stream().map(MainPanel::getPanel)
+								.collect(Collectors.toList())
+								.toArray(new JComponent[] {}))
+				.setColumnToPutRowInto(0));
 	}
 
 	public JPanel getPanel() {

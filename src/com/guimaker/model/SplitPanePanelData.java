@@ -1,18 +1,18 @@
 package com.guimaker.model;
 
-import com.guimaker.enums.SplitPanePanelLocation;
+import javax.swing.*;
 
 public class SplitPanePanelData {
 
 	private String title;
 	private Double weightY;
-	private SplitPanePanelLocation splitpanePanelLocation;
+	private JComponent content;
 
 	public SplitPanePanelData(String title, Double weightY,
-			SplitPanePanelLocation splitpanePanelLocation) {
+			JComponent content) {
 		this.title = title;
 		this.weightY = weightY;
-		this.splitpanePanelLocation = splitpanePanelLocation;
+		this.content = content;
 	}
 
 	public String getTitle() {
@@ -23,7 +23,7 @@ public class SplitPanePanelData {
 		return weightY;
 	}
 
-	public SplitPanePanelLocation getSplitpanePanelLocation() {
-		return splitpanePanelLocation;
+	public JComponent getContent() {
+		return content;
 	}
 }

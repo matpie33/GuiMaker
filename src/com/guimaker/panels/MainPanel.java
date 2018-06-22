@@ -146,7 +146,7 @@ public class MainPanel {
 		if (!columnPanelCreator.isInitialized()) {
 			columnPanelCreator.initializePanel();
 			addRow(SimpleRowBuilder
-					.createRow(FillType.HORIZONTAL, columnPanelCreator.getPanel()));
+					.createRow(FillType.BOTH, columnPanelCreator.getPanel()));
 		}
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
 	}

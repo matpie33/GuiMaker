@@ -76,7 +76,13 @@ public class ColumnPanelCreator {
 
 			}
 			if (verticallyFilledElements.contains(element)) {
-				c.fill = FillType.VERTICAL.getGridBagConstraintsFilling();
+				if (horizontallyFilledElements.contains(element)){
+					c.fill = FillType.BOTH.getGridBagConstraintsFilling();
+				}
+				else{
+					c.fill = FillType.VERTICAL.getGridBagConstraintsFilling();
+				}
+
 				c.weighty = 1;
 			}
 			if (indexOfElement == elements.length - 1
