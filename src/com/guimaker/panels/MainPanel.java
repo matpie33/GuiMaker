@@ -60,8 +60,12 @@ public class MainPanel {
 		borderToUse = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK);
 	}
 
-	public void setBorder(Border border) {
+	public void setRowsBorder(Border border) {
 		borderToUse = border;
+	}
+
+	public void setWrappingPanelBorder (Border border){
+		panel.setBorder(border);
 	}
 
 	public void setRowColor(Color color) {
