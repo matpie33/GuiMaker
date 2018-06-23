@@ -5,7 +5,7 @@ import javax.swing.*;
 public class SplitPanePanelData {
 
 	private String title;
-	private Double weightY;
+	private double weightY;
 	private JComponent content;
 
 	public SplitPanePanelData(String title, Double weightY,
@@ -19,7 +19,7 @@ public class SplitPanePanelData {
 		return title;
 	}
 
-	public Double getWeightY() {
+	public double getWeightY() {
 		return weightY;
 	}
 

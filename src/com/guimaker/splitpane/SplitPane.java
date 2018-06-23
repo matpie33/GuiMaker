@@ -48,7 +48,7 @@ public class SplitPane {
 	}
 
 	public void addCenterComponent(JComponent centerComponent, String title) {
-		addComponent(centerComponent, title, null,
+		addComponent(centerComponent, title, 0D,
 				SplitPanePanelLocation.CENTER);
 	}
 
@@ -59,7 +59,7 @@ public class SplitPane {
 	}
 
 	public void addLeftComponent(JComponent leftComponent, String title) {
-		addComponent(leftComponent, title, null, SplitPanePanelLocation.LEFT);
+		addComponent(leftComponent, title, 0D, SplitPanePanelLocation.LEFT);
 	}
 
 	public void addLeftComponent(JComponent leftComponent, String title,
@@ -69,7 +69,7 @@ public class SplitPane {
 	}
 
 	public void addRightComponent(JComponent rightComponent, String title) {
-		addComponent(rightComponent, title, null, SplitPanePanelLocation.RIGHT);
+		addComponent(rightComponent, title, 0D, SplitPanePanelLocation.RIGHT);
 	}
 
 	public void addRightComponent(JComponent rightComponent, String title,

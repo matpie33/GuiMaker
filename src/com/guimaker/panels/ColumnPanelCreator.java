@@ -76,10 +76,10 @@ public class ColumnPanelCreator {
 
 			}
 			if (verticallyFilledElements.contains(element)) {
-				if (horizontallyFilledElements.contains(element)){
+				if (horizontallyFilledElements.contains(element)) {
 					c.fill = FillType.BOTH.getGridBagConstraintsFilling();
 				}
-				else{
+				else {
 					c.fill = FillType.VERTICAL.getGridBagConstraintsFilling();
 				}
 
@@ -89,6 +89,13 @@ public class ColumnPanelCreator {
 					&& indexOfElement == numberOfColumns - 1) {
 				c.weightx = 1;
 			}
+			if (abstractSimpleRow.getWeightsX() != null){
+				Double weightx = abstractSimpleRow.getWeightsX()[indexOfElement];
+				if (weightx != 0) {
+					c.weightx = weightx;
+				}
+			}
+
 
 			wrappingPanel.add(element, c);
 			indexOfElement++;

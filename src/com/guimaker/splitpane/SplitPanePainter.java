@@ -15,7 +15,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class SplitPanePainter {
 
 	private static final Color BORDER_COLOR = Color.WHITE;
-	private Map<Integer, Double> panelColumnNumberToWeightX = new HashMap<>();
+	private Map<Integer, Double> panelColumnNumberToWeightX = new LinkedHashMap<>();
 	private SplitPaneActionsCreator splitPaneActionsCreator = new SplitPaneActionsCreator();
 	private MainPanel rootSplitPanePanel;
 	private PanelConstraintsCreator panelConstraintsCreator;
@@ -102,7 +102,8 @@ public class SplitPanePainter {
 				panel.addRow(SimpleRowBuilder.createRow(FillType.BOTH,
 						splitPanePanelData.getContent()));
 				wrappingPanel.addRow(SimpleRowBuilder
-						.createRow(FillType.BOTH, panel.getPanel()));
+						.createRow(FillType.BOTH, panel.getPanel())
+						.setWeightY(splitPanePanelData.getWeightY()));
 			}
 			if (panel == null) {
 				continue;
@@ -152,7 +153,9 @@ public class SplitPanePainter {
 						columnPanels.stream().map(MainPanel::getPanel)
 								.collect(Collectors.toList())
 								.toArray(new JComponent[] {}))
-				.setColumnToPutRowInto(0));
+				.setColumnToPutRowInto(0).setWeightsX(
+						panelColumnNumberToWeightX.values()
+								.toArray(new Double[] {})));
 	}
 
 	public JPanel getPanel() {

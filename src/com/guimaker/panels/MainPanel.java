@@ -28,7 +28,7 @@ public class MainPanel {
 	private int gapBetweenRows = 4;
 	private int gapInsideRow = 10;
 	private int gapRightSide;
-	private final boolean shouldPutRowsHighestAsPossible;
+	private boolean shouldPutRowsHighestAsPossible;
 	private Border borderToUse;
 	private Color rowColor;
 	private int numberOfRows;
@@ -38,6 +38,7 @@ public class MainPanel {
 	private PanelDisplayMode displayMode;
 	private ColumnPanelCreator columnPanelCreator;
 	private static Color defaultColor;
+	private boolean rowsHaveNonZeroWeightsY;
 
 	public static void setDefaultColor(Color defaultColor) {
 		MainPanel.defaultColor = defaultColor;
@@ -350,7 +351,10 @@ public class MainPanel {
 				|| fill == GridBagConstraints.BOTH
 				|| fill == GridBagConstraints.VERTICAL) {
 			c.weighty = 1;
-			removeFillingFromOtherPanels(rowNumber);
+			if (!rowsHaveNonZeroWeightsY) {
+				removeFillingFromOtherPanels(rowNumber);
+			}
+
 		}
 		else {
 			c.weighty = 0;
@@ -368,6 +372,11 @@ public class MainPanel {
 			if (c.fill == GridBagConstraints.BOTH) {
 				c.fill = GridBagConstraints.HORIZONTAL;
 			}
+		}
+
+		if (row.getWeightY() != 0) {
+			c.weighty = row.getWeightY();
+			rowsHaveNonZeroWeightsY = true;
 		}
 
 		c.anchor = anchor;

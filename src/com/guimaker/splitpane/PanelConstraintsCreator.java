@@ -17,30 +17,8 @@ public class PanelConstraintsCreator {
 
 	public SplitPaneWeightsX recalculateMissingWeightsX(double leftPanel,
 			double centerPanel, double rightPanel) {
-		double sumOfWeights = MathUtils.sum(leftPanel, centerPanel, rightPanel);
-
-		if (sumOfWeights > 1) {
-			throw new IllegalArgumentException(
-					"Sum of weights for column panels should not exceed 1, but was: "
-							+ sumOfWeights);
-		}
-		else if (sumOfWeights < 1) {
-			int numberOfZeroElements = MathUtils
-					.numberOfZeroElements(leftPanel, centerPanel, rightPanel);
-			double rest = 1 - sumOfWeights;
-			rest = rest / numberOfZeroElements;
-			leftPanel = replaceWeightIfIsZero(leftPanel, rest);
-			rightPanel = replaceWeightIfIsZero(rightPanel, rest);
-			centerPanel = replaceWeightIfIsZero(centerPanel, rest);
-		}
 		return new SplitPaneWeightsX(leftPanel, centerPanel, rightPanel);
 	}
 
-	private double replaceWeightIfIsZero(double valueToCheck, double newValue) {
-		if (valueToCheck == 0) {
-			valueToCheck = newValue;
-		}
-		return valueToCheck;
-	}
 
 }

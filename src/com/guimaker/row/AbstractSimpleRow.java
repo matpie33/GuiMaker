@@ -20,6 +20,8 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	private int columnToPutRowInto;
 	private Border border;
 	private boolean shouldAddRow = true;
+	private Double[] weightsX;
+	private double weightY;
 
 	public Border getBorder() {
 		return border;
@@ -40,7 +42,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 
 	public AbstractSimpleRow(FillType fillingType, Anchor anchor,
 			JComponent... components) {
-		if (fillingType.equals(FillType.BOTH)){
+		if (fillingType.equals(FillType.BOTH)) {
 			verticallyFilledElements = components;
 			horizontallyFilledElements = components;
 		}
@@ -138,6 +140,24 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return fillType.getGridBagConstraintsFilling();
 	}
 
+	public Row setWeightsX(Double... weightsX) {
+		if (weightsX.length != componentsInRow.length) {
+			throw new IllegalArgumentException(
+					"Number of weights should be equal"
+							+ "to number of components, but number of weights: "
+							+ weightsX.length + " and number of components: "
+							+ componentsInRow.length);
+		}
+		else {
+			this.weightsX = weightsX;
+		}
+		return getThis();
+	}
+
+	public Double[] getWeightsX() {
+		return weightsX;
+	}
+
 	public Row setAnchor(Anchor anchor) {
 		this.anchor = anchor;
 		return getThis();
@@ -181,4 +201,12 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 
 	public abstract Row getThis();
 
+	public Row setWeightY(double weightY) {
+		this.weightY = weightY;
+		return getThis();
+	}
+
+	public double getWeightY() {
+		return weightY;
+	}
 }
