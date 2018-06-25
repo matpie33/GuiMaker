@@ -23,11 +23,17 @@ import java.util.List;
 
 public class MainPanel {
 
+	private final int paddingDefaultValue = 4;
+
 	private List<JComponent> rows;
 	private JPanel panel;
 	private int gapBetweenRows = 4;
-	private int gapInsideRow = 10;
-	private int gapRightSide;
+
+	private int paddingRight = paddingDefaultValue;
+	private int paddingLeft = paddingDefaultValue;
+	private int paddingTop = paddingDefaultValue;
+	private int paddingBottom = paddingDefaultValue;
+
 	private boolean shouldPutRowsHighestAsPossible;
 	private Border borderToUse;
 	private Color rowColor;
@@ -44,6 +50,11 @@ public class MainPanel {
 		MainPanel.defaultColor = defaultColor;
 	}
 
+	public void setPaddingHorizontal (int padding){
+		paddingLeft = padding;
+		paddingRight = padding;
+	}
+
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
 	}
@@ -53,7 +64,7 @@ public class MainPanel {
 	}
 
 	public void setGapsRightSideBetweenColumnsTo(int gap) {
-		gapRightSide = gap;
+		paddingRight = gap;
 	}
 
 	public void setRightBorder() {
@@ -336,11 +347,7 @@ public class MainPanel {
 	private GridBagConstraints initializeGridBagConstraints() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-
-		int a = gapInsideRow;
-		int b = gapRightSide;
-		int rightGap = a != b && b > 0 ? b : a;
-		gbc.insets = new Insets(0, 0, 0, rightGap);
+		gbc.insets = new Insets(paddingTop, paddingLeft, paddingBottom, paddingRight);
 		return gbc;
 	}
 
