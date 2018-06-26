@@ -23,13 +23,14 @@ import java.util.stream.Collectors;
 
 public class SplitPanePainter {
 
-	private static final Color BORDER_COLOR = BasicColors.BLUE_BRIGHT_3;
-	private static final Color BOTTOM_BORDER_COLOR = BasicColors.BLUE_NORMAL_1;
+	private static final Color CONTENT_PANEL_BORDER_COLOR = BasicColors.BLUE_BRIGHT_3;
+	private static final Color TITLE_PANEL_BORDER_COLOR = BasicColors.BLUE_NORMAL_1;
 	private Map<Integer, Double> panelColumnNumberToWeightX = new LinkedHashMap<>();
 	private SplitPaneActionsCreator splitPaneActionsCreator = new SplitPaneActionsCreator();
 	private MainPanel rootSplitPanePanel;
 	private PanelConstraintsCreator panelConstraintsCreator;
-	private final int borderThickness = 5;
+	private final int contentPanelBorderThickness = 5;
+	private final int titlePanelBorderThickness = 2;
 
 	public SplitPanePainter() {
 		panelConstraintsCreator = new PanelConstraintsCreator();
@@ -39,23 +40,29 @@ public class SplitPanePainter {
 	private void initializeRootPanel() {
 		rootSplitPanePanel = new MainPanel(null);
 		rootSplitPanePanel.setGapsBetweenColumns(0);
+		rootSplitPanePanel.setGapsBetweenRowsTo0();
+		rootSplitPanePanel.setRowsBorder(createBorderWithAllEdges());
+
 	}
 
 	private MainPanel createColumnPanel(SplitPanePanelLocation location) {
 		MainPanel columnPanel = new MainPanel(null);
+		splitPaneActionsCreator
+				.createActionExpandCollapseOnDrag(columnPanel.getPanel());
 		columnPanel.setGapsBetweenRowsTo0();
 		columnPanel.setWrappingPanelBorder(getBorderForLocation(location));
 		return columnPanel;
 	}
 
 	private Border getBorderForLocation(SplitPanePanelLocation location) {
+
 		switch (location) {
 		case LEFT:
-			return createBorderWithoutRightEdge();
+			return createBorderWithRightEdgeOnly();
 		case CENTER:
-			return createBorderWithoutLeftAndRightEdge();
+			return createBorderWithRightEdgeOnly();
 		case RIGHT:
-			return createBorderWithoutLeftEdge();
+			return null;
 
 		default:
 			throw new IllegalArgumentException(
@@ -66,19 +73,21 @@ public class SplitPanePainter {
 	}
 
 	private Border createBorderWithoutLeftEdge() {
+		return BorderFactory.createMatteBorder(contentPanelBorderThickness, 0,
+				contentPanelBorderThickness, contentPanelBorderThickness,
+				CONTENT_PANEL_BORDER_COLOR);
+	}
+
+	private Border createBorderWithRightEdgeOnly() {
 		return BorderFactory
-				.createMatteBorder(borderThickness, 0, borderThickness,
-						borderThickness, BORDER_COLOR);
+				.createMatteBorder(0, 0, 0, contentPanelBorderThickness,
+						CONTENT_PANEL_BORDER_COLOR);
 	}
 
-	private Border createBorderWithoutRightEdge() {
-		return BorderFactory.createMatteBorder(borderThickness, borderThickness,
-				borderThickness, 0, BORDER_COLOR);
-	}
-
-	private Border createBorderWithoutLeftAndRightEdge() {
-		return BorderFactory.createMatteBorder(borderThickness, borderThickness,
-				borderThickness, borderThickness, BORDER_COLOR);
+	private Border createBorderWithAllEdges() {
+		return BorderFactory.createMatteBorder(contentPanelBorderThickness,
+				contentPanelBorderThickness, contentPanelBorderThickness,
+				contentPanelBorderThickness, CONTENT_PANEL_BORDER_COLOR);
 	}
 
 	public void setWeightsX(double leftPanel, double centerPanel,
@@ -97,17 +106,15 @@ public class SplitPanePainter {
 				.entrySet()) {
 			MainPanel wrappingPanel = createColumnPanel(panels.getKey());
 			MainPanel panel = null;
-			boolean manyPanels = panels.getValue().size() > 1;
 			int indexOfPanel = 0;
 			for (SplitPanePanelData splitPanePanelData : panels.getValue()) {
 				panel = new MainPanel(null);
 				panel.setGapsBetweenRowsTo0();
 				if (indexOfPanel < panels.getValue().size() - 1) {
-					panel.setWrappingPanelBorder(createBorderBottom());
-				}
-				else if (panels.getValue().size() == 1) {
+					splitPaneActionsCreator
+							.createActionExpandCollapseOnDrag(panel.getPanel());
 					panel.setWrappingPanelBorder(
-							getBorderForLocation(panels.getKey()));
+							createBorderBottomForContentPanel());
 				}
 
 				JLabel title = createTitleLabel(splitPanePanelData.getTitle());
@@ -116,14 +123,12 @@ public class SplitPanePainter {
 								createButtonCollapsePanel())
 						.setColor(Color.GRAY)
 						.fillHorizontallySomeElements(title)
-						.setBorder(createBorderBottom()));
+						.setBorder(createBorderBottomForTitlePanel()));
 				panel.addRow(SimpleRowBuilder.createRow(FillType.BOTH,
 						splitPanePanelData.getContent()));
-				if (manyPanels) {
-					wrappingPanel.addRow(SimpleRowBuilder
-							.createRow(FillType.BOTH, panel.getPanel())
-							.setWeightY(splitPanePanelData.getWeightY()));
-				}
+				wrappingPanel.addRow(SimpleRowBuilder
+						.createRow(FillType.BOTH, panel.getPanel())
+						.setWeightY(splitPanePanelData.getWeightY()));
 
 				indexOfPanel++;
 			}
@@ -131,14 +136,21 @@ public class SplitPanePainter {
 				continue;
 			}
 
-			wrappingPanels.add(manyPanels ? wrappingPanel : panel);
+			wrappingPanels.add(wrappingPanel);
 
 		}
 		return wrappingPanels;
 	}
 
-	private Border createBorderBottom() {
-		return BorderFactory.createMatteBorder(0, 0, 2, 0, BOTTOM_BORDER_COLOR);
+	private Border createBorderBottomForTitlePanel() {
+		return BorderFactory
+				.createMatteBorder(0, 0, titlePanelBorderThickness, 0, TITLE_PANEL_BORDER_COLOR);
+	}
+
+	private Border createBorderBottomForContentPanel() {
+		return BorderFactory
+				.createMatteBorder(0, 0, contentPanelBorderThickness, 0,
+						CONTENT_PANEL_BORDER_COLOR);
 	}
 
 	private JLabel createTitleLabel(String title) {

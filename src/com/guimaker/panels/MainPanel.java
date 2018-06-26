@@ -57,6 +57,7 @@ public class MainPanel {
 
 	public void setGapsBetweenRowsTo0() {
 		gapBetweenRows = 0;
+		columnPanelCreator.setGapBetweenRows(0);
 	}
 
 	public void setGapsBetweenRowsTo(int gap) {

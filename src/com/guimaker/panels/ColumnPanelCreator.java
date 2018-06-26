@@ -16,7 +16,7 @@ public class ColumnPanelCreator {
 	private int numberOfRows;
 	private PanelDisplayMode panelDisplayMode;
 	private int gapBetweenRows;
-	private int gapsBetweenColumns = 4;
+	private int gapsBetweenColumns = 0;
 
 	public ColumnPanelCreator(PanelDisplayMode panelDisplayMode,
 			int gapBetweenRows) {
@@ -113,5 +113,9 @@ public class ColumnPanelCreator {
 
 	public void setGapsBetweenColumns(int gapsBetweenColumns) {
 		this.gapsBetweenColumns = gapsBetweenColumns;
+	}
+
+	public void setGapBetweenRows(int gapBetweenRows) {
+		this.gapBetweenRows = gapBetweenRows;
 	}
 }
