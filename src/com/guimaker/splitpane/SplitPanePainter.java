@@ -48,7 +48,7 @@ public class SplitPanePainter {
 	private MainPanel createColumnPanel(SplitPanePanelLocation location) {
 		MainPanel columnPanel = new MainPanel(null);
 		splitPaneActionsCreator
-				.createActionExpandCollapseOnDrag(columnPanel.getPanel());
+				.addShrinkExpandListeners(columnPanel.getPanel());
 		columnPanel.setGapsBetweenRowsTo0();
 		columnPanel.setWrappingPanelBorder(getBorderForLocation(location));
 		return columnPanel;
@@ -112,7 +112,7 @@ public class SplitPanePainter {
 				panel.setGapsBetweenRowsTo0();
 				if (indexOfPanel < panels.getValue().size() - 1) {
 					splitPaneActionsCreator
-							.createActionExpandCollapseOnDrag(panel.getPanel());
+							.addShrinkExpandListeners(panel.getPanel());
 					panel.setWrappingPanelBorder(
 							createBorderBottomForContentPanel());
 				}
@@ -144,7 +144,8 @@ public class SplitPanePainter {
 
 	private Border createBorderBottomForTitlePanel() {
 		return BorderFactory
-				.createMatteBorder(0, 0, titlePanelBorderThickness, 0, TITLE_PANEL_BORDER_COLOR);
+				.createMatteBorder(0, 0, titlePanelBorderThickness, 0,
+						TITLE_PANEL_BORDER_COLOR);
 	}
 
 	private Border createBorderBottomForContentPanel() {
