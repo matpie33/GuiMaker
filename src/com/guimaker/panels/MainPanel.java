@@ -50,7 +50,7 @@ public class MainPanel {
 		MainPanel.defaultColor = defaultColor;
 	}
 
-	public void setPaddingHorizontal (int padding){
+	public void setPaddingHorizontal(int padding) {
 		paddingLeft = padding;
 		paddingRight = padding;
 	}
@@ -76,7 +76,7 @@ public class MainPanel {
 		borderToUse = border;
 	}
 
-	public void setWrappingPanelBorder (Border border){
+	public void setWrappingPanelBorder(Border border) {
 		panel.setBorder(border);
 	}
 
@@ -348,7 +348,8 @@ public class MainPanel {
 	private GridBagConstraints initializeGridBagConstraints() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(paddingTop, paddingLeft, paddingBottom, paddingRight);
+		gbc.insets = new Insets(paddingTop, paddingLeft, paddingBottom,
+				paddingRight);
 		return gbc;
 	}
 
@@ -728,13 +729,16 @@ public class MainPanel {
 	}
 
 	public void updateView() {
-		panel.revalidate();
-		panel.repaint();
+		getPanel().revalidate();
+		getPanel().repaint();
 
 	}
 
 	public JPanel getPanel() {
-		return panel;
+		return getNumberOfRows() == 1 && getRows().get(0)
+				.equals(columnPanelCreator.getPanel()) ?
+				columnPanelCreator.getPanel() :
+				panel;
 	}
 
 	public void removeRowInAColumnWay(int rowNumber) {
@@ -836,6 +840,17 @@ public class MainPanel {
 
 	public void selectPreviousInputInSameRow() {
 		inputSelectionManager.selectPreviousInputInSameRow();
+	}
+
+	public GridBagConstraints getConstraintsForComponent(Component component) {
+		GridBagLayout layout = (GridBagLayout) getPanel().getLayout();
+		return layout.getConstraints(component);
+	}
+
+	public void setConstraintsForComponent(Component component,
+			GridBagConstraints constraints) {
+		GridBagLayout layout = (GridBagLayout) getPanel().getLayout();
+		layout.setConstraints(component, constraints);
 	}
 
 }

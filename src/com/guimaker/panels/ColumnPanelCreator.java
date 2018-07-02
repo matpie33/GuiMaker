@@ -34,7 +34,7 @@ public class ColumnPanelCreator {
 	}
 
 	public JPanel getPanel() {
-		return wrappingPanel;
+		return wrappingPanel != null ? wrappingPanel : new JPanel();
 	}
 
 	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
@@ -89,13 +89,13 @@ public class ColumnPanelCreator {
 					&& indexOfElement == numberOfColumns - 1) {
 				c.weightx = 1;
 			}
-			if (abstractSimpleRow.getWeightsX() != null){
-				Double weightx = abstractSimpleRow.getWeightsX()[indexOfElement];
+			if (abstractSimpleRow.getWeightsX() != null) {
+				Double weightx = abstractSimpleRow
+						.getWeightsX()[indexOfElement];
 				if (weightx != 0) {
 					c.weightx = weightx;
 				}
 			}
-
 
 			wrappingPanel.add(element, c);
 			indexOfElement++;
