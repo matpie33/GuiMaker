@@ -1,5 +1,6 @@
 package com.guimaker.panels;
 
+import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.inputSelection.InputSelectionManager;
@@ -105,6 +106,8 @@ public class MainPanel {
 			boolean scrollHorizontally, PanelConfiguration panelConfiguration) {
 		columnPanelCreator = new ColumnPanelCreator(
 				panelConfiguration.getPanelDisplayMode(), gapBetweenRows);
+		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
+				paddingLeft);
 		//TODO move all the params to panel configuration class
 		numberOfRows = 0;
 		originalBackgroundColor = color;
@@ -162,8 +165,8 @@ public class MainPanel {
 	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
 		if (!columnPanelCreator.isInitialized()) {
 			columnPanelCreator.initializePanel();
-			addRow(SimpleRowBuilder
-					.createRow(FillType.BOTH, columnPanelCreator.getPanel()));
+			addRow(SimpleRowBuilder.createRow(FillType.NONE, abstractSimpleRow.getAnchor(),
+					columnPanelCreator.getPanel()));
 		}
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
 	}
@@ -622,6 +625,15 @@ public class MainPanel {
 
 	public void clearSelectedInput() {
 		inputSelectionManager.deselectCurrentInput();
+	}
+
+	public void setPadding(int padding) {
+		this.paddingLeft = padding;
+		this.paddingBottom = padding;
+		this.paddingTop = padding;
+		this.paddingRight = padding;
+		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
+				paddingLeft);
 	}
 
 	private enum Direction {

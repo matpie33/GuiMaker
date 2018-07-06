@@ -17,11 +17,19 @@ public class ColumnPanelCreator {
 	private PanelDisplayMode panelDisplayMode;
 	private int gapBetweenRows;
 	private int gapsBetweenColumns = 0;
+	private int paddingLeft, paddingRight, paddingTop, paddingBottom;
 
 	public ColumnPanelCreator(PanelDisplayMode panelDisplayMode,
 			int gapBetweenRows) {
 		this.panelDisplayMode = panelDisplayMode;
 		this.gapBetweenRows = gapBetweenRows;
+	}
+
+	public void setPadding (int top, int right, int bottom, int left){
+		paddingLeft = left;
+		paddingBottom = bottom;
+		paddingRight = right;
+		paddingTop = top;
 	}
 
 	public boolean isInitialized() {
@@ -60,10 +68,8 @@ public class ColumnPanelCreator {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
 			c.gridy = numberOfRows;
-			c.anchor = abstractSimpleRow.getAnchor().getAnchor();
-			int xGap = gapsBetweenColumns;
-			int yGap = gapBetweenRows;
-			c.insets = new Insets(yGap, xGap, yGap, xGap);
+			c.anchor = GridBagConstraints.WEST;
+			c.insets = new Insets(paddingTop, paddingLeft, paddingBottom, paddingRight);
 			c.weighty = 0;
 			c.weightx = 0;
 			if (panelDisplayMode.equals(PanelDisplayMode.VIEW)) {
