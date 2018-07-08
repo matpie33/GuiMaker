@@ -1,6 +1,5 @@
 package com.guimaker.panels;
 
-import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.inputSelection.InputSelectionManager;
@@ -165,8 +164,9 @@ public class MainPanel {
 	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
 		if (!columnPanelCreator.isInitialized()) {
 			columnPanelCreator.initializePanel();
-			addRow(SimpleRowBuilder.createRow(FillType.NONE, abstractSimpleRow.getAnchor(),
-					columnPanelCreator.getPanel()));
+			addRow(SimpleRowBuilder
+					.createRow(FillType.NONE, abstractSimpleRow.getAnchor(),
+							columnPanelCreator.getPanel()));
 		}
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
 	}
@@ -634,6 +634,26 @@ public class MainPanel {
 		this.paddingRight = padding;
 		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
 				paddingLeft);
+	}
+
+	public void replacePanel(JComponent oldPanel, JComponent newPanel) {
+		Map<JComponent, GridBagConstraints> constraingsOfPanels = new LinkedHashMap<>();
+		rows.forEach(row -> {
+			if (row == oldPanel){
+				constraingsOfPanels.put(newPanel, getConstraintsForComponent(oldPanel));
+			}
+			else{
+				constraingsOfPanels
+						.put(row, getConstraintsForComponent(row));
+			}
+
+		});
+		int i = rows.indexOf(oldPanel);
+		rows.set(i, newPanel);
+		panel.removeAll();
+		constraingsOfPanels.entrySet()
+				.forEach(entry -> panel.add(entry.getKey(), entry.getValue()));
+
 	}
 
 	private enum Direction {
