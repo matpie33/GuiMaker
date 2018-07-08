@@ -637,13 +637,13 @@ public class MainPanel {
 	}
 
 	public void replacePanel(JComponent oldPanel, JComponent newPanel) {
-		Map<JComponent, GridBagConstraints> constraingsOfPanels = new LinkedHashMap<>();
+		Map<JComponent, GridBagConstraints> constraintsOfPanels = new LinkedHashMap<>();
 		rows.forEach(row -> {
 			if (row == oldPanel){
-				constraingsOfPanels.put(newPanel, getConstraintsForComponent(oldPanel));
+				constraintsOfPanels.put(newPanel, getConstraintsForComponent(oldPanel));
 			}
 			else{
-				constraingsOfPanels
+				constraintsOfPanels
 						.put(row, getConstraintsForComponent(row));
 			}
 
@@ -651,7 +651,7 @@ public class MainPanel {
 		int i = rows.indexOf(oldPanel);
 		rows.set(i, newPanel);
 		panel.removeAll();
-		constraingsOfPanels.entrySet()
+		constraintsOfPanels.entrySet()
 				.forEach(entry -> panel.add(entry.getKey(), entry.getValue()));
 
 	}
