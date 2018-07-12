@@ -773,6 +773,10 @@ public class MainPanel {
 				panel;
 	}
 
+	public JPanel getRootPanel (){
+		return panel;
+	}
+
 	public void removeRowInAColumnWay(int rowNumber) {
 		for (Component component : panel.getComponents()) {
 			GridBagLayout gridBagLayout = (GridBagLayout) panel.getLayout();
