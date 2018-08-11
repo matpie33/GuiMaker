@@ -80,16 +80,23 @@ public class GuiElementsCreator {
 	private static AbstractButton createButtonlikeComponent(
 			ButtonOptions options, AbstractAction actionOnClick, int hotkey,
 			KeyModifiers keyModifier) {
-		AbstractButton component = createButtonlikeComponent(options,
-				actionOnClick);
-		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, hotkey);
-		CommonActionsCreator.addHotkey(wrapper, actionOnClick, component);
-		return component;
+		return createButtonlikeComponent(options, actionOnClick,
+				new HotkeyWrapper(keyModifier, hotkey));
 	}
 
 	public static AbstractButton createButtonLikeComponent(
 			ButtonOptions options) {
 		return createButtonlikeComponent(options, null);
+	}
+
+	public static AbstractButton createButtonlikeComponent(
+			ButtonOptions options, AbstractAction actionOnClick,
+			HotkeyWrapper hotkeyWrapper) {
+		AbstractButton component = createButtonlikeComponent(options,
+				actionOnClick);
+
+		CommonActionsCreator.addHotkey(hotkeyWrapper, actionOnClick, component);
+		return component;
 	}
 
 	public static AbstractButton createButtonlikeComponent(

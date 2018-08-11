@@ -651,6 +651,7 @@ public class MainPanel {
 		int i = rows.indexOf(oldPanel);
 		rows.set(i, newPanel);
 		panel.removeAll();
+		panel.getLayout();
 		constraintsOfPanels.entrySet()
 				.forEach(entry -> panel.add(entry.getKey(), entry.getValue()));
 
@@ -835,7 +836,9 @@ public class MainPanel {
 	}
 
 	public void setBackground(Color c) {
-		panel.setBackground(c);
+		//TODO check why column panel creator is opaque false
+		getPanel().setOpaque(true);
+		getPanel().setBackground(c);
 	}
 
 	public boolean rowContainsComponent(int rowNumber, Component c) {
