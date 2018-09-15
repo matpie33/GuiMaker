@@ -359,6 +359,7 @@ public class MainPanel {
 	private void createConstraintsAndAdd(JComponent p, AbstractSimpleRow row,
 			int rowNumber) {
 		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
 		c.gridy = rowNumber;
 		c.weightx = 1;
 		int fill = row.getFillTypeAsGridBagConstraint();
@@ -639,12 +640,12 @@ public class MainPanel {
 	public void replacePanel(JComponent oldPanel, JComponent newPanel) {
 		Map<JComponent, GridBagConstraints> constraintsOfPanels = new LinkedHashMap<>();
 		rows.forEach(row -> {
-			if (row == oldPanel){
-				constraintsOfPanels.put(newPanel, getConstraintsForComponent(oldPanel));
-			}
-			else{
+			if (row == oldPanel) {
 				constraintsOfPanels
-						.put(row, getConstraintsForComponent(row));
+						.put(newPanel, getConstraintsForComponent(oldPanel));
+			}
+			else {
+				constraintsOfPanels.put(row, getConstraintsForComponent(row));
 			}
 
 		});
@@ -676,7 +677,8 @@ public class MainPanel {
 			else if (direction.equals(Direction.BACKWARD)) {
 				c.gridy -= absoluteIncrementDecrementValue;
 			}
-			if (!shouldPutRowsHighestAsPossible) {
+			if (!shouldPutRowsHighestAsPossible
+					&& c.fill != GridBagConstraints.BOTH) {
 				c.weighty = 0;
 			}
 			GridBagLayout g = (GridBagLayout) panel.getLayout();
@@ -774,7 +776,7 @@ public class MainPanel {
 				panel;
 	}
 
-	public JPanel getRootPanel (){
+	public JPanel getRootPanel() {
 		return panel;
 	}
 
