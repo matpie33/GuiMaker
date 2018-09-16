@@ -207,7 +207,7 @@ public class MainPanel {
 					borderToUse != null ? borderToUse : row.getBorder());
 		}
 		if (row.isOpaque() && (rowColor != null || row.getColor() != null)) {
-			panel.setBackground(rowColor != null ? rowColor : row.getColor());
+			panel.setBackground(row.getColor() != null ? row.getColor() : rowColor);
 			panel.setOpaque(true);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
