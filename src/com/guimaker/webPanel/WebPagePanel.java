@@ -1,6 +1,5 @@
 package com.guimaker.webPanel;
 
-import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
@@ -110,6 +109,10 @@ public class WebPagePanel {
 				StackPane pane = new StackPane(webView);
 				webView.getEngine().getLoadWorker().stateProperty()
 						.addListener(connectionChange);
+				webView.getEngine().getLoadWorker().exceptionProperty()
+						.addListener((obs, oldExc, newExc) -> {
+							if (newExc != null) { newExc.printStackTrace();}
+						});
 				webPage = new JFXPanel();
 				webPage.setScene(new Scene(pane));
 
@@ -123,15 +126,14 @@ public class WebPagePanel {
 	}
 
 	private void createButtonReload() {
-		reloadButton = GuiElementsCreator
-				.createButtonlikeComponent(new ButtonOptions(ButtonType.BUTTON).text(
-						ButtonsNames.RELOAD_PAGE),
-						new AbstractAction() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								showPage(currentlyLoadingPage);
-							}
-						});
+		reloadButton = GuiElementsCreator.createButtonlikeComponent(
+				new ButtonOptions(ButtonType.BUTTON)
+						.text(ButtonsNames.RELOAD_PAGE), new AbstractAction() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						showPage(currentlyLoadingPage);
+					}
+				});
 
 	}
 
