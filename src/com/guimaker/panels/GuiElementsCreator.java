@@ -1,5 +1,6 @@
 package com.guimaker.panels;
 
+import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.ConditionForHotkey;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
@@ -8,6 +9,7 @@ import com.guimaker.utilities.KeyModifiers;
 import com.guimaker.utilities.LimitDocumentFilter;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.text.*;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
@@ -227,6 +229,8 @@ public class GuiElementsCreator {
 	public static JComboBox createCombobox(ComboboxOptions options) {
 		JComboBox comboBox = new JComboBox();
 		setGeneralComponentOptions(options, comboBox);
+		comboBox.setBorder(null);
+
 		options.getComboboxValues().forEach(value -> comboBox.addItem(value));
 		ListCellRenderer defaultRenderer = comboBox.getRenderer();
 		setBackgroundColorOnSelection(options, comboBox, defaultRenderer);

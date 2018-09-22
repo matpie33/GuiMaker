@@ -25,7 +25,7 @@ public class ColumnPanelCreator {
 		this.gapBetweenRows = gapBetweenRows;
 	}
 
-	public void setPadding (int top, int right, int bottom, int left){
+	public void setPadding(int top, int right, int bottom, int left) {
 		paddingLeft = left;
 		paddingBottom = bottom;
 		paddingRight = right;
@@ -69,10 +69,12 @@ public class ColumnPanelCreator {
 			c.gridx = startingColumn++;
 			c.gridy = numberOfRows;
 			c.anchor = GridBagConstraints.WEST;
-			c.insets = new Insets(paddingTop, paddingLeft, paddingBottom, paddingRight);
+			c.insets = new Insets(paddingTop, paddingLeft, paddingBottom,
+					paddingRight);
 			c.weighty = 0;
 			c.weightx = 0;
-			if (panelDisplayMode.equals(PanelDisplayMode.VIEW)) {
+			if (panelDisplayMode.equals(PanelDisplayMode.VIEW)
+					&& !(element instanceof AbstractButton)) {
 				element.setEnabled(false);
 			}
 

@@ -88,6 +88,11 @@ public class MainPanel {
 		this(color, false);
 	}
 
+	public MainPanel(Color color, PanelConfiguration panelConfiguration) {
+		//TODO merge constructors into 1: list configuration
+		this(color, false, true, panelConfiguration);
+	}
+
 	public MainPanel(Color color, boolean putRowsHighestAsPossible) {
 		this(color, putRowsHighestAsPossible, true);
 	}
@@ -207,7 +212,8 @@ public class MainPanel {
 					borderToUse != null ? borderToUse : row.getBorder());
 		}
 		if (row.isOpaque() && (rowColor != null || row.getColor() != null)) {
-			panel.setBackground(row.getColor() != null ? row.getColor() : rowColor);
+			panel.setBackground(
+					row.getColor() != null ? row.getColor() : rowColor);
 			panel.setOpaque(true);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
@@ -272,7 +278,8 @@ public class MainPanel {
 			if (isTextInput && firstTextComponentInRow == null) {
 				firstTextComponentInRow = (JTextComponent) compo;
 			}
-			if (displayMode.equals(PanelDisplayMode.VIEW)) {
+			if (displayMode.equals(PanelDisplayMode.VIEW)
+					&& !(compo instanceof AbstractButton)) {
 				compo.setEnabled(false);
 			}
 			if (componentsFilling.containsKey(compo)) {
