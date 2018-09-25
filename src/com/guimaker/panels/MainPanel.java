@@ -255,7 +255,7 @@ public class MainPanel {
 	private JComponent addComponentsToSinglePanel(JComponent[] components,
 			Map<JComponent, Integer> componentsFilling,
 			boolean useExtraSpaceVertically) {
-		if (components.length == 1) {
+		if (components.length == 1 && !(components[0] instanceof JTextComponent)) {
 			return components[0];
 		}
 		JPanel p = new JPanel();
