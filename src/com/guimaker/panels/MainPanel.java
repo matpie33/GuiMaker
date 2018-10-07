@@ -255,7 +255,8 @@ public class MainPanel {
 	private JComponent addComponentsToSinglePanel(JComponent[] components,
 			Map<JComponent, Integer> componentsFilling,
 			boolean useExtraSpaceVertically) {
-		if (components.length == 1 && !(components[0] instanceof JTextComponent)) {
+		if (components.length == 1
+				&& !(components[0] instanceof JTextComponent)) {
 			return components[0];
 		}
 		JPanel p = new JPanel();
@@ -799,11 +800,8 @@ public class MainPanel {
 	}
 
 	public void removeRowWithElements(Component... elements) {
-		JComponent panel = findRow(elements);
-		if (panel != null) {
-			this.panel.remove(panel);
-			rows.remove(panel);
-		}
+		int rowNumber = findIndexOfRowContainingElements(elements);
+		removeAndUpdateRows(rows.get(rowNumber), rowNumber, true);
 	}
 
 	public void removeElementsFromRow(int rowNumber, Component... elements) {
@@ -816,9 +814,6 @@ public class MainPanel {
 
 	}
 
-	public void removeLastElementFromLastRow() {
-		removeLastElementFromRow(rows.size() - 1);
-	}
 
 	public void removeLastElementFromRow(int rowNumber) {
 		JComponent row = rows.get(rowNumber);
@@ -826,15 +821,20 @@ public class MainPanel {
 				row.getComponent(row.getComponentCount() - 1));
 	}
 
-	private JComponent findRow(Component... elements) {
-		for (JComponent panel : rows) {
-			Set<Component> e = new HashSet<Component>(
+	private int findIndexOfRowContainingElements(Component... elements) {
+
+		for (int i = 0; i < rows.size(); i++) {
+			JComponent panel = rows.get(i);
+			Set<Component> e = new HashSet<>(
 					Arrays.asList(panel.getComponents()));
-			if (e.equals(new HashSet<Component>(Arrays.asList(elements)))) {
-				return panel;
+			if (elements.length == 1 && panel.equals(elements[0])) {
+				return i;
+			}
+			if (e.equals(new HashSet<>(Arrays.asList(elements)))) {
+				return i;
 			}
 		}
-		return null;
+		return -1;
 	}
 
 	public void clear() {
