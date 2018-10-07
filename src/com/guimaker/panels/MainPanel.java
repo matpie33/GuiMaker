@@ -861,11 +861,11 @@ public class MainPanel {
 		return false;
 	}
 
-	public void changeVisibilityOfLastElementInRow(int rowNumber,
-			boolean visible) {
+	public void changeEnabledStateOfLastElementInRow(int rowNumber,
+			boolean enabled) {
 		JComponent panel = rows.get(rowNumber);
 		Component c = panel.getComponent(panel.getComponentCount() - 1);
-		c.setVisible(visible);
+		c.setEnabled(enabled);
 	}
 
 	public void setPanelColor(int rowNumber, Color color) {
