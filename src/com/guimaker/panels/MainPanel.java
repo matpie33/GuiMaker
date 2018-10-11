@@ -800,7 +800,7 @@ public class MainPanel {
 	}
 
 	public void removeRowWithElements(Component... elements) {
-		int rowNumber = findIndexOfRowContainingElements(elements);
+		int rowNumber = getIndexOfRowContainingElements(elements);
 		removeAndUpdateRows(rows.get(rowNumber), rowNumber, true);
 	}
 
@@ -814,23 +814,21 @@ public class MainPanel {
 
 	}
 
-
 	public void removeLastElementFromRow(int rowNumber) {
 		JComponent row = rows.get(rowNumber);
 		removeElementsFromRow(rowNumber,
 				row.getComponent(row.getComponentCount() - 1));
 	}
 
-	private int findIndexOfRowContainingElements(Component... elements) {
+	public int getIndexOfRowContainingElements(Component... elements) {
 
 		for (int i = 0; i < rows.size(); i++) {
 			JComponent panel = rows.get(i);
-			Set<Component> e = new HashSet<>(
-					Arrays.asList(panel.getComponents()));
+			List<Component> e = Arrays.asList(panel.getComponents());
 			if (elements.length == 1 && panel.equals(elements[0])) {
 				return i;
 			}
-			if (e.equals(new HashSet<>(Arrays.asList(elements)))) {
+			if (e.containsAll(Arrays.asList(elements))) {
 				return i;
 			}
 		}
