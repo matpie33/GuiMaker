@@ -47,6 +47,8 @@ public class WebPagePanel {
 	public WebPagePanel(ContextOwner contextOwner,
 			ConnectionFailPageHandler connectionFailPageHandler) {
 		this.contextOwner = contextOwner;
+		webPage = new JFXPanel();
+		switchingPanel = new JPanel(new CardLayout());
 		createButtonReload();
 		if (connectionFailPageHandler == null) {
 			connectionFailPageHandler = new ConnectionFailMessagePage(
@@ -113,10 +115,10 @@ public class WebPagePanel {
 						.addListener((obs, oldExc, newExc) -> {
 							if (newExc != null) { newExc.printStackTrace();}
 						});
-				webPage = new JFXPanel();
+
 				webPage.setScene(new Scene(pane));
 
-				switchingPanel = new JPanel(new CardLayout());
+
 				switchingPanel.add(MESSAGE_PANEL, messagePanel.getPanel());
 				switchingPanel.add(WEB_PAGE_PANEL, webPage);
 				switchingPanel.add(CONNECTION_FAIL_PANEL, connectionFailPanel);
