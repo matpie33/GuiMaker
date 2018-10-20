@@ -12,4 +12,5 @@ public class ButtonsNames {
 	public static final String EDIT = "Edytuj";
 	public static final String ADD = "Dodaj słówko";
 
+	public static final String CLOSE_WINDOW = "Zamknij";
 }
