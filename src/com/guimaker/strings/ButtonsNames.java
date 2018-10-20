@@ -13,4 +13,6 @@ public class ButtonsNames {
 	public static final String ADD = "Dodaj słówko";
 
 	public static final String CLOSE_WINDOW = "Zamknij";
+	public static final String CONFIRM = "Tak";
+	public static final String REJECT = "Nie";
 }

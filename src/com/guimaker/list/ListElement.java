@@ -1,4 +1,4 @@
-package com.guimaker.list.listElements;
+package com.guimaker.list;
 
 public interface ListElement {
 

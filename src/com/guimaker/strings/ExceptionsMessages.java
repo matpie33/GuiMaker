@@ -6,4 +6,12 @@ public class ExceptionsMessages {
 	public static final String RANGE_VALUE_HIGHER_THAN_MAXIMUM_WORD_NUMBER =
 			"Górna wartość zakresu jest większa niż liczba słów na liście "
 					+ "(%d).";
+	public static final String NO_INPUT_SUPPLIED = "Prosze cokolwiek wpisac!";
+	public static final String WORD_ALREADY_EXISTS = "Takie slowo już istnieje w wierszu %d.";
+	public static final String ROW_FOR_DUPLICATED_PROPERTY = "Duplikat występuje w wierszu nr %s.";
+	public static final String WORD_ALREADY_HIGHLIGHTED_EXCEPTION =
+			"To slowo jest juz zaznaczone." + "Nie znaleziono innych pozycji.";
+	public static final String WORD_NOT_FOUND_EXCEPTION =
+			"Nie znaleziono podanego słowa. Być może zaznaczono złą opcję, "
+					+ "a może jest błąd we wpisanym słowie.";
 }
