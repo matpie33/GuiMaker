@@ -22,6 +22,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	private boolean shouldAddRow = true;
 	private Double[] weightsX;
 	private double weightY;
+	private boolean wrapWithPanel = true;
 
 	public Border getBorder() {
 		return border;
@@ -165,6 +166,15 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 
 	public Anchor getAnchor() {
 		return anchor;
+	}
+
+	public Row wrapSingleComponentWithPanel(boolean isWrapWithPanel){
+		this.wrapWithPanel = isWrapWithPanel;
+		return getThis();
+	}
+
+	public boolean isWrapWithPanel() {
+		return wrapWithPanel;
 	}
 
 	public Row setNotOpaque() {

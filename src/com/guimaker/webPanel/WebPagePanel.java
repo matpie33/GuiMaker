@@ -1,5 +1,6 @@
 package com.guimaker.webPanel;
 
+import com.guimaker.application.ApplicationWindow;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
@@ -42,10 +43,13 @@ public class WebPagePanel {
 	private boolean shouldGrabFocusOnReload;
 	private AbstractButton reloadButton;
 	private String currentlyLoadingPage;
+	private ApplicationWindow applicationWindow;
 
 	//TODO it's too coupled to kanji context, should be more generic
 	public WebPagePanel(ContextOwner contextOwner,
-			ConnectionFailPageHandler connectionFailPageHandler) {
+			ConnectionFailPageHandler connectionFailPageHandler,
+			ApplicationWindow applicationWindow) {
+		this.applicationWindow = applicationWindow;
 		this.contextOwner = contextOwner;
 		webPage = new JFXPanel();
 		switchingPanel = new JPanel(new CardLayout());
@@ -93,7 +97,8 @@ public class WebPagePanel {
 	}
 
 	private void initiatePanels() {
-		messagePanel = new MainPanel(null);
+		messagePanel = new MainPanel(applicationWindow
+				.getApplicationConfiguration().getContentPanelColor());
 		messageComponent = GuiElementsCreator
 				.createTextPane(new TextPaneOptions().
 						text(Prompts.LOADING_PAGE).fontSize(20)

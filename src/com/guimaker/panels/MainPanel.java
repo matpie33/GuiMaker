@@ -192,7 +192,8 @@ public class MainPanel {
 			return null;
 		}
 		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
-				mapComponentToFilling(row), row.isUseAllExtraVerticalSpace());
+				mapComponentToFilling(row), row.isWrapWithPanel(),
+				row.isUseAllExtraVerticalSpace());
 		if (panel == null) {
 			return null;
 		}
@@ -244,7 +245,7 @@ public class MainPanel {
 	}
 
 	private JComponent addComponentsToSinglePanel(JComponent[] components,
-			Map<JComponent, Integer> componentsFilling,
+			Map<JComponent, Integer> componentsFilling, boolean wrapWithPanel,
 			boolean useExtraSpaceVertically) {
 		if (components.length == 1
 				&& !(components[0] instanceof JTextComponent)) {
@@ -308,6 +309,9 @@ public class MainPanel {
 			p.add(compo, gbc);
 			gbc.gridx = gbc.gridx + 1;
 			i++;
+		}
+		if (!wrapWithPanel && components.length == 1) {
+			return components[0];
 		}
 
 		return p;
