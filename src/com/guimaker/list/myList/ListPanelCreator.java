@@ -81,7 +81,7 @@ public class ListPanelCreator<Word extends ListElement>
 				listConfiguration.getParentListAndWordContainingThisList()
 						!= null;
 
-		rowsPanel = new MainPanel(null, true, true,
+		rowsPanel = new MainPanel(BasicColors.PURPLE_DARK_1, true, true,
 				new PanelConfiguration(listConfiguration.getDisplayMode()));
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
@@ -102,7 +102,15 @@ public class ListPanelCreator<Word extends ListElement>
 				.getAllInputsSelectionManager();
 		addElementsForEmptyList();
 		createButtonsShowNextAndPrevious();
+		initializeNavigationButtons();
+	}
 
+	private void initializeNavigationButtons() {
+		if (enableWordAdding) {
+			navigationButtons.add(createButtonAddWord());
+		}
+		setNavigationButtons(
+				navigationButtons.toArray(new AbstractButton[] {}));
 	}
 
 	public void addElementsForEmptyList() {
@@ -277,6 +285,8 @@ public class ListPanelCreator<Word extends ListElement>
 				.createRow(FillType.BOTH, listElementsPanel));
 		mainPanel.addRow(SimpleRowBuilder
 				.createRow(FillType.NONE, buttonLoadNextWords));
+		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
+				navigationButtons.toArray(new JComponent[]{})));
 
 	}
 
@@ -295,9 +305,7 @@ public class ListPanelCreator<Word extends ListElement>
 		isInitialized = true;
 		createRootPanel();
 
-		if (enableWordAdding) {
-			navigationButtons.add(createButtonAddWord());
-		}
+
 		if (enableWordSearching) {
 			ListRowData<Word> listRow = this.listRow.createListRow(
 					listWordsController.getWordInitializer()
@@ -331,9 +339,9 @@ public class ListPanelCreator<Word extends ListElement>
 			mainPanel.getPanel().setOpaque(false);
 		}
 
-		setNavigationButtons(
-				navigationButtons.toArray(new AbstractButton[] {}));
 		createMainPanelElements();
+
+
 	}
 
 	private AbstractButton createButtonFilter(
