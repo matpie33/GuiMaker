@@ -87,7 +87,7 @@ public class ListPanelCreator<Word extends ListElement>
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
 			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
-			mainPanel.setBackground(null);
+			mainPanel.setBackgroundColor(null);
 			rowsPanel.setWrappingPanelBorder(getDefaultBorder());
 		}
 
@@ -291,7 +291,7 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public void setParentDialog(DialogWindow dialog) {
 		super.setParentDialog(dialog);
-		mainPanel.setBackground(
+		mainPanel.setBackgroundColor(
 				dialog.getParentConfiguration().getContentPanelColor());
 		filterPanel.setRowColor(BasicColors.GREEN_BRIGHT_1);
 	}
@@ -497,14 +497,14 @@ public class ListPanelCreator<Word extends ListElement>
 				customInputGoal == null ? this.inputGoal : customInputGoal)
 				.getRowPanel();
 		if (highlighted) {
-			newPanel.setBackground(
+			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
 							.getApplicationConfiguration()
 							.getListRowHighlightColor());
 		}
 		if (customInputGoal != null && customInputGoal
 				.equals(InputGoal.EDIT_TEMPORARILY)) {
-			newPanel.setBackground(
+			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
 							.getApplicationConfiguration()
 							.getListRowEditTemporarilyColor());

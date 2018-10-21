@@ -7,9 +7,6 @@ import com.guimaker.enums.FillType;
 import com.guimaker.enums.MoveDirection;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComponentOptions;
-import com.guimaker.panels.ExpandablePanel;
-import com.guimaker.panels.GuiElementsCreator;
-import com.guimaker.panels.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
@@ -261,8 +258,8 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		ApplicationConfiguration parentConfiguration = parent
 				.getParentConfiguration();
 		hotkeysPanel
-				.setBackground(parentConfiguration.getPanelBackgroundColor());
-		mainPanel.setBackground(parentConfiguration.getPanelBackgroundColor());
+				.setBackgroundColor(parentConfiguration.getPanelBackgroundColor());
+		mainPanel.setBackgroundColor(parentConfiguration.getPanelBackgroundColor());
 		mainPanel.setRowColor(parentConfiguration.getContentPanelColor());
 
 		contentColor = parentConfiguration.getContentPanelColor();

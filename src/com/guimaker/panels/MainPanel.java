@@ -147,7 +147,7 @@ public class MainPanel {
 	}
 
 	public void setOriginalBackgroundColor() {
-		setBackground(originalBackgroundColor);
+		setBackgroundColor(originalBackgroundColor);
 	}
 
 	public void addRowsOfElementsInColumn(ComplexRow complexRow) {
@@ -833,7 +833,7 @@ public class MainPanel {
 		rows.clear();
 	}
 
-	public void setBackground(Color c) {
+	public void setBackgroundColor(Color c) {
 		//TODO check why column panel creator is opaque false
 		getPanel().setOpaque(c != null);
 		getPanel().setBackground(c);
