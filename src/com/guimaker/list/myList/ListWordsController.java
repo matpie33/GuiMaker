@@ -36,7 +36,7 @@ public class ListWordsController<Word extends ListElement> {
 	private ListPanelCreator<Word> listPanelCreator;
 	private ApplicationChangesManager applicationChangesManager;
 	private final int MAXIMUM_WORDS_TO_SHOW = 201;
-	private int lastRowVisible;
+	private int lastRowVisible = -1;
 	private final List<LoadWordsForFoundWord> strategiesForFoundWord = new ArrayList<>();
 	private ListRow<Word> currentlyHighlightedWord;
 	private ListElementInitializer<Word> wordInitializer;
@@ -64,7 +64,6 @@ public class ListWordsController<Word extends ListElement> {
 				applicationChangesManager, listRowCreator, this, myList);
 		listPanelCreator.setParentDialog(
 				applicationChangesManager.getApplicationWindow());
-		listPanelCreator.createPanel();
 		this.listPanelCreator.setTitle(title);
 
 		initializeFoundWordStrategies();

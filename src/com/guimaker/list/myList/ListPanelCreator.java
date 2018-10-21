@@ -61,6 +61,7 @@ public class ListPanelCreator<Word extends ListElement>
 	private ListSearchPanelCreator<Word> listSearchPanelCreator;
 	private final static String UNIQUE_NAME = "list panel creator";
 	private MyList myList;
+	private boolean isInitialized = false;
 
 	public ListPanelCreator(ListConfiguration listConfiguration,
 			ApplicationChangesManager applicationChangesManager,
@@ -95,11 +96,12 @@ public class ListPanelCreator<Word extends ListElement>
 		unwrapConfiguration(listConfiguration);
 		listInputsSelectionManager = listConfiguration
 				.getAllInputsSelectionManager();
+		addElementsForEmptyList();
 
 	}
 
 	public void addElementsForEmptyList() {
-		rowsPanel.insertRow(1, SimpleRowBuilder.createRow(FillType.NONE,
+		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				GuiElementsCreator.createLabel(new ComponentOptions()
 						.text(com.guimaker.strings.Prompts.EMPTY_LIST)),
 				createButtonAddRow(InputGoal.EDIT)));
@@ -165,6 +167,9 @@ public class ListPanelCreator<Word extends ListElement>
 	public ListRow<Word> addRow(Word word, int rowNumber,
 			boolean shouldShowWord, LoadWordsHandler loadWordsHandler,
 			InputGoal inputGoal) {
+		if (!isInitialized){
+			createElements();
+		}
 		this.inputGoal = inputGoal;
 		CommonListElements commonListElements = createCommonListElements(word,
 				inputGoal, rowNumber);
@@ -258,9 +263,10 @@ public class ListPanelCreator<Word extends ListElement>
 
 	@Override
 	public void createElements() {
+		mainPanel.removeRow(0);
+		isInitialized = true;
 		createRootPanel();
 		createAndAddButtonsShowNextAndPrevious();
-		addElementsForEmptyList();
 		if (enableWordAdding) {
 			navigationButtons.add(createButtonAddWord());
 		}
