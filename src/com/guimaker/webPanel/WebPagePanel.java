@@ -5,6 +5,7 @@ import com.guimaker.enums.Anchor;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.TextAlignment;
+import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.TextPaneOptions;
 import com.guimaker.panels.GuiElementsCreator;
@@ -97,8 +98,9 @@ public class WebPagePanel {
 	}
 
 	private void initiatePanels() {
-		messagePanel = new MainPanel(applicationWindow
-				.getApplicationConfiguration().getContentPanelColor());
+		messagePanel = new MainPanel(new PanelConfiguration().setColorToUse(
+				applicationWindow.getApplicationConfiguration()
+						.getContentPanelColor()));
 		messageComponent = GuiElementsCreator
 				.createTextPane(new TextPaneOptions().
 						text(Prompts.LOADING_PAGE).fontSize(20)
@@ -122,7 +124,6 @@ public class WebPagePanel {
 						});
 
 				webPage.setScene(new Scene(pane));
-
 
 				switchingPanel.add(MESSAGE_PANEL, messagePanel.getPanel());
 				switchingPanel.add(WEB_PAGE_PANEL, webPage);

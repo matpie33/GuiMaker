@@ -38,7 +38,7 @@ public class SplitPanePainter {
 	}
 
 	private void initializeRootPanel() {
-		rootSplitPanePanel = new MainPanel(null);
+		rootSplitPanePanel = new MainPanel();
 		rootSplitPanePanel.setGapsBetweenColumns(0);
 		rootSplitPanePanel.setGapsBetweenRowsTo0();
 		rootSplitPanePanel.setRowsBorder(createBorderWithAllEdges());
@@ -46,7 +46,7 @@ public class SplitPanePainter {
 	}
 
 	private MainPanel createColumnPanel(SplitPanePanelLocation location) {
-		MainPanel columnPanel = new MainPanel(null);
+		MainPanel columnPanel = new MainPanel();
 		splitPaneActionsCreator
 				.addShrinkExpandListeners(rootSplitPanePanel, columnPanel.getPanel());
 		columnPanel.setGapsBetweenRowsTo0();
@@ -107,7 +107,7 @@ public class SplitPanePainter {
 			MainPanel panel = null;
 			int indexOfPanel = 0;
 			for (SplitPanePanelData splitPanePanelData : panels.getValue()) {
-				panel = new MainPanel(null);
+				panel = new MainPanel();
 				panel.setGapsBetweenRowsTo0();
 				if (indexOfPanel < panels.getValue().size() - 1) {
 					splitPaneActionsCreator

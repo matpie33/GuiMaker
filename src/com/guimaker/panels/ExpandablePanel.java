@@ -2,6 +2,7 @@ package com.guimaker.panels;
 
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
+import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
@@ -28,7 +29,7 @@ public class ExpandablePanel extends MainPanel {
 	}
 
 	public ExpandablePanel(Color color, String title) {
-		super(color);
+		super(new PanelConfiguration().setColorToUse(color));
 		state = State.SHRINKED;
 		initialize(title);
 

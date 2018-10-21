@@ -44,6 +44,12 @@ public class MainPanel {
 	private PanelDisplayMode displayMode;
 	private ColumnPanelCreator columnPanelCreator;
 	private boolean rowsHaveNonZeroWeightsY;
+	private static Color defaultColor;
+	private boolean opaque = true;
+
+	public static void setDefaultColor(Color defaultColor) {
+		MainPanel.defaultColor = defaultColor;
+	}
 
 	public void setPaddingHorizontal(int padding) {
 		paddingLeft = padding;
@@ -79,50 +85,40 @@ public class MainPanel {
 		rowColor = color;
 	}
 
-	public MainPanel(Color color) {
-		this(color, false);
-	}
-
-	public MainPanel(Color color, PanelConfiguration panelConfiguration) {
-		//TODO merge constructors into 1: list configuration
-		this(color, false, true, panelConfiguration);
-	}
-
-	public MainPanel(Color color, boolean putRowsHighestAsPossible) {
-		this(color, putRowsHighestAsPossible, true);
-	}
-
-	public MainPanel(Color color, boolean putRowsHighestAsPossible,
-			boolean scrollHorizontally) {
-		this(color, putRowsHighestAsPossible, scrollHorizontally,
-				new PanelConfiguration(PanelDisplayMode.EDIT));
+	public MainPanel() {
+		this(new PanelConfiguration());
 	}
 
 	//TODO "do not create many top level containers (JPanel?), instead reuse existing
 	// by calling removAll" - try to optimize drawing
 
-	public MainPanel(Color color, boolean putRowsHighestAsPossible,
-			boolean scrollHorizontally, PanelConfiguration panelConfiguration) {
+	public MainPanel(PanelConfiguration panelConfiguration) {
+		opaque = panelConfiguration.isOpaque();
 		columnPanelCreator = new ColumnPanelCreator(
 				panelConfiguration.getPanelDisplayMode(), gapBetweenRows);
 		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
 				paddingLeft);
 		//TODO move all the params to panel configuration class
 		numberOfRows = 0;
-		originalBackgroundColor = color;
-		shouldPutRowsHighestAsPossible = putRowsHighestAsPossible;
-		if (scrollHorizontally) {
+		originalBackgroundColor = panelConfiguration.getColorToUse();
+		shouldPutRowsHighestAsPossible = panelConfiguration
+				.shouldPutRowsAsHighestAsPossible();
+		if (panelConfiguration.isScrollHorizontally()) {
 			panel = new JPanel();
 		}
 		else {
 			panel = new HorizontallyNonscrollablePanel();
 		}
 
-		if (color == null) {
-			panel.setOpaque(false);
+		if (panelConfiguration.getColorToUse() == null && panelConfiguration
+				.isOpaque()) {
+			panel.setBackground(defaultColor);
 		}
-		else {
-			panel.setBackground(color);
+		else if (panelConfiguration.getColorToUse() != null) {
+			panel.setBackground(panelConfiguration.getColorToUse());
+		}
+		else if (!panelConfiguration.isOpaque()) {
+			panel.setOpaque(false);
 		}
 
 		panel.setLayout(new GridBagLayout());
@@ -202,8 +198,8 @@ public class MainPanel {
 			panel.setBorder(
 					borderToUse != null ? borderToUse : row.getBorder());
 		}
-		if (panel instanceof JPanel && row.isOpaque() && (rowColor != null
-				|| row.getColor() != null)) {
+		if (panel instanceof JPanel && opaque && row.isOpaque() && (
+				rowColor != null || row.getColor() != null)) {
 			panel.setBackground(
 					row.getColor() != null ? row.getColor() : rowColor);
 			panel.setOpaque(true);

@@ -34,7 +34,7 @@ public class ListSearchPanelCreator<Word extends ListElement> {
 		this.buttonFilter = buttonFilter;
 		this.listRowData = listRowData;
 
-		searchPanel = new MainPanel(null);
+		searchPanel = new MainPanel();
 
 		JLabel searchOptionPrompt = GuiElementsCreator.createLabel(
 				new ComponentOptions().text(Prompts.SEARCH_OPTION_PROMPT));

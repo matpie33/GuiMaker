@@ -69,7 +69,7 @@ public class ListPanelCreator<Word extends ListElement>
 			ListRowCreator<Word> listRow, ListWordsController<Word> controller,
 			MyList<Word> myList) {
 		mainPanel.setRowsBorder(null);
-		filterPanel = new MainPanel(null);
+		filterPanel = new MainPanel();
 		filterPanel.setGapsBetweenRowsTo0();
 		filterPanel.setRowsBorder(getDefaultBorder());
 		this.myList = myList;
@@ -82,8 +82,10 @@ public class ListPanelCreator<Word extends ListElement>
 						!= null;
 
 		Color contentColor = BasicColors.PURPLE_DARK_1;
-		rowsPanel = new MainPanel(contentColor, true, true,
-				new PanelConfiguration(listConfiguration.getDisplayMode()));
+		rowsPanel = new MainPanel(
+				new PanelConfiguration().setColorToUse(contentColor)
+						.setPanelDisplayMode(listConfiguration.getDisplayMode())
+						.putRowsAsHighestAsPossible());
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
 			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
@@ -119,7 +121,8 @@ public class ListPanelCreator<Word extends ListElement>
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				GuiElementsCreator.createLabel(new ComponentOptions()
 						.text(com.guimaker.strings.Prompts.EMPTY_LIST)),
-				createButtonAddRow(InputGoal.EDIT)).setBorder(getDefaultBorder()));
+				createButtonAddRow(InputGoal.EDIT))
+				.setBorder(getDefaultBorder()));
 	}
 
 	private void unwrapConfiguration(ListConfiguration listConfiguration) {
@@ -284,7 +287,7 @@ public class ListPanelCreator<Word extends ListElement>
 		mainPanel.addRow(SimpleRowBuilder
 				.createRow(FillType.NONE, buttonLoadNextWords));
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
-				navigationButtons.toArray(new JComponent[]{})));
+				navigationButtons.toArray(new JComponent[] {})));
 
 	}
 
@@ -302,7 +305,6 @@ public class ListPanelCreator<Word extends ListElement>
 		mainPanel.removeRow(0);
 		isInitialized = true;
 		createRootPanel();
-
 
 		if (enableWordSearching) {
 			ListRowData<Word> listRow = this.listRow.createListRow(
@@ -339,7 +341,6 @@ public class ListPanelCreator<Word extends ListElement>
 
 		createMainPanelElements();
 
-
 	}
 
 	private AbstractButton createButtonFilter(
@@ -359,8 +360,8 @@ public class ListPanelCreator<Word extends ListElement>
 		if (!isScrollBarInherited) {
 			parentScrollPane = GuiElementsCreator.createScrollPane(
 					new ScrollPaneOptions().opaque(false)
-							.componentToWrap(rowsPanel.getPanel()).border
-							(getDefaultBorder()));
+							.componentToWrap(rowsPanel.getPanel())
+							.border(getDefaultBorder()));
 			if (!scrollBarSizeFittingContent) {
 				parentScrollPane.setPreferredSize(scrollPanesSize);
 			}

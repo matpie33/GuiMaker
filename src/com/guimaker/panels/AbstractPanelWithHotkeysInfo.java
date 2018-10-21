@@ -49,7 +49,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	private Color contentColor;
 
 	public AbstractPanelWithHotkeysInfo() {
-		mainPanel = new MainPanel(null);
+		mainPanel = new MainPanel();
 		mainPanel.setRowsBorder(defaultBorder);
 		createHotkeysPanel();
 		isMaximized = false;

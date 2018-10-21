@@ -1,6 +1,7 @@
 package com.guimaker.panels;
 
 import com.guimaker.colors.BasicColors;
+import com.guimaker.model.PanelConfiguration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +16,10 @@ public class SubPanel {
 		super();
 		panel = new JPanel();
 		panel.setLayout(new GridLayout(1, 2));
-		leftPanel = new MainPanel(BasicColors.BLUE_NORMAL_2);
-		rightPanel = new MainPanel(BasicColors.BLUE_NORMAL_1);
+		leftPanel = new MainPanel(new PanelConfiguration()
+				.setColorToUse(BasicColors.BLUE_NORMAL_2));
+		rightPanel = new MainPanel(new PanelConfiguration()
+				.setColorToUse(BasicColors.BLUE_NORMAL_1));
 		panel.add(leftPanel.getPanel());
 		panel.add(rightPanel.getPanel());
 	}

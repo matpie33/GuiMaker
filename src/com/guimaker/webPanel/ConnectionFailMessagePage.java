@@ -4,6 +4,7 @@ import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.TextAlignment;
+import com.guimaker.model.PanelConfiguration;
 import com.guimaker.model.WebContext;
 import com.guimaker.options.TextPaneOptions;
 import com.guimaker.panels.GuiElementsCreator;
@@ -20,7 +21,8 @@ public class ConnectionFailMessagePage implements ConnectionFailPageHandler {
 	private JTextComponent messageComponent;
 
 	public ConnectionFailMessagePage(AbstractButton buttonReload) {
-		messagePanel = new MainPanel(BasicColors.BLUE_DARK_3);
+		messagePanel = new MainPanel(new PanelConfiguration()
+				.setColorToUse(BasicColors.BLUE_DARK_3));
 		messageComponent = GuiElementsCreator.createTextPane(new TextPaneOptions().
 				text(Prompts.CONNECTION_ERROR).fontSize(20)
 				.textAlignment(TextAlignment.CENTERED).editable(false));
