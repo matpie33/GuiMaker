@@ -29,8 +29,7 @@ public class LoadNextWordsHandler implements LoadWordsHandler {
 
 	@Override
 	public JComponent showWord(AbstractSimpleRow abstractSimpleRow) {
-		return rowsPanel
-				.insertRow(rowsPanel.getNumberOfRows() - 1, abstractSimpleRow);
+		return rowsPanel.addRow(abstractSimpleRow);
 	}
 
 	@Override

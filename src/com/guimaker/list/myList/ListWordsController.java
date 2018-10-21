@@ -62,8 +62,6 @@ public class ListWordsController<Word extends ListElement> {
 		this.applicationChangesManager = applicationChangesManager;
 		listPanelCreator = new ListPanelCreator<>(listConfiguration,
 				applicationChangesManager, listRowCreator, this, myList);
-		listPanelCreator.setParentDialog(
-				applicationChangesManager.getApplicationWindow());
 		this.listPanelCreator.setTitle(title);
 
 		initializeFoundWordStrategies();

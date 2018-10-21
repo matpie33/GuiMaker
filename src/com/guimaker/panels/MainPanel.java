@@ -206,12 +206,17 @@ public class MainPanel {
 		if (panel == null) {
 			return null;
 		}
-		if (row.isBorderEnabled() && (borderToUse != null
+		if (panel instanceof JPanel && row.isBorderEnabled() && (borderToUse !=
+				null
 				|| row.getBorder() != null)) {
 			panel.setBorder(
 					borderToUse != null ? borderToUse : row.getBorder());
 		}
-		if (row.isOpaque() && (rowColor != null || row.getColor() != null)) {
+		if (panel instanceof JPanel && row.isOpaque() && (rowColor != null ||
+				row
+				.getColor()
+				!=
+				null)) {
 			panel.setBackground(
 					row.getColor() != null ? row.getColor() : rowColor);
 			panel.setOpaque(true);

@@ -2,14 +2,15 @@ package com.guimaker.list.myList;
 
 import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.ApplicationWindow;
+import com.guimaker.application.DialogWindow;
 import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
-import com.guimaker.list.ListRowData;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.ListRowData;
 import com.guimaker.model.ListRow;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ButtonOptions;
@@ -42,7 +43,6 @@ public class ListPanelCreator<Word extends ListElement>
 	private JLabel titleLabel;
 	private ListRowCreator<Word> listRow;
 	private ApplicationChangesManager applicationChangesManager;
-	private MainPanel rootPanel;
 	private boolean enableWordAdding;
 	private AbstractButton buttonLoadNextWords;
 	private AbstractButton buttonLoadPreviousWords;
@@ -62,11 +62,16 @@ public class ListPanelCreator<Word extends ListElement>
 	private final static String UNIQUE_NAME = "list panel creator";
 	private MyList myList;
 	private boolean isInitialized = false;
+	private MainPanel filterPanel;
 
 	public ListPanelCreator(ListConfiguration listConfiguration,
 			ApplicationChangesManager applicationChangesManager,
 			ListRowCreator<Word> listRow, ListWordsController<Word> controller,
 			MyList<Word> myList) {
+		mainPanel.setRowsBorder(null);
+		filterPanel = new MainPanel(null);
+		filterPanel.setGapsBetweenRowsTo0();
+		filterPanel.setRowsBorder(getDefaultBorder());
 		this.myList = myList;
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
 		this.applicationChangesManager = applicationChangesManager;
@@ -78,11 +83,10 @@ public class ListPanelCreator<Word extends ListElement>
 
 		rowsPanel = new MainPanel(null, true, true,
 				new PanelConfiguration(listConfiguration.getDisplayMode()));
-		rootPanel = new MainPanel(null);
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
 			mainPanel.setRowColor(ColorChanger.makeLighter(getContentColor()));
-			rootPanel.setRowColor(ColorChanger.makeLighter(getContentColor()));
+			rowsPanel.setWrappingPanelBorder(getDefaultBorder());
 		}
 
 		titleLabel = GuiElementsCreator.createLabel(new ComponentOptions());
@@ -97,11 +101,12 @@ public class ListPanelCreator<Word extends ListElement>
 		listInputsSelectionManager = listConfiguration
 				.getAllInputsSelectionManager();
 		addElementsForEmptyList();
+		createButtonsShowNextAndPrevious();
 
 	}
 
 	public void addElementsForEmptyList() {
-		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
+		rowsPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				GuiElementsCreator.createLabel(new ComponentOptions()
 						.text(com.guimaker.strings.Prompts.EMPTY_LIST)),
 				createButtonAddRow(InputGoal.EDIT)));
@@ -138,7 +143,7 @@ public class ListPanelCreator<Word extends ListElement>
 		return loadPreviousWordsHandler;
 	}
 
-	private void createAndAddButtonsShowNextAndPrevious() {
+	private void createButtonsShowNextAndPrevious() {
 		buttonLoadNextWords = createAndAddButtonLoadWords(
 				ButtonsNames.SHOW_NEXT_WORDS_ON_LIST);
 		buttonLoadPreviousWords = createAndAddButtonLoadWords(
@@ -147,10 +152,6 @@ public class ListPanelCreator<Word extends ListElement>
 				createButtonShowNextOrPreviousWords(loadNextWordsHandler));
 		buttonLoadPreviousWords.addActionListener(
 				createButtonShowNextOrPreviousWords(loadPreviousWordsHandler));
-		rowsPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, buttonLoadPreviousWords));
-		rowsPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, buttonLoadNextWords));
 		if (!showButtonsNextAndPrevious) {
 			buttonLoadPreviousWords.setVisible(false);
 			buttonLoadNextWords.setVisible(false);
@@ -167,7 +168,7 @@ public class ListPanelCreator<Word extends ListElement>
 	public ListRow<Word> addRow(Word word, int rowNumber,
 			boolean shouldShowWord, LoadWordsHandler loadWordsHandler,
 			InputGoal inputGoal) {
-		if (!isInitialized){
+		if (!isInitialized) {
 			createElements();
 		}
 		this.inputGoal = inputGoal;
@@ -261,12 +262,39 @@ public class ListPanelCreator<Word extends ListElement>
 		titleLabel.setText(title);
 	}
 
+	private void createMainPanelElements() {
+		if (!isSkipTitle) {
+			mainPanel.addRow(SimpleRowBuilder
+					.createRow(FillType.NONE, Anchor.CENTER, titleLabel));
+		}
+		if (filterPanel.getNumberOfRows() > 0) {
+			mainPanel.addRow(SimpleRowBuilder
+					.createRow(FillType.HORIZONTAL, filterPanel.getPanel()));
+		}
+		mainPanel.addRow(SimpleRowBuilder
+				.createRow(FillType.NONE, buttonLoadPreviousWords));
+		mainPanel.addRow(SimpleRowBuilder
+				.createRow(FillType.BOTH, listElementsPanel));
+		mainPanel.addRow(SimpleRowBuilder
+				.createRow(FillType.NONE, buttonLoadNextWords));
+
+	}
+
+	@Override
+	public void setParentDialog(DialogWindow dialog) {
+		super.setParentDialog(dialog);
+		mainPanel.setBackground(
+				dialog.getParentConfiguration().getContentPanelColor());
+		filterPanel.setRowColor(BasicColors.GREEN_BRIGHT_1);
+	}
+
 	@Override
 	public void createElements() {
-		mainPanel.removeRow(0);
+
+		rowsPanel.removeRow(0);
 		isInitialized = true;
 		createRootPanel();
-		createAndAddButtonsShowNextAndPrevious();
+
 		if (enableWordAdding) {
 			navigationButtons.add(createButtonAddWord());
 		}
@@ -277,10 +305,11 @@ public class ListPanelCreator<Word extends ListElement>
 					CommonListElements.forSingleRowOnly(Color.WHITE),
 					InputGoal.SEARCH);
 			if (!listRow.isEmpty()) {
-				mainPanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
-						listSearchPanelCreator.createPanel(listRow,
-								createButtonFilter(listSearchPanelCreator)))
-						.setColor(BasicColors.GREEN_BRIGHT_1));
+
+				JPanel panel = listSearchPanelCreator.createPanel(listRow,
+						createButtonFilter(listSearchPanelCreator));
+				filterPanel.addRow(SimpleRowBuilder
+						.createRow(FillType.HORIZONTAL, Anchor.WEST, panel));
 				addHotkey(KeyModifiers.CONTROL, KeyEvent.VK_SPACE,
 						listSearchPanelCreator
 								.createActionSwitchComboboxValue(),
@@ -298,21 +327,13 @@ public class ListPanelCreator<Word extends ListElement>
 			}
 		}
 
-		if (!isSkipTitle) {
-			rootPanel.addRow(SimpleRowBuilder
-					.createRow(FillType.NONE, Anchor.CENTER, titleLabel));
-		}
-		rootPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.BOTH, listElementsPanel));
-		mainPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.BOTH, rootPanel.getPanel()));
-
 		if (!enableWordSearching && !enableWordAdding) {
 			mainPanel.getPanel().setOpaque(false);
 		}
 
 		setNavigationButtons(
 				navigationButtons.toArray(new AbstractButton[] {}));
+		createMainPanelElements();
 	}
 
 	private AbstractButton createButtonFilter(
@@ -332,7 +353,8 @@ public class ListPanelCreator<Word extends ListElement>
 		if (!isScrollBarInherited) {
 			parentScrollPane = GuiElementsCreator.createScrollPane(
 					new ScrollPaneOptions().opaque(false)
-							.componentToWrap(rowsPanel.getPanel()));
+							.componentToWrap(rowsPanel.getPanel()).border
+							(getDefaultBorder()));
 			if (!scrollBarSizeFittingContent) {
 				parentScrollPane.setPreferredSize(scrollPanesSize);
 			}
@@ -437,7 +459,7 @@ public class ListPanelCreator<Word extends ListElement>
 
 	public void clear() {
 		rowsPanel.clear();
-		createAndAddButtonsShowNextAndPrevious();
+		createButtonsShowNextAndPrevious();
 	}
 
 	public void scrollToTop() {
@@ -446,7 +468,7 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public int getNumberOfListRows() {
-		return rowsPanel.getNumberOfRows() - 2;
+		return rowsPanel.getNumberOfRows();
 	}
 
 	public void enableButtonShowPreviousWords() {
