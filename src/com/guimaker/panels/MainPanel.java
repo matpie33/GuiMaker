@@ -835,7 +835,7 @@ public class MainPanel {
 
 	public void setBackground(Color c) {
 		//TODO check why column panel creator is opaque false
-		getPanel().setOpaque(true);
+		getPanel().setOpaque(c != null);
 		getPanel().setBackground(c);
 	}
 

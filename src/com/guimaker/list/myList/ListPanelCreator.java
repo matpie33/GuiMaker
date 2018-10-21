@@ -87,6 +87,7 @@ public class ListPanelCreator<Word extends ListElement>
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
 			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
+			mainPanel.setBackground(null);
 			rowsPanel.setWrappingPanelBorder(getDefaultBorder());
 		}
 
@@ -115,10 +116,10 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public void addElementsForEmptyList() {
-		rowsPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
+		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				GuiElementsCreator.createLabel(new ComponentOptions()
 						.text(com.guimaker.strings.Prompts.EMPTY_LIST)),
-				createButtonAddRow(InputGoal.EDIT)));
+				createButtonAddRow(InputGoal.EDIT)).setBorder(getDefaultBorder()));
 	}
 
 	private void unwrapConfiguration(ListConfiguration listConfiguration) {
@@ -298,7 +299,7 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public void createElements() {
 
-		rowsPanel.removeRow(0);
+		mainPanel.removeRow(0);
 		isInitialized = true;
 		createRootPanel();
 
