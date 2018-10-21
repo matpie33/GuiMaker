@@ -81,11 +81,12 @@ public class ListPanelCreator<Word extends ListElement>
 				listConfiguration.getParentListAndWordContainingThisList()
 						!= null;
 
-		rowsPanel = new MainPanel(BasicColors.PURPLE_DARK_1, true, true,
+		Color contentColor = BasicColors.PURPLE_DARK_1;
+		rowsPanel = new MainPanel(contentColor, true, true,
 				new PanelConfiguration(listConfiguration.getDisplayMode()));
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
-			mainPanel.setRowColor(ColorChanger.makeLighter(getContentColor()));
+			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
 			rowsPanel.setWrappingPanelBorder(getDefaultBorder());
 		}
 
@@ -190,10 +191,6 @@ public class ListPanelCreator<Word extends ListElement>
 			AbstractSimpleRow abstractSimpleRow = SimpleRowBuilder
 					.createRow(FillType.HORIZONTAL, Anchor.NORTH,
 							rowPanel.getPanel());
-			if (hasParentList) {
-				rowPanel.setBackground(
-						ColorChanger.makeLighter(getContentColor()));
-			}
 			loadWordsHandler.showWord(abstractSimpleRow);
 		}
 		else if (!buttonLoadNextWords.isEnabled()) {

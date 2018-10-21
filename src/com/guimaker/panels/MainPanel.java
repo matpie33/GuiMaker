@@ -43,12 +43,7 @@ public class MainPanel {
 	private InputSelectionManager inputSelectionManager;
 	private PanelDisplayMode displayMode;
 	private ColumnPanelCreator columnPanelCreator;
-	private static Color defaultColor;
 	private boolean rowsHaveNonZeroWeightsY;
-
-	public static void setDefaultColor(Color defaultColor) {
-		MainPanel.defaultColor = defaultColor;
-	}
 
 	public void setPaddingHorizontal(int padding) {
 		paddingLeft = padding;
@@ -124,12 +119,7 @@ public class MainPanel {
 		}
 
 		if (color == null) {
-			if (defaultColor == null) {
-				panel.setOpaque(false);
-			}
-			else {
-				panel.setBackground(defaultColor);
-			}
+			panel.setOpaque(false);
 		}
 		else {
 			panel.setBackground(color);
@@ -206,17 +196,13 @@ public class MainPanel {
 		if (panel == null) {
 			return null;
 		}
-		if (panel instanceof JPanel && row.isBorderEnabled() && (borderToUse !=
-				null
-				|| row.getBorder() != null)) {
+		if (panel instanceof JPanel && row.isBorderEnabled() && (
+				borderToUse != null || row.getBorder() != null)) {
 			panel.setBorder(
 					borderToUse != null ? borderToUse : row.getBorder());
 		}
-		if (panel instanceof JPanel && row.isOpaque() && (rowColor != null ||
-				row
-				.getColor()
-				!=
-				null)) {
+		if (panel instanceof JPanel && row.isOpaque() && (rowColor != null
+				|| row.getColor() != null)) {
 			panel.setBackground(
 					row.getColor() != null ? row.getColor() : rowColor);
 			panel.setOpaque(true);
