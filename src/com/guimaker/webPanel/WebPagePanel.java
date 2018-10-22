@@ -19,8 +19,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 
 import javax.swing.*;
@@ -86,9 +88,6 @@ public class WebPagePanel {
 					}
 					shouldGrabFocusOnReload = true;
 				}
-				if (newValue == Worker.State.SCHEDULED) {
-					showPanel(MESSAGE_PANEL);
-				}
 			}
 		};
 	}
@@ -146,6 +145,7 @@ public class WebPagePanel {
 	}
 
 	public void showPage(String url) {
+		showPanel(MESSAGE_PANEL);
 		currentlyLoadingPage = url;
 		Platform.runLater(() -> webView.getEngine().load(url));
 	}
