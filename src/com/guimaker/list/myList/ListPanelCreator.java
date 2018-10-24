@@ -107,6 +107,8 @@ public class ListPanelCreator<Word extends ListElement>
 		addElementsForEmptyList();
 		createButtonsShowNextAndPrevious();
 		initializeNavigationButtons();
+		createRootPanel();
+		createMainPanelElements();
 	}
 
 	private void initializeNavigationButtons() {
@@ -118,11 +120,10 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public void addElementsForEmptyList() {
-		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
+		rowsPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				GuiElementsCreator.createLabel(new ComponentOptions()
 						.text(com.guimaker.strings.Prompts.EMPTY_LIST)),
-				createButtonAddRow(InputGoal.EDIT))
-				.setBorder(getDefaultBorder()));
+				createButtonAddRow(InputGoal.EDIT)));
 	}
 
 	private void unwrapConfiguration(ListConfiguration listConfiguration) {
@@ -303,9 +304,8 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public void createElements() {
 
-		mainPanel.removeRow(0);
+		rowsPanel.removeRow(0);
 		isInitialized = true;
-		createRootPanel();
 
 		if (enableWordSearching) {
 			ListRowData<Word> listRow = this.listRow.createListRow(
@@ -339,8 +339,6 @@ public class ListPanelCreator<Word extends ListElement>
 		if (!enableWordSearching && !enableWordAdding) {
 			mainPanel.getPanel().setOpaque(false);
 		}
-
-		createMainPanelElements();
 
 	}
 
