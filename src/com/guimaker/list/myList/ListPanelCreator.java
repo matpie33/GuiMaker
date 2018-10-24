@@ -278,10 +278,8 @@ public class ListPanelCreator<Word extends ListElement>
 			mainPanel.addRow(SimpleRowBuilder
 					.createRow(FillType.NONE, Anchor.CENTER, titleLabel));
 		}
-		if (filterPanel.getNumberOfRows() > 0) {
-			mainPanel.addRow(SimpleRowBuilder
-					.createRow(FillType.HORIZONTAL, filterPanel.getPanel()));
-		}
+		mainPanel.addRow(SimpleRowBuilder
+				.createRow(FillType.HORIZONTAL, filterPanel.getPanel()));
 		mainPanel.addRow(SimpleRowBuilder
 				.createRow(FillType.NONE, buttonLoadPreviousWords));
 		mainPanel.addRow(SimpleRowBuilder
@@ -333,6 +331,9 @@ public class ListPanelCreator<Word extends ListElement>
 							}
 						}, mainPanel.getPanel(),
 						HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
+			}
+			else{
+				mainPanel.removeRowWithElements(filterPanel.getPanel());
 			}
 		}
 
