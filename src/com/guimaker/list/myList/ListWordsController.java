@@ -289,7 +289,9 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public WordInMyListExistence<Word> isWordDefined(Word word) {
-
+		if (word.isEmpty()){
+			return new WordInMyListExistence<>(false, null, 0);
+		}
 		for (int i = 0; i < allWordsToRowNumberMap.size(); i++) {
 			ListRow<Word> listRow = allWordsToRowNumberMap.get(i);
 			if (listRow.getWord().equals(word)) {

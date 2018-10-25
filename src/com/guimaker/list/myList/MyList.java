@@ -311,9 +311,6 @@ public class MyList<Word extends ListElement>
 		return listController.get0BasedRowNumberOfWord(word) + 1;
 	}
 
-	public WordInMyListExistence<Word> isWordDefined(Word word) {
-		return listController.isWordDefined(word);
-	}
 
 	public Word getWordInRow(int rowNumber1Based) {
 		return listController.getWordInRow(rowNumber1Based - 1);
