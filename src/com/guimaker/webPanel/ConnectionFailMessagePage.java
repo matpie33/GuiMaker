@@ -21,15 +21,19 @@ public class ConnectionFailMessagePage implements ConnectionFailPageHandler {
 	private JTextComponent messageComponent;
 
 	public ConnectionFailMessagePage(AbstractButton buttonReload) {
-		messagePanel = new MainPanel(new PanelConfiguration()
-				.setColorToUse(BasicColors.BLUE_DARK_3));
-		messageComponent = GuiElementsCreator.createTextPane(new TextPaneOptions().
-				text(Prompts.CONNECTION_ERROR).fontSize(20)
-				.textAlignment(TextAlignment.CENTERED).editable(false));
-		messagePanel.addRow(SimpleRowBuilder
-				.createRow(FillType.HORIZONTAL, messageComponent));
-		messagePanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, Anchor.CENTER, buttonReload));
+		messagePanel = new MainPanel(new PanelConfiguration().setColorToUse(
+				BasicColors.BLUE_DARK_3));
+		messageComponent = GuiElementsCreator.createTextPane(
+				new TextPaneOptions().
+											 text(Prompts.CONNECTION_ERROR)
+									 .fontSize(20)
+									 .textAlignment(TextAlignment.CENTERED)
+									 .editable(false));
+		messagePanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+				messageComponent));
+		messagePanel.addRow(
+				SimpleRowBuilder.createRow(FillType.NONE, Anchor.CENTER,
+						buttonReload));
 
 	}
 

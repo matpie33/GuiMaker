@@ -1,15 +1,15 @@
 package com.guimaker.controllers;
 
-import com.guimaker.panels.MainPanel;
-import com.guimaker.strings.ExceptionsMessages;
 import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.list.ListElement;
-import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.MyList;
+import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.InsertWordPanel;
+import com.guimaker.panels.MainPanel;
+import com.guimaker.strings.ExceptionsMessages;
 import com.guimaker.utilities.CommonListElements;
 import com.guimaker.utilities.ThreadUtilities;
 
@@ -34,13 +34,14 @@ public class InsertWordController<Word extends ListElement>
 		this.panel = panel;
 		this.list = list;
 		this.applicationChangesManager = applicationChangesManager;
-		list.getListRowCreator().addValidationListener(this);
+		list.getListRowCreator()
+			.addValidationListener(this);
 	}
 
 	private void checkIfWordExistsOrIsEmptyAndAdd(Word word) {
 		if (word.isEmpty()) {
 			panel.getDialog()
-					.showMessageDialog(ExceptionsMessages.NO_INPUT_SUPPLIED);
+				 .showMessageDialog(ExceptionsMessages.NO_INPUT_SUPPLIED);
 			return;
 		}
 		ThreadUtilities.callOnOtherThread(() -> {
@@ -49,11 +50,13 @@ public class InsertWordController<Word extends ListElement>
 				list.scrollToBottom();
 				applicationChangesManager.save();
 			}
-			else{
-				list.highlightRow(list.get1BasedRowNumberOfWord(word) - 1, true);
-				panel.getDialog().showMessageDialog(
-						String.format(ExceptionsMessages.WORD_ALREADY_EXISTS,
-								list.get1BasedRowNumberOfWord(word)), false);
+			else {
+				list.highlightRow(list.get1BasedRowNumberOfWord(word) - 1,
+						true);
+				panel.getDialog()
+					 .showMessageDialog(String.format(
+							 ExceptionsMessages.WORD_ALREADY_EXISTS,
+							 list.get1BasedRowNumberOfWord(word)), false);
 			}
 		});
 	}
@@ -63,7 +66,7 @@ public class InsertWordController<Word extends ListElement>
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Component focusOwner = FocusManager.getCurrentManager()
-						.getFocusOwner();
+												   .getFocusOwner();
 				if (focusOwner instanceof JTextComponent) {
 					validateFocusedTextInput();
 					addingWordWasRequested = true;
@@ -78,7 +81,7 @@ public class InsertWordController<Word extends ListElement>
 
 	private void validateFocusedTextInput() {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
-				.clearGlobalFocusOwner();
+							.clearGlobalFocusOwner();
 	}
 
 	@Override
@@ -96,11 +99,13 @@ public class InsertWordController<Word extends ListElement>
 	}
 
 	public MainPanel createListRowPanel() {
-		word = list.getWordInitializer().initializeElement();
+		word = list.getWordInitializer()
+				   .initializeElement();
 		ListRowData<Word> listRowData = list.getListRowCreator()
-				.createListRow(word, CommonListElements
-								.forSingleRowOnly(panel.getLabelsColor()),
-						InputGoal.ADD);
+											.createListRow(word,
+													CommonListElements.forSingleRowOnly(
+															panel.getLabelsColor()),
+													InputGoal.ADD);
 		return listRowData.getRowPanel();
 	}
 

@@ -17,17 +17,21 @@ public class ConfirmPanelController {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				confirmPanel.getDialog().setAccepted(false);
+				confirmPanel.getDialog()
+							.setAccepted(false);
 			}
 		};
 	}
 
-	public AbstractAction createActionConfirm (){
+	public AbstractAction createActionConfirm() {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				confirmPanel.getDialog().getContainer().dispose();
-				confirmPanel.getDialog().setAccepted(true);
+				confirmPanel.getDialog()
+							.getContainer()
+							.dispose();
+				confirmPanel.getDialog()
+							.setAccepted(true);
 			}
 		};
 	}

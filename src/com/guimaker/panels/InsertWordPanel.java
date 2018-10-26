@@ -1,13 +1,13 @@
 package com.guimaker.panels;
 
+import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.controllers.InsertWordController;
 import com.guimaker.enums.FillType;
+import com.guimaker.list.ListElement;
+import com.guimaker.list.myList.MyList;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.HotkeysDescriptions;
-import com.guimaker.application.ApplicationChangesManager;
-import com.guimaker.list.ListElement;
-import com.guimaker.list.myList.MyList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +40,10 @@ public class InsertWordPanel<Word extends ListElement>
 	@Override
 	public void createElements() {
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.BOTH,
-				controller.createListRowPanel().getPanel()).fillAllVertically()
-				.fillHorizontallyEqually());
+				controller.createListRowPanel()
+						  .getPanel())
+										 .fillAllVertically()
+										 .fillHorizontallyEqually());
 	}
 
 	@Override

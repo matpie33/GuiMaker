@@ -8,7 +8,8 @@ public class ListInputsSelectionManager {
 
 	private List<InputSelectionManager> inputsSelectionManagers = new ArrayList<>();
 
-	public void addInputSelectionManager (InputSelectionManager inputSelectionManager){
+	public void addInputSelectionManager(
+			InputSelectionManager inputSelectionManager) {
 		inputsSelectionManagers.add(inputSelectionManager);
 	}
 
@@ -20,7 +21,7 @@ public class ListInputsSelectionManager {
 
 	public JTextComponent getSelectedInput() {
 		for (InputSelectionManager inputsSelectionManager : inputsSelectionManagers) {
-			if (inputsSelectionManager.hasSelectedInput()){
+			if (inputsSelectionManager.hasSelectedInput()) {
 				return inputsSelectionManager.getSelectedInput();
 			}
 		}

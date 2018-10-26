@@ -1,10 +1,10 @@
 package com.guimaker.list.myList;
 
+import com.guimaker.list.ListElement;
+import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListPropertyInformation;
 import com.guimaker.list.ListRowData;
 import com.guimaker.panels.MainPanel;
-import com.guimaker.list.ListElementPropertyManager;
-import com.guimaker.list.ListElement;
 
 import javax.swing.text.JTextComponent;
 
@@ -22,8 +22,8 @@ public class ListRowDataCreator<Word extends ListElement> {
 
 		ListPropertyInformation<Word> listPropertyInformation = new ListPropertyInformation<>(
 				filteringInput, filteringHandler);
-		listRowData
-				.addPropertyInformation(propertyName, listPropertyInformation);
+		listRowData.addPropertyInformation(propertyName,
+				listPropertyInformation);
 
 	}
 

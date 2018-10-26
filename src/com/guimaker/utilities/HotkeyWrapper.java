@@ -28,8 +28,6 @@ public class HotkeyWrapper {
 		return conditionForHotkey.getIntValue();
 	}
 
-
-
 	public int getKeyModifier() {
 		return keyMask;
 	}

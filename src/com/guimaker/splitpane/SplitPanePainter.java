@@ -47,8 +47,8 @@ public class SplitPanePainter {
 
 	private MainPanel createColumnPanel(SplitPanePanelLocation location) {
 		MainPanel columnPanel = new MainPanel();
-		splitPaneActionsCreator
-				.addShrinkExpandListeners(rootSplitPanePanel, columnPanel.getPanel());
+		splitPaneActionsCreator.addShrinkExpandListeners(rootSplitPanePanel,
+				columnPanel.getPanel());
 		columnPanel.setGapsBetweenRowsTo0();
 		columnPanel.setWrappingPanelBorder(getBorderForLocation(location));
 		return columnPanel;
@@ -78,9 +78,8 @@ public class SplitPanePainter {
 	}
 
 	private Border createBorderWithRightEdgeOnly() {
-		return BorderFactory
-				.createMatteBorder(0, 0, 0, contentPanelBorderThickness,
-						CONTENT_PANEL_BORDER_COLOR);
+		return BorderFactory.createMatteBorder(0, 0, 0,
+				contentPanelBorderThickness, CONTENT_PANEL_BORDER_COLOR);
 	}
 
 	private Border createBorderWithAllEdges() {
@@ -91,8 +90,8 @@ public class SplitPanePainter {
 
 	public void setWeightsX(double leftPanel, double centerPanel,
 			double rightPanel) {
-		SplitPaneWeightsX recalculatedWeights = panelConstraintsCreator
-				.recalculateMissingWeightsX(leftPanel, centerPanel, rightPanel);
+		SplitPaneWeightsX recalculatedWeights = panelConstraintsCreator.recalculateMissingWeightsX(
+				leftPanel, centerPanel, rightPanel);
 		panelColumnNumberToWeightX.put(0, recalculatedWeights.getLeftPanel());
 		panelColumnNumberToWeightX.put(1, recalculatedWeights.getCenterPanel());
 		panelColumnNumberToWeightX.put(2, recalculatedWeights.getRightPanel());
@@ -101,33 +100,35 @@ public class SplitPanePainter {
 	private List<MainPanel> createColumnPanels(
 			Map<SplitPanePanelLocation, List<SplitPanePanelData>> splitPanePanelLocations) {
 		List<MainPanel> wrappingPanels = new ArrayList<>();
-		for (Map.Entry<SplitPanePanelLocation, List<SplitPanePanelData>> panels : splitPanePanelLocations
-				.entrySet()) {
+		for (Map.Entry<SplitPanePanelLocation, List<SplitPanePanelData>> panels : splitPanePanelLocations.entrySet()) {
 			MainPanel wrappingPanel = createColumnPanel(panels.getKey());
 			MainPanel panel = null;
 			int indexOfPanel = 0;
 			for (SplitPanePanelData splitPanePanelData : panels.getValue()) {
 				panel = new MainPanel();
 				panel.setGapsBetweenRowsTo0();
-				if (indexOfPanel < panels.getValue().size() - 1) {
-					splitPaneActionsCreator
-							.addShrinkExpandListeners(wrappingPanel, panel.getPanel());
+				if (indexOfPanel < panels.getValue()
+										 .size() - 1) {
+					splitPaneActionsCreator.addShrinkExpandListeners(
+							wrappingPanel, panel.getPanel());
 					panel.setWrappingPanelBorder(
 							createBorderBottomForContentPanel());
 				}
 
 				JLabel title = createTitleLabel(splitPanePanelData.getTitle());
-				panel.addRow(SimpleRowBuilder
-						.createRow(FillType.HORIZONTAL, title,
+				panel.addRow(
+						SimpleRowBuilder.createRow(FillType.HORIZONTAL, title,
 								createButtonCollapsePanel())
-						.setColor(Color.GRAY)
-						.fillHorizontallySomeElements(title)
-						.setBorder(createBorderBottomForTitlePanel()));
+										.setColor(Color.GRAY)
+										.fillHorizontallySomeElements(title)
+										.setBorder(
+												createBorderBottomForTitlePanel()));
 				panel.addRow(SimpleRowBuilder.createRow(FillType.BOTH,
 						splitPanePanelData.getContent()));
-				wrappingPanel.addRow(SimpleRowBuilder
-						.createRow(FillType.BOTH, panel.getPanel())
-						.setWeightY(splitPanePanelData.getWeightY()));
+				wrappingPanel.addRow(SimpleRowBuilder.createRow(FillType.BOTH,
+						panel.getPanel())
+													 .setWeightY(
+															 splitPanePanelData.getWeightY()));
 
 				indexOfPanel++;
 			}
@@ -142,20 +143,18 @@ public class SplitPanePainter {
 	}
 
 	private Border createBorderBottomForTitlePanel() {
-		return BorderFactory
-				.createMatteBorder(0, 0, titlePanelBorderThickness, 0,
-						TITLE_PANEL_BORDER_COLOR);
+		return BorderFactory.createMatteBorder(0, 0, titlePanelBorderThickness,
+				0, TITLE_PANEL_BORDER_COLOR);
 	}
 
 	private Border createBorderBottomForContentPanel() {
-		return BorderFactory
-				.createMatteBorder(0, 0, contentPanelBorderThickness, 0,
-						CONTENT_PANEL_BORDER_COLOR);
+		return BorderFactory.createMatteBorder(0, 0,
+				contentPanelBorderThickness, 0, CONTENT_PANEL_BORDER_COLOR);
 	}
 
 	private JLabel createTitleLabel(String title) {
-		return GuiElementsCreator
-				.createLabel(new ComponentOptions().text(title));
+		return GuiElementsCreator.createLabel(
+				new ComponentOptions().text(title));
 	}
 
 	private AbstractButton createButtonCollapsePanel() {
@@ -173,14 +172,17 @@ public class SplitPanePainter {
 
 	private void addColumnPanels(List<MainPanel> columnPanels) {
 
-			rootSplitPanePanel.addElementsInColumn(SimpleRowBuilder
-				.createRow(FillType.BOTH,
-						columnPanels.stream().map(MainPanel::getPanel)
-								.collect(Collectors.toList())
-								.toArray(new JComponent[] {}))
-				.setColumnToPutRowInto(0).setWeightsX(
-						panelColumnNumberToWeightX.values()
-								.toArray(new Double[] {})));
+		rootSplitPanePanel.addElementsInColumn(
+				SimpleRowBuilder.createRow(FillType.BOTH, columnPanels.stream()
+																	  .map(MainPanel::getPanel)
+																	  .collect(
+																			  Collectors.toList())
+																	  .toArray(
+																			  new JComponent[] {}))
+								.setColumnToPutRowInto(0)
+								.setWeightsX(panelColumnNumberToWeightX.values()
+																	   .toArray(
+																			   new Double[] {})));
 	}
 
 	public JPanel getPanel() {

@@ -18,10 +18,11 @@ public class FoundWordOutsideRangeStrategy implements LoadWordsForFoundWord {
 	@Override
 	public boolean isApplicable(int foundWordRowNumber,
 			Range visibleWordsRange) {
-		int distanceFromLastRow = Math
-				.abs(foundWordRowNumber - visibleWordsRange.getRangeEnd());
+		int distanceFromLastRow = Math.abs(
+				foundWordRowNumber - visibleWordsRange.getRangeEnd());
 		int distanceFromFirstRow = Math.
-				abs(foundWordRowNumber - visibleWordsRange.getRangeStart());
+											   abs(foundWordRowNumber
+													   - visibleWordsRange.getRangeStart());
 		this.foundWordRowNumber = foundWordRowNumber;
 		return distanceFromLastRow > maximumWordsDisplayed
 				|| distanceFromFirstRow > maximumWordsDisplayed;

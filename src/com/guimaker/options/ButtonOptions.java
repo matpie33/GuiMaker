@@ -10,9 +10,9 @@ public class ButtonOptions extends AbstractComponentOptions<ButtonOptions> {
 	private ButtonType buttonType;
 	private final Color backgroundColor = BasicColors.BLACK_NORMAL_1;
 
-	public ButtonOptions (ButtonType buttonType){
+	public ButtonOptions(ButtonType buttonType) {
 		opaque(false);
-		if (buttonType.equals(ButtonType.BUTTON)){
+		if (buttonType.equals(ButtonType.BUTTON)) {
 			backgroundColor(backgroundColor);
 		}
 		this.buttonType = buttonType;

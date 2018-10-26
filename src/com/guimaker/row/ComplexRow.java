@@ -47,7 +47,7 @@ public class ComplexRow extends AbstractSimpleRow<ComplexRow> {
 		return rowsHolder.getAllRows();
 	}
 
-	public AbstractSimpleRow getRowContainingComponent (JComponent component){
+	public AbstractSimpleRow getRowContainingComponent(JComponent component) {
 		return rowsHolder.getRowContainingComponent(component);
 	}
 

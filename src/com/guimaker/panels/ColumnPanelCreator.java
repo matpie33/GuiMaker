@@ -54,10 +54,10 @@ public class ColumnPanelCreator {
 			numberOfColumns = elements.length;
 		}
 		int indexOfElement = 0;
-		List<JComponent> verticallyFilledElements = Arrays
-				.asList(abstractSimpleRow.getVerticallyFilledElements());
-		List<JComponent> horizontallyFilledElements = Arrays
-				.asList(abstractSimpleRow.getHorizontallyFilledElements());
+		List<JComponent> verticallyFilledElements = Arrays.asList(
+				abstractSimpleRow.getVerticallyFilledElements());
+		List<JComponent> horizontallyFilledElements = Arrays.asList(
+				abstractSimpleRow.getHorizontallyFilledElements());
 		int startingColumn = abstractSimpleRow.getColumnToPutRowInto();
 		for (JComponent element : elements) {
 
@@ -98,8 +98,7 @@ public class ColumnPanelCreator {
 				c.weightx = 1;
 			}
 			if (abstractSimpleRow.getWeightsX() != null) {
-				Double weightx = abstractSimpleRow
-						.getWeightsX()[indexOfElement];
+				Double weightx = abstractSimpleRow.getWeightsX()[indexOfElement];
 				if (weightx != 0) {
 					c.weightx = weightx;
 				}

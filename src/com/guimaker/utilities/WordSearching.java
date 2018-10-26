@@ -1,9 +1,8 @@
 package com.guimaker.utilities;
 
-import com.guimaker.utilities.MathUtils;
 import com.guimaker.enums.WordSearchOptions;
-import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.model.FilteredWordMatch;
 import com.guimaker.model.ListRow;
 
@@ -36,10 +35,10 @@ public class WordSearching {
 	}
 
 	private static String removeDiacriticsAndCapitalLetters(String word) {
-		for (Map.Entry<Character, Character> letterAndReplacement : polishDiacriticsMap
-				.entrySet()) {
+		for (Map.Entry<Character, Character> letterAndReplacement : polishDiacriticsMap.entrySet()) {
 			word = word.replace(letterAndReplacement.getKey(),
-					letterAndReplacement.getValue()).toLowerCase();
+					letterAndReplacement.getValue())
+					   .toLowerCase();
 		}
 		return word;
 	}
@@ -71,7 +70,7 @@ public class WordSearching {
 	private static boolean doesPhraseContainSearchedWords(String phrase,
 			String searched) {
 		return phrase.toLowerCase()
-				.matches(".*\\b" + searched.toLowerCase() + "\\b.*");
+					 .matches(".*\\b" + searched.toLowerCase() + "\\b.*");
 	}
 
 	private static boolean doesPhraseEqualToSearchedWords(String phrase,
@@ -81,7 +80,8 @@ public class WordSearching {
 
 	private static boolean doesPhraseContainSearchedCharacterChain(
 			String phrase, String characterChain) {
-		return phrase.toLowerCase().contains(characterChain.toLowerCase());
+		return phrase.toLowerCase()
+					 .contains(characterChain.toLowerCase());
 	}
 
 	public static <Word extends ListElement> SortedMap<FilteredWordMatch, ListRow<Word>> filterWords(
@@ -131,13 +131,13 @@ public class WordSearching {
 
 	private static double calculateMatch(String wordInList,
 			String filterWordToCheck) {
-		return (double) filterWordToCheck.length() / (double) wordInList
-				.length();
+		return (double) filterWordToCheck.length()
+				/ (double) wordInList.length();
 	}
 
 	private static String[] splitWords(String word) {
 		CharsetEncoder charsetEncoder = Charset.forName("US-ASCII")
-				.newEncoder();
+											   .newEncoder();
 		if (charsetEncoder.canEncode(word)) {
 			return word.split("\\W+");
 		}

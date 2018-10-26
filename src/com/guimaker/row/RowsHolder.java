@@ -9,7 +9,7 @@ public class RowsHolder {
 
 	private List<AbstractSimpleRow> rows = new ArrayList<>();
 
-	public void addRow (AbstractSimpleRow row){
+	public void addRow(AbstractSimpleRow row) {
 		rows.add(row);
 	}
 
@@ -17,9 +17,10 @@ public class RowsHolder {
 		return rows;
 	}
 
-	public AbstractSimpleRow getRowContainingComponent (JComponent component){
+	public AbstractSimpleRow getRowContainingComponent(JComponent component) {
 		for (AbstractSimpleRow row : rows) {
-			if (Arrays.asList(row.getComponents()).contains(component)){
+			if (Arrays.asList(row.getComponents())
+					  .contains(component)) {
 				return row;
 			}
 		}

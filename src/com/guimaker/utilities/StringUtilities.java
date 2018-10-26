@@ -26,7 +26,8 @@ public class StringUtilities {
 			builder.append(COMMA_SPACE);
 		}
 		if (builder.length() > 0) {
-			return builder.toString().substring(0, builder.length() - 2);
+			return builder.toString()
+						  .substring(0, builder.length() - 2);
 		}
 		else {
 			return "";

@@ -84,8 +84,9 @@ public class ListPanelCreator<Word extends ListElement>
 		Color contentColor = BasicColors.PURPLE_DARK_1;
 		rowsPanel = new MainPanel(
 				new PanelConfiguration().setColorToUse(contentColor)
-						.setPanelDisplayMode(listConfiguration.getDisplayMode())
-						.putRowsAsHighestAsPossible());
+										.setPanelDisplayMode(
+												listConfiguration.getDisplayMode())
+										.putRowsAsHighestAsPossible());
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
 			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
@@ -102,8 +103,7 @@ public class ListPanelCreator<Word extends ListElement>
 
 		navigationButtons = new ArrayList<>();
 		unwrapConfiguration(listConfiguration);
-		listInputsSelectionManager = listConfiguration
-				.getAllInputsSelectionManager();
+		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
 		addElementsForEmptyList();
 		createButtonsShowNextAndPrevious();
 		initializeNavigationButtons();
@@ -121,8 +121,8 @@ public class ListPanelCreator<Word extends ListElement>
 
 	public void addElementsForEmptyList() {
 		rowsPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
-				GuiElementsCreator.createLabel(new ComponentOptions()
-						.text(com.guimaker.strings.Prompts.EMPTY_LIST)),
+				GuiElementsCreator.createLabel(new ComponentOptions().text(
+						com.guimaker.strings.Prompts.EMPTY_LIST)),
 				createButtonAddRow(InputGoal.EDIT)));
 	}
 
@@ -130,10 +130,8 @@ public class ListPanelCreator<Word extends ListElement>
 		this.enableWordAdding = listConfiguration.isWordAddingEnabled();
 		this.isScrollBarInherited = listConfiguration.isScrollBarInherited();
 		this.enableWordSearching = listConfiguration.isWordSearchingEnabled();
-		showButtonsNextAndPrevious = listConfiguration
-				.isShowButtonsLoadNextPreviousWords();
-		scrollBarSizeFittingContent = listConfiguration
-				.isScrollBarSizeFittingContent();
+		showButtonsNextAndPrevious = listConfiguration.isShowButtonsLoadNextPreviousWords();
+		scrollBarSizeFittingContent = listConfiguration.isScrollBarSizeFittingContent();
 		addNavigationButtons(
 				listConfiguration.getAdditionalNavigationButtons());
 		//TODO redundant code - keep reference to list configuration instead of keep all the params in this class
@@ -190,13 +188,13 @@ public class ListPanelCreator<Word extends ListElement>
 				inputGoal, rowNumber);
 		MainPanel rowPanel = null;
 		if (shouldShowWord) {
-			ListRowData<Word> listRow = this.listRow
-					.createListRow(word, commonListElements, inputGoal);
+			ListRowData<Word> listRow = this.listRow.createListRow(word,
+					commonListElements, inputGoal);
 			rowPanel = listRow.getRowPanel();
-			rowPanel.getPanel().setOpaque(false);
-			AbstractSimpleRow abstractSimpleRow = SimpleRowBuilder
-					.createRow(FillType.HORIZONTAL, Anchor.NORTH,
-							rowPanel.getPanel());
+			rowPanel.getPanel()
+					.setOpaque(false);
+			AbstractSimpleRow abstractSimpleRow = SimpleRowBuilder.createRow(
+					FillType.HORIZONTAL, Anchor.NORTH, rowPanel.getPanel());
 			loadWordsHandler.showWord(abstractSimpleRow);
 		}
 		else if (!buttonLoadNextWords.isEnabled()) {
@@ -225,8 +223,8 @@ public class ListPanelCreator<Word extends ListElement>
 
 	private AbstractButton createButtonRemoveWord(Word word) {
 		return GuiElementsCreator.createButtonlikeComponent(
-				new ButtonOptions(ButtonType.BUTTON)
-						.text(ButtonsNames.REMOVE_ROW),
+				new ButtonOptions(ButtonType.BUTTON).text(
+						ButtonsNames.REMOVE_ROW),
 				listWordsController.createDeleteRowAction(word));
 	}
 
@@ -247,18 +245,19 @@ public class ListPanelCreator<Word extends ListElement>
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int numberOfAddedWords = listWordsController
-						.addNextHalfOfMaximumWords(loadWordsHandler);
+				int numberOfAddedWords = listWordsController.addNextHalfOfMaximumWords(
+						loadWordsHandler);
 				if (numberOfAddedWords > 0) {
-					removeWordsFromRangeInclusive(loadWordsHandler
-							.getRangeOfWordsToRemove(numberOfAddedWords));
+					removeWordsFromRangeInclusive(
+							loadWordsHandler.getRangeOfWordsToRemove(
+									numberOfAddedWords));
 				}
-				boolean hasMoreWordsToShow = numberOfAddedWords == Math
-						.ceil((double) listWordsController
-								.getMaximumWordsToShow() / 2);
-				loadWordsHandler
-						.enableOrDisableLoadWordsButtons(buttonLoadNextWords,
-								buttonLoadPreviousWords, hasMoreWordsToShow);
+				boolean hasMoreWordsToShow = numberOfAddedWords == Math.ceil(
+						(double) listWordsController.getMaximumWordsToShow()
+								/ 2);
+				loadWordsHandler.enableOrDisableLoadWordsButtons(
+						buttonLoadNextWords, buttonLoadPreviousWords,
+						hasMoreWordsToShow);
 				rowsPanel.updateView();
 			}
 		};
@@ -275,17 +274,18 @@ public class ListPanelCreator<Word extends ListElement>
 
 	private void createMainPanelElements() {
 		if (!isSkipTitle) {
-			mainPanel.addRow(SimpleRowBuilder
-					.createRow(FillType.NONE, Anchor.CENTER, titleLabel));
+			mainPanel.addRow(
+					SimpleRowBuilder.createRow(FillType.NONE, Anchor.CENTER,
+							titleLabel));
 		}
-		mainPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.HORIZONTAL, filterPanel.getPanel()));
-		mainPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, buttonLoadPreviousWords));
-		mainPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.BOTH, listElementsPanel));
-		mainPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, buttonLoadNextWords));
+		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+				filterPanel.getPanel()));
+		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
+				buttonLoadPreviousWords));
+		mainPanel.addRow(
+				SimpleRowBuilder.createRow(FillType.BOTH, listElementsPanel));
+		mainPanel.addRow(
+				SimpleRowBuilder.createRow(FillType.NONE, buttonLoadNextWords));
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				navigationButtons.toArray(new JComponent[] {})));
 
@@ -294,8 +294,8 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public void setParentDialog(DialogWindow dialog) {
 		super.setParentDialog(dialog);
-		mainPanel.setBackgroundColor(
-				dialog.getParentConfiguration().getContentPanelColor());
+		mainPanel.setBackgroundColor(dialog.getParentConfiguration()
+										   .getContentPanelColor());
 		filterPanel.setRowColor(BasicColors.GREEN_BRIGHT_1);
 	}
 
@@ -308,18 +308,18 @@ public class ListPanelCreator<Word extends ListElement>
 		if (enableWordSearching) {
 			ListRowData<Word> listRow = this.listRow.createListRow(
 					listWordsController.getWordInitializer()
-							.initializeElement(),
+									   .initializeElement(),
 					CommonListElements.forSingleRowOnly(Color.WHITE),
 					InputGoal.SEARCH);
 			if (!listRow.isEmpty()) {
 
 				JPanel panel = listSearchPanelCreator.createPanel(listRow,
 						createButtonFilter(listSearchPanelCreator));
-				filterPanel.addRow(SimpleRowBuilder
-						.createRow(FillType.HORIZONTAL, Anchor.WEST, panel));
+				filterPanel.addRow(
+						SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+								Anchor.WEST, panel));
 				addHotkey(KeyModifiers.CONTROL, KeyEvent.VK_SPACE,
-						listSearchPanelCreator
-								.createActionSwitchComboboxValue(),
+						listSearchPanelCreator.createActionSwitchComboboxValue(),
 						mainPanel.getPanel(),
 						HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
 				addHotkey(KeyModifiers.CONTROL, KeyEvent.VK_F,
@@ -327,29 +327,29 @@ public class ListPanelCreator<Word extends ListElement>
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								listSearchPanelCreator.getFilteringInput()
-										.requestFocusInWindow();
+													  .requestFocusInWindow();
 							}
 						}, mainPanel.getPanel(),
 						HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
 			}
-			else{
+			else {
 				mainPanel.removeRowWithElements(filterPanel.getPanel());
 			}
 		}
 
 		if (!enableWordSearching && !enableWordAdding) {
-			mainPanel.getPanel().setOpaque(false);
+			mainPanel.getPanel()
+					 .setOpaque(false);
 		}
 
 	}
 
 	private AbstractButton createButtonFilter(
 			ListSearchPanelCreator<Word> listSearchPanelCreator) {
-		AbstractButton filterButton = GuiElementsCreator
-				.createButtonLikeComponent(new ButtonOptions(ButtonType.BUTTON)
-						.text(ButtonsNames.FILTER));
-		AbstractAction action = listWordsController
-				.createFilterAction(listSearchPanelCreator, filterButton);
+		AbstractButton filterButton = GuiElementsCreator.createButtonLikeComponent(
+				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.FILTER));
+		AbstractAction action = listWordsController.createFilterAction(
+				listSearchPanelCreator, filterButton);
 		addHotkey(KeyEvent.VK_ENTER, action, getPanel(),
 				HotkeysDescriptions.FILTER_WORDS);
 		filterButton.addActionListener(action);
@@ -360,8 +360,9 @@ public class ListPanelCreator<Word extends ListElement>
 		if (!isScrollBarInherited) {
 			parentScrollPane = GuiElementsCreator.createScrollPane(
 					new ScrollPaneOptions().opaque(false)
-							.componentToWrap(rowsPanel.getPanel())
-							.border(getDefaultBorder()));
+										   .componentToWrap(
+												   rowsPanel.getPanel())
+										   .border(getDefaultBorder()));
 			if (!scrollBarSizeFittingContent) {
 				parentScrollPane.setPreferredSize(scrollPanesSize);
 			}
@@ -380,8 +381,8 @@ public class ListPanelCreator<Word extends ListElement>
 
 	private AbstractButton createButtonFinishEditing(Word word) {
 		return GuiElementsCreator.createButtonlikeComponent(
-				new ButtonOptions(ButtonType.BUTTON)
-						.text(ButtonsNames.FINISH_EDITING),
+				new ButtonOptions(ButtonType.BUTTON).text(
+						ButtonsNames.FINISH_EDITING),
 				listWordsController.createFinishEditAction(word),
 				new HotkeyWrapper(KeyEvent.VK_ENTER));
 	}
@@ -399,11 +400,11 @@ public class ListPanelCreator<Word extends ListElement>
 		AbstractAction action = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ApplicationWindow applicationWindow = applicationChangesManager
-						.getApplicationWindow();
+				ApplicationWindow applicationWindow = applicationChangesManager.getApplicationWindow();
 				applicationWindow.showInsertWordDialog(myList,
-						applicationWindow.getApplicationConfiguration().
-								getInsertWordPanelPositioner());
+						applicationWindow.getApplicationConfiguration()
+										 .
+												 getInsertWordPanelPositioner());
 			}
 		};
 		//TODO add in my list a parameter with hotkeys mapping for add/search panels
@@ -420,10 +421,12 @@ public class ListPanelCreator<Word extends ListElement>
 		int rowNumber = rowsPanel.getIndexOfPanel(row);
 		changePanelColor(rowNumber,
 				applicationChangesManager.getApplicationWindow()
-						.getApplicationConfiguration()
-						.getListRowHighlightColor());
-		scrollTo(rowsPanel.getRows().get(rowNumber));
-		this.rowsPanel.getPanel().repaint();
+										 .getApplicationConfiguration()
+										 .getListRowHighlightColor());
+		scrollTo(rowsPanel.getRows()
+						  .get(rowNumber));
+		this.rowsPanel.getPanel()
+					  .repaint();
 	}
 
 	private void changePanelColor(int rowNumber, Color color) {
@@ -438,7 +441,7 @@ public class ListPanelCreator<Word extends ListElement>
 		SwingUtilities.invokeLater(() -> {
 			int r = panel.getY();
 			this.parentScrollPane.getViewport()
-					.setViewPosition(new Point(0, r));
+								 .setViewPosition(new Point(0, r));
 		});
 	}
 
@@ -470,8 +473,8 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public void scrollToTop() {
-		SwingUtilities.invokeLater(
-				() -> parentScrollPane.getVerticalScrollBar().setValue(0));
+		SwingUtilities.invokeLater(() -> parentScrollPane.getVerticalScrollBar()
+														 .setValue(0));
 	}
 
 	public int getNumberOfListRows() {
@@ -496,19 +499,19 @@ public class ListPanelCreator<Word extends ListElement>
 				this.inputGoal, rowNumber);
 		MainPanel newPanel = listRow.createListRow(word, commonListElements,
 				customInputGoal == null ? this.inputGoal : customInputGoal)
-				.getRowPanel();
+									.getRowPanel();
 		if (highlighted) {
 			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
-							.getApplicationConfiguration()
-							.getListRowHighlightColor());
+											 .getApplicationConfiguration()
+											 .getListRowHighlightColor());
 		}
-		if (customInputGoal != null && customInputGoal
-				.equals(InputGoal.EDIT_TEMPORARILY)) {
+		if (customInputGoal != null && customInputGoal.equals(
+				InputGoal.EDIT_TEMPORARILY)) {
 			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
-							.getApplicationConfiguration()
-							.getListRowEditTemporarilyColor());
+											 .getApplicationConfiguration()
+											 .getListRowEditTemporarilyColor());
 			newPanel.updateView();
 		}
 		rowsPanel.replacePanel(oldPanel, newPanel.getPanel());
@@ -517,7 +520,8 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public boolean isFilterInputFocused() {
-		return listSearchPanelCreator.getFilteringInput().hasFocus();
+		return listSearchPanelCreator.getFilteringInput()
+									 .hasFocus();
 	}
 
 	@Override

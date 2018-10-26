@@ -3,12 +3,12 @@ package com.guimaker.list.myList;
 import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
-import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.ListElementPropertyManager;
+import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.strings.ExceptionsMessages;
-import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.utilities.StringUtilities;
 import com.guimaker.utilities.ThreadUtilities;
 
@@ -63,22 +63,24 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	public void focusGained(FocusEvent e) {
 		JTextComponent textInput = (JTextComponent) e.getSource();
 		textInput.setForeground(Color.WHITE);
-		previousValueOfTextInput = textInput.getText().isEmpty() ?
+		previousValueOfTextInput = textInput.getText()
+											.isEmpty() ?
 				defaultValue :
 				textInput.getText();
 
 	}
 
 	private boolean isTextFieldEmpty(JTextComponent textComponent) {
-		return textComponent.getText().isEmpty() || textComponent.getText()
-				.equals(defaultValue);
+		return textComponent.getText()
+							.isEmpty() || textComponent.getText()
+													   .equals(defaultValue);
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
 		JTextComponent input = (JTextComponent) e.getSource();
 		boolean somethingHasChanged = !input.getText()
-				.equals(previousValueOfTextInput);
+											.equals(previousValueOfTextInput);
 		if (isTextFieldEmpty(input) && !somethingHasChanged) {
 			return;
 		}
@@ -90,8 +92,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			if (inputValid && !inputGoal.equals(InputGoal.SEARCH)) {
 				addedWord = addWordToList(input, propertyNewValue);
 			}
-			notifyValidationListeners(inputValid && (addedWord || inputGoal
-					.equals(InputGoal.SEARCH)), propertyNewValue);
+			notifyValidationListeners(
+					inputValid && (addedWord || inputGoal.equals(
+							InputGoal.SEARCH)), propertyNewValue);
 		});
 	}
 
@@ -106,16 +109,14 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 
 	private boolean addWordToList(JTextComponent input,
 			Property propertyNewValue) {
-		listElementPropertyManager
-				.setProperty(propertyHolder, propertyNewValue);
-		WordInMyListExistence<PropertyHolder> wordInMyListExistence = list
-				.doesWordWithPropertyExist(propertyNewValue,
-						listElementPropertyManager, propertyHolder);
+		listElementPropertyManager.setProperty(propertyHolder,
+				propertyNewValue);
+		WordInMyListExistence<PropertyHolder> wordInMyListExistence = list.doesWordWithPropertyExist(
+				propertyNewValue, listElementPropertyManager, propertyHolder);
 		if (wordInMyListExistence.exists()) {
 			setTextInputToPreviousValue(input);
 			setWordToPreviousValue(input);
-			int duplicateRowNumber = wordInMyListExistence
-					.getOneBasedRowNumber();
+			int duplicateRowNumber = wordInMyListExistence.getOneBasedRowNumber();
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
 					duplicateRowNumber);
 			dialogWindow.showMessageDialog(exceptionMessage, false);
@@ -140,8 +141,8 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 
 	private void setWordToPreviousValue(JTextComponent input) {
 		listElementPropertyManager.setProperty(propertyHolder,
-				listElementPropertyManager
-						.validateInputAndConvertToProperty(input));
+				listElementPropertyManager.validateInputAndConvertToProperty(
+						input));
 	}
 
 	private void setTextInputToPreviousValue(JTextComponent input) {
@@ -152,8 +153,8 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 
 	private String getExceptionForDuplicate(Property propertyNewValue,
 			int duplicateRowNumber) {
-		String propertyDefinedMessage = listElementPropertyManager
-				.getPropertyDefinedException(propertyNewValue);
+		String propertyDefinedMessage = listElementPropertyManager.getPropertyDefinedException(
+				propertyNewValue);
 		String duplicatedRowMessage = StringUtilities.putInNewLine(
 				String.format(ExceptionsMessages.ROW_FOR_DUPLICATED_PROPERTY,
 						duplicateRowNumber));
@@ -161,9 +162,10 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	}
 
 	private Property validateAndConvertToProperty(JTextComponent input) {
-		Property propertyNewValue = listElementPropertyManager
-				.validateInputAndConvertToProperty(input);
-		if (propertyNewValue == null && !input.getText().isEmpty()) {
+		Property propertyNewValue = listElementPropertyManager.validateInputAndConvertToProperty(
+				input);
+		if (propertyNewValue == null && !input.getText()
+											  .isEmpty()) {
 			input.setForeground(Color.RED);
 			dialogWindow.showMessageDialog(
 					listElementPropertyManager.getInvalidPropertyReason());

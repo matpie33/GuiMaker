@@ -18,7 +18,7 @@ public class WebContext {
 		return noContentMessage;
 	}
 
-	public boolean isEmpty (){
+	public boolean isEmpty() {
 		return content.isEmpty();
 	}
 

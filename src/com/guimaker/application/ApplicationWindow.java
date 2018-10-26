@@ -1,9 +1,9 @@
 package com.guimaker.application;
 
 import com.guimaker.colors.BasicColors;
+import com.guimaker.customPositioning.CustomPositioner;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
 import com.guimaker.strings.Prompts;
-import com.guimaker.customPositioning.CustomPositioner;
 import com.guimaker.timer.TimeSpentHandler;
 
 import javax.swing.*;
@@ -54,8 +54,9 @@ public class ApplicationWindow extends DialogWindow {
 
 		mainApplicationPanel.add(startingPanel.createPanel(),
 				startingPanel.getUniqueName());
-		Arrays.stream(panels).forEach(panel -> mainApplicationPanel
-				.add(panel.createPanel(), panel.getUniqueName()));
+		Arrays.stream(panels)
+			  .forEach(panel -> mainApplicationPanel.add(panel.createPanel(),
+					  panel.getUniqueName()));
 
 		setWindowProperties();
 	}
@@ -86,7 +87,8 @@ public class ApplicationWindow extends DialogWindow {
 			@Override
 			public void windowActivated(WindowEvent e) {
 				if (childWindow != null && childWindow.getContainer() != null) {
-					childWindow.getContainer().toFront();
+					childWindow.getContainer()
+							   .toFront();
 				}
 
 			}
@@ -114,13 +116,13 @@ public class ApplicationWindow extends DialogWindow {
 	}
 
 	public void showPanel(String name) {
-		((CardLayout) mainApplicationPanel.getLayout())
-				.show(mainApplicationPanel, name);
+		((CardLayout) mainApplicationPanel.getLayout()).show(
+				mainApplicationPanel, name);
 	}
 
 	public void updateTitle(String update) {
-		container
-				.setTitle(applicationConfiguration.getTitle() + "   " + update);
+		container.setTitle(
+				applicationConfiguration.getTitle() + "   " + update);
 	}
 
 	public void createPanel(AbstractPanelWithHotkeysInfo panel, String title,
@@ -139,7 +141,8 @@ public class ApplicationWindow extends DialogWindow {
 	// and the others are in application controller?
 
 	public void closeDialog() {
-		childWindow.getContainer().dispose();
+		childWindow.getContainer()
+				   .dispose();
 	}
 
 	public JFrame getContainer() {

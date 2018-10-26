@@ -25,10 +25,13 @@ public class SplitPane {
 
 	}
 
-	private void initialize (){
-		contentPanelsWithInformation.put(SplitPanePanelLocation.LEFT, new ArrayList<>());
-		contentPanelsWithInformation.put(SplitPanePanelLocation.CENTER, new ArrayList<>());
-		contentPanelsWithInformation.put(SplitPanePanelLocation.RIGHT, new ArrayList<>());
+	private void initialize() {
+		contentPanelsWithInformation.put(SplitPanePanelLocation.LEFT,
+				new ArrayList<>());
+		contentPanelsWithInformation.put(SplitPanePanelLocation.CENTER,
+				new ArrayList<>());
+		contentPanelsWithInformation.put(SplitPanePanelLocation.RIGHT,
+				new ArrayList<>());
 	}
 
 	private void validateWeight(Double weightY) {
@@ -41,15 +44,14 @@ public class SplitPane {
 	private void addComponent(JComponent component, String title,
 			Double weightY, SplitPanePanelLocation splitPanePanelLocation) {
 		validateWeight(weightY);
-		List<SplitPanePanelData> splitPanePanelData = contentPanelsWithInformation
-				.get(splitPanePanelLocation);
-		splitPanePanelData
-				.add(new SplitPanePanelData(title, weightY, component));
+		List<SplitPanePanelData> splitPanePanelData = contentPanelsWithInformation.get(
+				splitPanePanelLocation);
+		splitPanePanelData.add(
+				new SplitPanePanelData(title, weightY, component));
 	}
 
 	public void addCenterComponent(JComponent centerComponent, String title) {
-		addComponent(centerComponent, title, 0D,
-				SplitPanePanelLocation.CENTER);
+		addComponent(centerComponent, title, 0D, SplitPanePanelLocation.CENTER);
 	}
 
 	public void addCenterComponent(JComponent centerComponent, String title,

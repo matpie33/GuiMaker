@@ -12,27 +12,26 @@ public class PanelConfiguration {
 	private boolean opaque = true;
 	private Color colorToUse;
 
-
 	public PanelDisplayMode getPanelDisplayMode() {
 		return panelDisplayMode;
 	}
 
-	public PanelConfiguration setPanelDisplayMode (PanelDisplayMode
-			panelDisplayMode){
+	public PanelConfiguration setPanelDisplayMode(
+			PanelDisplayMode panelDisplayMode) {
 		this.panelDisplayMode = panelDisplayMode;
 		return this;
 	}
 
-	public PanelConfiguration putRowsAsHighestAsPossible(){
+	public PanelConfiguration putRowsAsHighestAsPossible() {
 		putRowsAsHighestAsPossible = true;
 		return this;
 	}
 
-	public boolean shouldPutRowsAsHighestAsPossible (){
+	public boolean shouldPutRowsAsHighestAsPossible() {
 		return putRowsAsHighestAsPossible;
 	}
 
-	public PanelConfiguration doNotScrollHorizontally (){
+	public PanelConfiguration doNotScrollHorizontally() {
 		scrollHorizontally = false;
 		return this;
 	}

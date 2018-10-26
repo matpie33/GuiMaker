@@ -43,8 +43,8 @@ public class InputSelectionManager {
 
 	public void addInput(JTextComponent inputToAdd,
 			JTextComponent inputThatAlreadyExists) {
-		TextInputsList listOfInputsToWhichWeAdd = inputToRowMap
-				.get(inputThatAlreadyExists);
+		TextInputsList listOfInputsToWhichWeAdd = inputToRowMap.get(
+				inputThatAlreadyExists);
 		if (listOfInputsToWhichWeAdd == null) {
 			listOfInputsToWhichWeAdd = new TextInputsList(numberOfRows);
 			numberOfRows++;
@@ -55,18 +55,24 @@ public class InputSelectionManager {
 
 	public void selectNextInputInSameRow() {
 		if (currentlySelectedComponent == null) {
-			selectInput(inputToRowMap.values().iterator().next().getInputsList()
-					.get(0));
+			selectInput(inputToRowMap.values()
+									 .iterator()
+									 .next()
+									 .getInputsList()
+									 .get(0));
 			return;
 		}
-		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap
-				.get(currentlySelectedComponent);
-		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
-				.getInputsList().indexOf(currentlySelectedComponent);
-		if (rowContainingCurrentlySelectedInput.getInputsList().size()
+		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap.get(
+				currentlySelectedComponent);
+		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput.getInputsList()
+																			   .indexOf(
+																					   currentlySelectedComponent);
+		if (rowContainingCurrentlySelectedInput.getInputsList()
+											   .size()
 				> indexOfCurrentlySelectedInput + 1) {
 			selectInput(rowContainingCurrentlySelectedInput.getInputsList()
-					.get(indexOfCurrentlySelectedInput + 1));
+														   .get(indexOfCurrentlySelectedInput
+																   + 1));
 		}
 		else {
 			notifyThatNextDoesntExist(MoveDirection.RIGHT);
@@ -75,28 +81,32 @@ public class InputSelectionManager {
 	}
 
 	private void notifyThatNextDoesntExist(MoveDirection moveDirection) {
-		switchBetweenInputsFailListeners.forEach(listener -> listener
-				.switchBetweenInputsFailed(currentlySelectedComponent,
-						moveDirection));
+		switchBetweenInputsFailListeners.forEach(
+				listener -> listener.switchBetweenInputsFailed(
+						currentlySelectedComponent, moveDirection));
 
 	}
 
 	public void selectPreviousInputInSameRow() {
 		if (currentlySelectedComponent == null) {
-			List<JTextComponent> inputsList = inputToRowMap.values().iterator()
-					.next().getInputsList();
-			selectInput(inputsList.get(inputsList.size()-1));
+			List<JTextComponent> inputsList = inputToRowMap.values()
+														   .iterator()
+														   .next()
+														   .getInputsList();
+			selectInput(inputsList.get(inputsList.size() - 1));
 			return;
 		}
-		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap
-				.get(currentlySelectedComponent);
-		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput
-				.getInputsList().indexOf(currentlySelectedComponent);
+		TextInputsList rowContainingCurrentlySelectedInput = inputToRowMap.get(
+				currentlySelectedComponent);
+		int indexOfCurrentlySelectedInput = rowContainingCurrentlySelectedInput.getInputsList()
+																			   .indexOf(
+																					   currentlySelectedComponent);
 		if (indexOfCurrentlySelectedInput > 0) {
 			selectInput(rowContainingCurrentlySelectedInput.getInputsList()
-					.get(indexOfCurrentlySelectedInput - 1));
+														   .get(indexOfCurrentlySelectedInput
+																   - 1));
 		}
-		else{
+		else {
 			notifyThatNextDoesntExist(MoveDirection.LEFT);
 		}
 	}
@@ -115,8 +125,8 @@ public class InputSelectionManager {
 			manager.clearOtherInputsManagersSelections();
 		}
 		if (currentlySelectedComponent != null) {
-			inputSelectionHandler
-					.markInputAsDeselected(currentlySelectedComponent);
+			inputSelectionHandler.markInputAsDeselected(
+					currentlySelectedComponent);
 		}
 		inputSelectionHandler.markInputAsSelected(input);
 		currentlySelectedComponent = input;
@@ -148,13 +158,17 @@ public class InputSelectionManager {
 	}
 
 	public int getSelectedInputIndex() {
-		return inputToRowMap.get(currentlySelectedComponent).getInputsList()
-				.indexOf(currentlySelectedComponent);
+		return inputToRowMap.get(currentlySelectedComponent)
+							.getInputsList()
+							.indexOf(currentlySelectedComponent);
 	}
 
 	public void selectInputInColumn(int columnNumber) {
-		List<JTextComponent> inputsList = inputToRowMap.entrySet().iterator()
-				.next().getValue().getInputsList();
+		List<JTextComponent> inputsList = inputToRowMap.entrySet()
+													   .iterator()
+													   .next()
+													   .getValue()
+													   .getInputsList();
 		if (inputsList.size() > columnNumber) {
 			selectInput(inputsList.get(columnNumber));
 		}

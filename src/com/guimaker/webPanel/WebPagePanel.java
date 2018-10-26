@@ -19,10 +19,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
-import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 
 import javax.swing.*;
@@ -99,28 +97,35 @@ public class WebPagePanel {
 	private void initiatePanels() {
 		messagePanel = new MainPanel(new PanelConfiguration().setColorToUse(
 				applicationWindow.getApplicationConfiguration()
-						.getContentPanelColor()));
-		messageComponent = GuiElementsCreator
-				.createTextPane(new TextPaneOptions().
-						text(Prompts.LOADING_PAGE).fontSize(20)
-						.textAlignment(TextAlignment.CENTERED).editable(false));
+								 .getContentPanelColor()));
+		messageComponent = GuiElementsCreator.createTextPane(
+				new TextPaneOptions().
+											 text(Prompts.LOADING_PAGE)
+									 .fontSize(20)
+									 .textAlignment(TextAlignment.CENTERED)
+									 .editable(false));
 
-		messagePanel.addRow(SimpleRowBuilder
-				.createRow(FillType.HORIZONTAL, messageComponent));
-		messagePanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, Anchor.CENTER, reloadButton));
+		messagePanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+				messageComponent));
+		messagePanel.addRow(
+				SimpleRowBuilder.createRow(FillType.NONE, Anchor.CENTER,
+						reloadButton));
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				webView = new WebView();
 				StackPane pane = new StackPane(webView);
-				webView.getEngine().getLoadWorker().stateProperty()
-						.addListener(connectionChange);
-				webView.getEngine().getLoadWorker().exceptionProperty()
-						.addListener((obs, oldExc, newExc) -> {
-							if (newExc != null) { newExc.printStackTrace();}
-						});
+				webView.getEngine()
+					   .getLoadWorker()
+					   .stateProperty()
+					   .addListener(connectionChange);
+				webView.getEngine()
+					   .getLoadWorker()
+					   .exceptionProperty()
+					   .addListener((obs, oldExc, newExc) -> {
+						   if (newExc != null) { newExc.printStackTrace();}
+					   });
 
 				webPage.setScene(new Scene(pane));
 
@@ -134,8 +139,8 @@ public class WebPagePanel {
 
 	private void createButtonReload() {
 		reloadButton = GuiElementsCreator.createButtonlikeComponent(
-				new ButtonOptions(ButtonType.BUTTON)
-						.text(ButtonsNames.RELOAD_PAGE), new AbstractAction() {
+				new ButtonOptions(ButtonType.BUTTON).text(
+						ButtonsNames.RELOAD_PAGE), new AbstractAction() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						showPage(currentlyLoadingPage);
@@ -147,7 +152,8 @@ public class WebPagePanel {
 	public void showPage(String url) {
 		showPanel(MESSAGE_PANEL);
 		currentlyLoadingPage = url;
-		Platform.runLater(() -> webView.getEngine().load(url));
+		Platform.runLater(() -> webView.getEngine()
+									   .load(url));
 	}
 
 	public JFXPanel getWebPanel() {

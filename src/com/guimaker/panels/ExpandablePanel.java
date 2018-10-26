@@ -38,8 +38,8 @@ public class ExpandablePanel extends MainPanel {
 	private void initialize(String title) {
 		titleLabel = GuiElementsCreator.createLabel(
 				new ComponentOptions().text(title + " " + EXPAND_HINT));
-		addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, Anchor.WEST, titleLabel));
+		addRow(SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
+				titleLabel));
 		getPanel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {

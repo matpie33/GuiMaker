@@ -7,9 +7,9 @@ import javax.swing.*;
 
 public class SimpleRow extends AbstractSimpleRow<SimpleRow> {
 
-	public SimpleRow(FillType fillingType,
-			Anchor anchor, JComponent... components) {
-		super( fillingType, anchor, components);
+	public SimpleRow(FillType fillingType, Anchor anchor,
+			JComponent... components) {
+		super(fillingType, anchor, components);
 	}
 
 	@Override

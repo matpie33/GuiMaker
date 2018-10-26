@@ -1,10 +1,12 @@
 package com.guimaker.panels;
 
 import com.guimaker.application.ApplicationConfiguration;
+import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.MoveDirection;
+import com.guimaker.list.myList.MyList;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.row.AbstractSimpleRow;
@@ -15,8 +17,6 @@ import com.guimaker.strings.Titles;
 import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.HotkeyWrapper;
 import com.guimaker.utilities.KeyModifiers;
-import com.guimaker.list.myList.MyList;
-import com.guimaker.application.DialogWindow;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -38,8 +38,8 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	private int hotkeysPanelIndex;
 	private AbstractButton[] navigationButtons;
 	private Anchor buttonsAnchor = Anchor.EAST;
-	private Border defaultBorder = BorderFactory
-			.createBevelBorder(BevelBorder.LOWERED);
+	private Border defaultBorder = BorderFactory.createBevelBorder(
+			BevelBorder.LOWERED);
 	private Map<HotkeyWrapper, AbstractAction> hotkeysMapping = new HashMap<>();
 	private boolean isMaximized;
 	private List<MyList> navigableByKeyboardLists = new ArrayList<>();
@@ -64,11 +64,10 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	}
 
 	private void addHotkeys(JComponent rootPanel) {
-		for (Map.Entry<MoveDirection, HotkeyWrapper> hotkey : hotkeysForMovingBetweenInputs
-				.entrySet()) {
+		for (Map.Entry<MoveDirection, HotkeyWrapper> hotkey : hotkeysForMovingBetweenInputs.entrySet()) {
 			HotkeyWrapper hotkeyWrapper = hotkey.getValue();
-			KeyModifiers keyModifier = KeyModifiers
-					.of(hotkeyWrapper.getKeyModifier());
+			KeyModifiers keyModifier = KeyModifiers.of(
+					hotkeyWrapper.getKeyModifier());
 			switch (hotkey.getKey()) {
 			case RIGHT:
 				addHotkey(keyModifier, hotkeyWrapper.getKeyEvent(),
@@ -141,8 +140,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		navigationButtons = buttons;
 	}
 
-	public void setNavigationButtons(Anchor anchor, AbstractButton...
-			buttons) {
+	public void setNavigationButtons(Anchor anchor, AbstractButton... buttons) {
 		navigationButtons = buttons;
 		buttonsAnchor = anchor;
 	}
@@ -156,9 +154,8 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		if (hotkeysMapping.isEmpty()) {
 			return;
 		}
-		AbstractSimpleRow row = SimpleRowBuilder
-				.createRow(FillType.HORIZONTAL, Anchor.SOUTH,
-						hotkeysPanel.getPanel());
+		AbstractSimpleRow row = SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+				Anchor.SOUTH, hotkeysPanel.getPanel());
 		MainPanel panelForHotkeys = parentPanelForHotkeys();
 
 		if (hotkeysPanelIndex == -1) {
@@ -168,9 +165,11 @@ public abstract class AbstractPanelWithHotkeysInfo {
 			panelForHotkeys.insertRow(hotkeysPanelIndex, row);
 		}
 		if (navigationButtons != null)
-			panelForHotkeys.addRow(SimpleRowBuilder
-					.createRow(FillType.NONE, buttonsAnchor, navigationButtons)
-					.disableBorder().setNotOpaque());
+			panelForHotkeys.addRow(
+					SimpleRowBuilder.createRow(FillType.NONE, buttonsAnchor,
+							navigationButtons)
+									.disableBorder()
+									.setNotOpaque());
 
 	}
 
@@ -195,9 +194,9 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		HotkeyWrapper wrapper = new HotkeyWrapper(keyModifier, keyEvent);
 		if (hotkeysMapping.containsKey(wrapper)) {
 			throw new IllegalArgumentException(
-					"Multiple actions binded to the same key: " + KeyModifiers
-							.of(wrapper.getKeyModifier()) + "+" + KeyEvent
-							.getKeyText(wrapper.getKeyEvent())
+					"Multiple actions binded to the same key: "
+							+ KeyModifiers.of(wrapper.getKeyModifier()) + "+"
+							+ KeyEvent.getKeyText(wrapper.getKeyEvent())
 							+ " in the class: " + this);
 		}
 		hotkeysMapping.put(wrapper, action);
@@ -255,11 +254,11 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	public void setParentDialog(DialogWindow parent) {
 		//TODO this should be set in constructor
 		parentDialog = parent;
-		ApplicationConfiguration parentConfiguration = parent
-				.getParentConfiguration();
-		hotkeysPanel
-				.setBackgroundColor(parentConfiguration.getPanelBackgroundColor());
-		mainPanel.setBackgroundColor(parentConfiguration.getPanelBackgroundColor());
+		ApplicationConfiguration parentConfiguration = parent.getParentConfiguration();
+		hotkeysPanel.setBackgroundColor(
+				parentConfiguration.getPanelBackgroundColor());
+		mainPanel.setBackgroundColor(
+				parentConfiguration.getPanelBackgroundColor());
 		mainPanel.setRowColor(parentConfiguration.getContentPanelColor());
 
 		contentColor = parentConfiguration.getContentPanelColor();
@@ -283,10 +282,6 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		return parentDialog;
 	}
 
-	public boolean isDisplayable() {
-		return parentDialog.getContainer().isDisplayable();
-	}
-
 	public abstract void createElements();
 
 	public void afterVisible() {
@@ -297,12 +292,12 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		AbstractAction dispose = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				parentDialog.getContainer().dispose();
+				parentDialog.getContainer()
+							.dispose();
 			}
 		};
 		return createButtonWithHotkey(KeyEvent.VK_ESCAPE, dispose,
-				ButtonsNames.CLOSE_WINDOW,
-				HotkeysDescriptions.CLOSE_WINDOW);
+				ButtonsNames.CLOSE_WINDOW, HotkeysDescriptions.CLOSE_WINDOW);
 	}
 
 	public JPanel getPanel() {
@@ -314,10 +309,13 @@ public abstract class AbstractPanelWithHotkeysInfo {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				MyList selectedList = getListWithSelectedInput();
-				if (selectedList == null ||
-						selectedList.getPanel().getVisibleRect().getSize()
-								.getHeight() != selectedList.getPanel()
-								.getSize().getHeight()) {
+				if (selectedList == null || selectedList.getPanel()
+														.getVisibleRect()
+														.getSize()
+														.getHeight()
+						!= selectedList.getPanel()
+									   .getSize()
+									   .getHeight()) {
 					selectedList = findFirstVisibleList();
 				}
 				actionOnInput.accept(selectedList);
@@ -328,8 +326,12 @@ public abstract class AbstractPanelWithHotkeysInfo {
 
 	private MyList findFirstVisibleList() {
 		for (MyList navigableList : navigableByKeyboardLists) {
-			if (navigableList.getPanel().getVisibleRect().getSize().getHeight()
-					== navigableList.getPanel().getSize().getHeight()) {
+			if (navigableList.getPanel()
+							 .getVisibleRect()
+							 .getSize()
+							 .getHeight() == navigableList.getPanel()
+														  .getSize()
+														  .getHeight()) {
 				return navigableList;
 			}
 		}

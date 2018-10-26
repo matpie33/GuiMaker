@@ -30,5 +30,4 @@ public class ConfirmPanel extends MessagePanel {
 		setNavigationButtons(Anchor.CENTER, buttonClose, yesButton);
 	}
 
-
 }

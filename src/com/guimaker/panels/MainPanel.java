@@ -101,8 +101,7 @@ public class MainPanel {
 		//TODO move all the params to panel configuration class
 		numberOfRows = 0;
 		originalBackgroundColor = panelConfiguration.getColorToUse();
-		shouldPutRowsHighestAsPossible = panelConfiguration
-				.shouldPutRowsAsHighestAsPossible();
+		shouldPutRowsHighestAsPossible = panelConfiguration.shouldPutRowsAsHighestAsPossible();
 		if (panelConfiguration.isScrollHorizontally()) {
 			panel = new JPanel();
 		}
@@ -110,8 +109,8 @@ public class MainPanel {
 			panel = new HorizontallyNonscrollablePanel();
 		}
 
-		if (panelConfiguration.getColorToUse() == null && panelConfiguration
-				.isOpaque()) {
+		if (panelConfiguration.getColorToUse() == null
+				&& panelConfiguration.isOpaque()) {
 			panel.setBackground(defaultColor);
 		}
 		else if (panelConfiguration.getColorToUse() != null) {
@@ -155,9 +154,9 @@ public class MainPanel {
 	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
 		if (!columnPanelCreator.isInitialized()) {
 			columnPanelCreator.initializePanel();
-			addRow(SimpleRowBuilder
-					.createRow(FillType.NONE, abstractSimpleRow.getAnchor(),
-							columnPanelCreator.getPanel()));
+			addRow(SimpleRowBuilder.createRow(FillType.NONE,
+					abstractSimpleRow.getAnchor(),
+					columnPanelCreator.getPanel()));
 		}
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
 	}
@@ -362,7 +361,8 @@ public class MainPanel {
 		c.gridy = rowNumber;
 		c.weightx = 1;
 		int fill = row.getFillTypeAsGridBagConstraint();
-		int anchor = row.getAnchor().getAnchor();
+		int anchor = row.getAnchor()
+						.getAnchor();
 		if (shouldPutRowsHighestAsPossible || row.isUseAllExtraVerticalSpace()
 				|| fill == GridBagConstraints.BOTH
 				|| fill == GridBagConstraints.VERTICAL) {
@@ -487,8 +487,8 @@ public class MainPanel {
 	public void addElementsToRow(JComponent row, JComponent... elements) {
 
 		addOrRemoveFillingFromLastElementInRow(false, row);
-		GridBagConstraints c = ((GridBagLayout) row.getLayout())
-				.getConstraints(row.getComponent(row.getComponentCount() - 1));
+		GridBagConstraints c = ((GridBagLayout) row.getLayout()).getConstraints(
+				row.getComponent(row.getComponentCount() - 1));
 		c.weightx = 1;
 		for (JComponent element : elements) {
 			row.add(element, c); // TODO why it works?
@@ -498,8 +498,8 @@ public class MainPanel {
 
 	private void addOrRemoveFillingFromLastElementInRow(boolean addFilling,
 			JComponent row) {
-		GridBagConstraints c = ((GridBagLayout) row.getLayout())
-				.getConstraints(row.getComponent(row.getComponentCount() - 1));
+		GridBagConstraints c = ((GridBagLayout) row.getLayout()).getConstraints(
+				row.getComponent(row.getComponentCount() - 1));
 		Component comp = row.getComponent(row.getComponentCount() - 1);
 		row.remove(comp);
 		c.weightx = addFilling ? 1 : 0;
@@ -640,8 +640,8 @@ public class MainPanel {
 		Map<JComponent, GridBagConstraints> constraintsOfPanels = new LinkedHashMap<>();
 		rows.forEach(row -> {
 			if (row == oldPanel) {
-				constraintsOfPanels
-						.put(newPanel, getConstraintsForComponent(oldPanel));
+				constraintsOfPanels.put(newPanel,
+						getConstraintsForComponent(oldPanel));
 			}
 			else {
 				constraintsOfPanels.put(row, getConstraintsForComponent(row));
@@ -653,7 +653,8 @@ public class MainPanel {
 		panel.removeAll();
 		panel.getLayout();
 		constraintsOfPanels.entrySet()
-				.forEach(entry -> panel.add(entry.getKey(), entry.getValue()));
+						   .forEach(entry -> panel.add(entry.getKey(),
+								   entry.getValue()));
 
 	}
 
@@ -713,12 +714,12 @@ public class MainPanel {
 				continue;
 			}
 			GridBagLayout layout = (GridBagLayout) row.getLayout();
-			GridBagConstraints firstElementToMoveConstraints = layout
-					.getConstraints(elementToReplace);
+			GridBagConstraints firstElementToMoveConstraints = layout.getConstraints(
+					elementToReplace);
 			JPanel rowPanel = (JPanel) row;
 			for (Component c : rowPanel.getComponents()) {
-				GridBagConstraints currentConstraints = layout
-						.getConstraints(c);
+				GridBagConstraints currentConstraints = layout.getConstraints(
+						c);
 				if (elementToAdd instanceof JTextComponent
 						&& currentConstraints.gridy
 						== firstElementToMoveConstraints.gridy
@@ -770,7 +771,7 @@ public class MainPanel {
 
 	public JPanel getPanel() {
 		return getNumberOfRows() == 1 && getRows().get(0)
-				.equals(columnPanelCreator.getPanel()) ?
+												  .equals(columnPanelCreator.getPanel()) ?
 				columnPanelCreator.getPanel() :
 				panel;
 	}

@@ -1,12 +1,12 @@
 package com.guimaker.application;
 
+import com.guimaker.customPositioning.CustomPositioner;
+import com.guimaker.list.myList.MyList;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
 import com.guimaker.panels.ConfirmPanel;
 import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MessagePanel;
 import com.guimaker.strings.Titles;
-import com.guimaker.customPositioning.CustomPositioner;
-import com.guimaker.list.myList.MyList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,8 @@ public class DialogWindow {
 			container = new JDialog();
 		}
 		container.setAutoRequestFocus(true);
-		container.getInputContext().selectInputMethod(Locale.getDefault());
+		container.getInputContext()
+				 .selectInputMethod(Locale.getDefault());
 		parentWindow = parent;
 	}
 
@@ -70,7 +71,8 @@ public class DialogWindow {
 			container.setLocationRelativeTo(parentWindow.getContainer());
 			break;
 		case LEFT_CORNER:
-			container.setLocation(parentWindow.getContainer().getLocation());
+			container.setLocation(parentWindow.getContainer()
+											  .getLocation());
 			break;
 
 		case NEXT_TO_PARENT:
@@ -119,18 +121,21 @@ public class DialogWindow {
 			}
 			childWindow.showYourself(title, modal);
 			childWindow.getContainer()
-					.setMinimumSize(childWindow.getContainer().getSize());
+					   .setMinimumSize(childWindow.getContainer()
+												  .getSize());
 			panelCreator.afterVisible();
 		}
 	}
 
 	private boolean isDialogOfSameType(
 			AbstractPanelWithHotkeysInfo panelTypeToCompare) {
-		return panelTypeToCompare.getClass().isInstance(panel);
+		return panelTypeToCompare.getClass()
+								 .isInstance(panel);
 	}
 
 	private boolean childWindowIsClosed() {
-		return childWindow == null || !childWindow.getContainer().isVisible();
+		return childWindow == null || !childWindow.getContainer()
+												  .isVisible();
 	}
 
 	public void showInsertWordDialog(MyList myList,
@@ -168,8 +173,9 @@ public class DialogWindow {
 			@Override
 			public void run() {
 				container.setBounds(
-						GraphicsEnvironment.getLocalGraphicsEnvironment().
-								getMaximumWindowBounds());
+						GraphicsEnvironment.getLocalGraphicsEnvironment()
+										   .
+												   getMaximumWindowBounds());
 			}
 		});
 
@@ -183,15 +189,15 @@ public class DialogWindow {
 		this.panel = panel;
 	}
 
-	public ApplicationConfiguration getParentConfiguration (){
-		if (this instanceof ApplicationWindow){
-			return ((ApplicationWindow)this).getApplicationConfiguration();
+	public ApplicationConfiguration getParentConfiguration() {
+		if (this instanceof ApplicationWindow) {
+			return ((ApplicationWindow) this).getApplicationConfiguration();
 		}
 		DialogWindow parent = parentWindow;
-		while (!(parent instanceof ApplicationWindow)){
+		while (!(parent instanceof ApplicationWindow)) {
 			parent = parent.parentWindow;
 		}
-		return ((ApplicationWindow)parent).getApplicationConfiguration();
+		return ((ApplicationWindow) parent).getApplicationConfiguration();
 
 	}
 

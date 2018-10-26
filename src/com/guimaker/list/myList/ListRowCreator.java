@@ -1,8 +1,8 @@
 package com.guimaker.list.myList;
 
 import com.guimaker.enums.InputGoal;
-import com.guimaker.list.ListRowData;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.ListRowData;
 import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.utilities.CommonListElements;
 

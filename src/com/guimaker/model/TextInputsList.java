@@ -13,7 +13,7 @@ public class TextInputsList {
 		this.rowNumber = rowNumber;
 	}
 
-	public void addInput (JTextComponent component){
+	public void addInput(JTextComponent component) {
 		inputsList.add(component);
 	}
 

@@ -2,7 +2,6 @@ package com.guimaker.options;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import java.awt.*;
 
 public abstract class AbstractTextComponentOptions<TextOptions extends AbstractTextComponentOptions<TextOptions>>
 		extends AbstractComponentOptions<TextOptions> {
@@ -21,14 +20,13 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 		opaque(false);
 	}
 
-	public String getPromptWhenEmpty(){
+	public String getPromptWhenEmpty() {
 		return promptWhenEmpty;
 	}
 
 	public boolean isEditable() {
 		return editable;
 	}
-
 
 	public int getNumberOfRows() {
 		return numberOfRows;
@@ -42,7 +40,7 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 		return maximumCharacters;
 	}
 
-	public TextOptions promptWhenEmpty(String promptWhenEmpty){
+	public TextOptions promptWhenEmpty(String promptWhenEmpty) {
 		this.promptWhenEmpty = promptWhenEmpty;
 		return getThis();
 	}

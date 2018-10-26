@@ -31,10 +31,11 @@ public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy
 	@Override
 	public boolean isApplicable(int foundWordRowNumber,
 			Range visibleWordsRange) {
-		distanceFromLastRow = Math
-				.abs(foundWordRowNumber - visibleWordsRange.getRangeEnd());
+		distanceFromLastRow = Math.abs(
+				foundWordRowNumber - visibleWordsRange.getRangeEnd());
 		distanceFromFirstRow = Math.
-				abs(foundWordRowNumber - visibleWordsRange.getRangeStart());
+										   abs(foundWordRowNumber
+												   - visibleWordsRange.getRangeStart());
 		wordAboveRange = distanceFromLastRow < maximumWordsDisplayed;
 		wordBelowRange = distanceFromFirstRow < maximumWordsDisplayed;
 		return wordAboveRange || wordBelowRange;
@@ -57,7 +58,7 @@ public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy
 		}
 		listWordsController.removeRowsFromRangeInclusive(
 				loadWordsHandler.getRangeOfWordsToRemove(numberOfWordsToLoad));
-		listWordsController
-				.addSuccessiveWords(loadWordsHandler, numberOfWordsToLoad);
+		listWordsController.addSuccessiveWords(loadWordsHandler,
+				numberOfWordsToLoad);
 	}
 }

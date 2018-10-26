@@ -1,6 +1,5 @@
 package com.guimaker.panels;
 
-import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.ConditionForHotkey;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
@@ -9,7 +8,6 @@ import com.guimaker.utilities.KeyModifiers;
 import com.guimaker.utilities.LimitDocumentFilter;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.text.*;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
@@ -46,9 +44,9 @@ public class GuiElementsCreator {
 			component.setFont(options.getFont());
 		}
 		if (options.getFontSize() > 0) {
-			component.setFont(
-					component.getFont().deriveFont(options.getFontSize())
-							.deriveFont(Font.PLAIN));
+			component.setFont(component.getFont()
+									   .deriveFont(options.getFontSize())
+									   .deriveFont(Font.PLAIN));
 		}
 
 	}
@@ -135,16 +133,17 @@ public class GuiElementsCreator {
 		setGeneralComponentOptions(options, scrollPane);
 		if (options.getBackgroundColor() != null) {
 			scrollPane.getViewport()
-					.setBackground(options.getBackgroundColor());
+					  .setBackground(options.getBackgroundColor());
 		}
 		if (!options.isOpaque()) {
-			scrollPane.getViewport().setOpaque(false);
+			scrollPane.getViewport()
+					  .setOpaque(false);
 		}
 		if (options.getBorder() == null) {
 			scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		}
 		scrollPane.getVerticalScrollBar()
-				.setUnitIncrement(options.getUnitIncrement());
+				  .setUnitIncrement(options.getUnitIncrement());
 		return scrollPane;
 	}
 
@@ -173,16 +172,19 @@ public class GuiElementsCreator {
 		if (!options.isEditable())
 			textComponent.setHighlighter(null);
 
-		if (!options.getPromptWhenEmpty().isEmpty()) {
+		if (!options.getPromptWhenEmpty()
+					.isEmpty()) {
 			String prompt = options.getPromptWhenEmpty();
 			textComponent.addFocusListener(
 					CommonActionsCreator.addPromptWhenEmpty(prompt));
-			if (options.getText().isEmpty()) {
-				CommonActionsCreator
-						.setTextFieldToPromptValue(textComponent, prompt);
+			if (options.getText()
+					   .isEmpty()) {
+				CommonActionsCreator.setTextFieldToPromptValue(textComponent,
+						prompt);
 			}
 		}
-		if (options.getText() != null && !options.getText().isEmpty()) {
+		if (options.getText() != null && !options.getText()
+												 .isEmpty()) {
 			textComponent.setText(options.getText());
 			textComponent.setForeground(options.getForegroundColor());
 		}
@@ -196,7 +198,8 @@ public class GuiElementsCreator {
 
 	private static void addUndoRedoActions(JTextComponent textComponent) {
 		UndoManager undoManager = new UndoManager();
-		textComponent.getDocument().addUndoableEditListener(undoManager);
+		textComponent.getDocument()
+					 .addUndoableEditListener(undoManager);
 		AbstractAction undo = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -231,7 +234,8 @@ public class GuiElementsCreator {
 		setGeneralComponentOptions(options, comboBox);
 		comboBox.setBorder(null);
 
-		options.getComboboxValues().forEach(value -> comboBox.addItem(value));
+		options.getComboboxValues()
+			   .forEach(value -> comboBox.addItem(value));
 		ListCellRenderer defaultRenderer = comboBox.getRenderer();
 		setBackgroundColorOnSelection(options, comboBox, defaultRenderer);
 		return comboBox;
@@ -257,9 +261,8 @@ public class GuiElementsCreator {
 			public Component getListCellRendererComponent(JList list,
 					Object value, int index, boolean isSelected,
 					boolean cellHasFocus) {
-				Component c = defaultRenderer
-						.getListCellRendererComponent(list, value, index,
-								isSelected, cellHasFocus);
+				Component c = defaultRenderer.getListCellRendererComponent(list,
+						value, index, isSelected, cellHasFocus);
 				Color backgroundColor = options.getBackgroundColor();
 				if (c instanceof JLabel) {
 					if (isSelected) {
@@ -307,8 +310,8 @@ public class GuiElementsCreator {
 		setTextComponentOptions(textPaneOptions, textPane);
 		StyledDocument doc = textPane.getStyledDocument();
 		SimpleAttributeSet center = new SimpleAttributeSet();
-		StyleConstants.setAlignment(center,
-				textPaneOptions.getTextAlignment().getStyleConstant());
+		StyleConstants.setAlignment(center, textPaneOptions.getTextAlignment()
+														   .getStyleConstant());
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		return textPane;
 	}
@@ -321,17 +324,19 @@ public class GuiElementsCreator {
 	public static JScrollPane createTextPaneWrappedInScrollPane(
 			TextPaneOptions textPaneOptions,
 			ScrollPaneOptions scrollPaneOptions) {
-		JScrollPane pane = createScrollPane(scrollPaneOptions
-				.componentToWrap(createTextPane(textPaneOptions)));
+		JScrollPane pane = createScrollPane(scrollPaneOptions.componentToWrap(
+				createTextPane(textPaneOptions)));
 		return pane;
 	}
 
 	public static JScrollPane createTextPaneWrappedInScrollPane(
 			TextPaneOptions textPaneOptions) {
-		JScrollPane pane = createScrollPane(new ScrollPaneOptions()
-				.componentToWrap(createTextPane(textPaneOptions))
-				.opaque(textPaneOptions.isOpaque()));
-		pane.getViewport().setOpaque(textPaneOptions.isOpaque());
+		JScrollPane pane = createScrollPane(
+				new ScrollPaneOptions().componentToWrap(
+						createTextPane(textPaneOptions))
+									   .opaque(textPaneOptions.isOpaque()));
+		pane.getViewport()
+			.setOpaque(textPaneOptions.isOpaque());
 		return pane;
 	}
 

@@ -2,20 +2,15 @@ package com.guimaker.list.myList;
 
 import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.DialogWindow;
-import com.guimaker.enums.MoveDirection;
-import com.guimaker.listeners.SwitchBetweenInputsFailListener;
-import com.guimaker.panels.MainPanel;
-import com.guimaker.strings.ExceptionsMessages;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
-import com.guimaker.list.ListElementPropertyManager;
-import com.guimaker.list.ListElement;
-import com.guimaker.list.ListElementInitializer;
-import com.guimaker.list.ListObserver;
-import com.guimaker.list.ObservableList;
+import com.guimaker.enums.MoveDirection;
+import com.guimaker.list.*;
 import com.guimaker.listeners.InputValidationListener;
+import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.PropertyPostValidationData;
-import com.guimaker.list.WordInMyListExistence;
+import com.guimaker.panels.MainPanel;
+import com.guimaker.strings.ExceptionsMessages;
 import com.guimaker.swingUtilities.ProgressUpdater;
 
 import javax.swing.*;
@@ -48,7 +43,6 @@ public class MyList<Word extends ListElement>
 		this.wordInitializer = wordInitializer;
 		this.title = title;
 	}
-
 
 	@Override
 	public void addListObserver(ListObserver<Word> listObserver) {
@@ -97,8 +91,8 @@ public class MyList<Word extends ListElement>
 
 	public boolean addWord(Word word, InputGoal inputGoal,
 			boolean tryToShowWord) {
-		return word != null && listController
-				.add(word, inputGoal, tryToShowWord);
+		return word != null && listController.add(word, inputGoal,
+				tryToShowWord);
 	}
 
 	public void addWords(List<Word> words, InputGoal inputGoal,
@@ -117,8 +111,8 @@ public class MyList<Word extends ListElement>
 	}
 
 	public void highlightRow(int rowNumber, boolean clearLastHighlightedWord) {
-		listController
-				.highlightRowAndScroll(rowNumber, clearLastHighlightedWord);
+		listController.highlightRowAndScroll(rowNumber,
+				clearLastHighlightedWord);
 	}
 
 	public <Property> void findAndHighlightRowBasedOnPropertyStartingFromHighlightedWord(
@@ -169,8 +163,8 @@ public class MyList<Word extends ListElement>
 			}
 			else {
 				Word word = listController.getWordInRow(rowNumber);
-				if (propertyChecker
-						.isPropertyFound(searchedPropertyValue, word)) {
+				if (propertyChecker.isPropertyFound(searchedPropertyValue,
+						word)) {
 					return rowNumber;
 				}
 			}
@@ -183,8 +177,8 @@ public class MyList<Word extends ListElement>
 
 		Word highlightedWord = getHighlightedWord();
 		if (!checkHighlightedWordToo && highlightedWord != null
-				&& propertyChecker
-				.isPropertyFound(searchedPropertyValue, highlightedWord)) {
+				&& propertyChecker.isPropertyFound(searchedPropertyValue,
+				highlightedWord)) {
 			if (displayMessage) {
 				parent.showMessageDialog(
 						ExceptionsMessages.WORD_ALREADY_HIGHLIGHTED_EXCEPTION);
@@ -240,9 +234,8 @@ public class MyList<Word extends ListElement>
 			}
 		}
 		if (sourceList != null) {
-			WordInMyListExistence<Word> wordInSourceListExistence = sourceList
-					.doesWordWithPropertyExist(property, propertyManager,
-							wordToExclude);
+			WordInMyListExistence<Word> wordInSourceListExistence = sourceList.doesWordWithPropertyExist(
+					property, propertyManager, wordToExclude);
 			wordInSourceListExistence.clearRowNumber();
 			return wordInSourceListExistence;
 		}
@@ -299,8 +292,8 @@ public class MyList<Word extends ListElement>
 	}
 
 	public boolean areAllWordsHighlighted() {
-		return listController.getWordsByHighlight(true).size()
-				== getNumberOfWords();
+		return listController.getWordsByHighlight(true)
+							 .size() == getNumberOfWords();
 	}
 
 	public List<Word> getWords() {
@@ -310,7 +303,6 @@ public class MyList<Word extends ListElement>
 	public int get1BasedRowNumberOfWord(Word word) {
 		return listController.get0BasedRowNumberOfWord(word) + 1;
 	}
-
 
 	public Word getWordInRow(int rowNumber1Based) {
 		return listController.getWordInRow(rowNumber1Based - 1);

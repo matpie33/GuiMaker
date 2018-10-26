@@ -39,10 +39,10 @@ public class SplitPaneActionsCreator {
 			public void mouseDragged(MouseEvent e) {
 				currentMouseXPosition = e.getXOnScreen();
 				currentMouseYPosition = e.getYOnScreen();
-				if (mouseInBorderPosition
-						.equals(MouseInBorderPosition.IN_VERTICAL)) {
-					GridBagConstraints constraints = wrappingPanel
-							.getConstraintsForComponent(subPanel);
+				if (mouseInBorderPosition.equals(
+						MouseInBorderPosition.IN_VERTICAL)) {
+					GridBagConstraints constraints = wrappingPanel.getConstraintsForComponent(
+							subPanel);
 					double oldWeightX = constraints.weightx;
 					double newWeight = calculateNewWeightX(subPanel,
 							oldWeightX);
@@ -50,48 +50,46 @@ public class SplitPaneActionsCreator {
 						return;
 					}
 					for (Component otherSubPanel : wrappingPanel.getPanel()
-							.getComponents()) {
+																.getComponents()) {
 						if (subPanel.getWidth() + subPanel.getLocation().x
 								== otherSubPanel.getLocation().x) {
-							GridBagConstraints thisConstraints = wrappingPanel
-									.getConstraintsForComponent(otherSubPanel);
+							GridBagConstraints thisConstraints = wrappingPanel.getConstraintsForComponent(
+									otherSubPanel);
 							thisConstraints.weightx =
 									thisConstraints.weightx - (newWeight
 											- oldWeightX);
-							wrappingPanel
-									.setConstraintsForComponent(otherSubPanel,
-											thisConstraints);
+							wrappingPanel.setConstraintsForComponent(
+									otherSubPanel, thisConstraints);
 						}
 					}
 					constraints.weightx = newWeight;
-					wrappingPanel
-							.setConstraintsForComponent(subPanel, constraints);
+					wrappingPanel.setConstraintsForComponent(subPanel,
+							constraints);
 					wrappingPanel.updateView();
 				}
-				if (mouseInBorderPosition
-						.equals(MouseInBorderPosition.IN_HORIZONTAL)) {
-					GridBagConstraints constraints = wrappingPanel
-							.getConstraintsForComponent(subPanel);
+				if (mouseInBorderPosition.equals(
+						MouseInBorderPosition.IN_HORIZONTAL)) {
+					GridBagConstraints constraints = wrappingPanel.getConstraintsForComponent(
+							subPanel);
 					double oldWeightY = constraints.weighty;
 					double newWeight = calculateNewWeightY(subPanel,
 							constraints.weighty);
 					for (Component otherSubPanel : wrappingPanel.getRows()) {
 						if (subPanel.getHeight() + subPanel.getLocation().y
 								== otherSubPanel.getLocation().y) {
-							GridBagConstraints thisConstraints = wrappingPanel
-									.getConstraintsForComponent(otherSubPanel);
+							GridBagConstraints thisConstraints = wrappingPanel.getConstraintsForComponent(
+									otherSubPanel);
 							thisConstraints.weighty =
 									thisConstraints.weighty - (newWeight
 											- oldWeightY);
-							wrappingPanel
-									.setConstraintsForComponent(otherSubPanel,
-											thisConstraints);
+							wrappingPanel.setConstraintsForComponent(
+									otherSubPanel, thisConstraints);
 
 						}
 					}
 					constraints.weighty = newWeight;
-					wrappingPanel
-							.setConstraintsForComponent(subPanel, constraints);
+					wrappingPanel.setConstraintsForComponent(subPanel,
+							constraints);
 					wrappingPanel.updateView();
 				}
 
@@ -102,8 +100,9 @@ public class SplitPaneActionsCreator {
 	private double calculateNewWeightY(JPanel panel, double oldWeightY) {
 		double mouseMovementDeltaY =
 				(double) currentMouseYPosition - panel.getLocationOnScreen()
-						.getY();
-		double panelHeight = panel.getSize().getHeight();
+													  .getY();
+		double panelHeight = panel.getSize()
+								  .getHeight();
 		double panelHeightChange = mouseMovementDeltaY - panelHeight;
 		return (panelHeight + panelHeightChange) * oldWeightY / panelHeight;
 	}
@@ -152,13 +151,13 @@ public class SplitPaneActionsCreator {
 				else {
 					mouseInBorderPosition = MouseInBorderPosition.NOT_IN_BORDER;
 				}
-				if (mouseInBorderPosition
-						.equals(MouseInBorderPosition.IN_HORIZONTAL)) {
+				if (mouseInBorderPosition.equals(
+						MouseInBorderPosition.IN_HORIZONTAL)) {
 					panel.setCursor(
 							Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 				}
-				else if (mouseInBorderPosition
-						.equals(MouseInBorderPosition.IN_VERTICAL)) {
+				else if (mouseInBorderPosition.equals(
+						MouseInBorderPosition.IN_VERTICAL)) {
 					panel.setCursor(
 							Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 				}

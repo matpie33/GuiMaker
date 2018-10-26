@@ -12,9 +12,9 @@ public class ElementCopier {
 
 	public static AbstractButton copyButton(AbstractButton buttonToCopy) {
 		ActionListener[] actionListeners = buttonToCopy.getActionListeners();
-		AbstractButton copiedButton = GuiElementsCreator
-				.createButtonlikeComponent(new ButtonOptions(ButtonType.BUTTON)
-						.text(buttonToCopy.getText()), null);
+		AbstractButton copiedButton = GuiElementsCreator.createButtonlikeComponent(
+				new ButtonOptions(ButtonType.BUTTON).text(
+						buttonToCopy.getText()), null);
 		for (ActionListener actionListener : actionListeners) {
 			copiedButton.addActionListener(actionListener);
 		}
@@ -22,8 +22,8 @@ public class ElementCopier {
 	}
 
 	public static JLabel copyLabel(JLabel labelToCopy) {
-		JLabel copiedLabel = GuiElementsCreator
-				.createLabel(new ComponentOptions());
+		JLabel copiedLabel = GuiElementsCreator.createLabel(
+				new ComponentOptions());
 		copiedLabel.setText(labelToCopy.getText());
 		return copiedLabel;
 	}

@@ -27,8 +27,7 @@ public class ApplicationConfiguration {
 
 	public ApplicationConfiguration setInsertWordPanelPositioner(
 			CustomPositioner insertWordPanelPositioner) {
-		this.insertWordPanelPositioner =
-				insertWordPanelPositioner;
+		this.insertWordPanelPositioner = insertWordPanelPositioner;
 		return this;
 	}
 
@@ -36,7 +35,8 @@ public class ApplicationConfiguration {
 		return listRowHighlightColor;
 	}
 
-	public ApplicationConfiguration setListRowHighlightColor(Color listRowHighlightColor) {
+	public ApplicationConfiguration setListRowHighlightColor(
+			Color listRowHighlightColor) {
 		this.listRowHighlightColor = listRowHighlightColor;
 		return this;
 	}
@@ -55,7 +55,8 @@ public class ApplicationConfiguration {
 		return panelBackgroundColor;
 	}
 
-	public ApplicationConfiguration setPanelBackgroundColor(Color panelBackgroundColor) {
+	public ApplicationConfiguration setPanelBackgroundColor(
+			Color panelBackgroundColor) {
 		this.panelBackgroundColor = panelBackgroundColor;
 		return this;
 	}
@@ -64,7 +65,8 @@ public class ApplicationConfiguration {
 		return contentPanelColor;
 	}
 
-	public ApplicationConfiguration setContentPanelColor(Color contentPanelColor) {
+	public ApplicationConfiguration setContentPanelColor(
+			Color contentPanelColor) {
 		this.contentPanelColor = contentPanelColor;
 		return this;
 	}

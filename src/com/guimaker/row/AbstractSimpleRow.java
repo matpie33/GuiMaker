@@ -168,7 +168,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return anchor;
 	}
 
-	public Row wrapSingleComponentWithPanel(boolean isWrapWithPanel){
+	public Row wrapSingleComponentWithPanel(boolean isWrapWithPanel) {
 		this.wrapWithPanel = isWrapWithPanel;
 		return getThis();
 	}

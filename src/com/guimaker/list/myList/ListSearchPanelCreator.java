@@ -2,6 +2,8 @@ package com.guimaker.list.myList;
 
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
+import com.guimaker.list.ListElement;
+import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListRowData;
 import com.guimaker.options.ComboboxOptions;
 import com.guimaker.options.ComponentOptions;
@@ -9,8 +11,6 @@ import com.guimaker.options.TextComponentOptions;
 import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
-import com.guimaker.list.ListElementPropertyManager;
-import com.guimaker.list.ListElement;
 import com.guimaker.strings.Prompts;
 
 import javax.swing.*;
@@ -39,33 +39,36 @@ public class ListSearchPanelCreator<Word extends ListElement> {
 		JLabel searchOptionPrompt = GuiElementsCreator.createLabel(
 				new ComponentOptions().text(Prompts.SEARCH_OPTION_PROMPT));
 
-		filteringProperty = GuiElementsCreator
-				.createLabel(new ComponentOptions());
+		filteringProperty = GuiElementsCreator.createLabel(
+				new ComponentOptions());
 		filteringInput = GuiElementsCreator.createTextField(
 				new TextComponentOptions().rowsAndColumns(1, 15));
 
 		comboBox = createComboboxForSearchedProperty();
-		searchPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, Anchor.WEST, searchOptionPrompt,
-						comboBox));
+		searchPanel.addRow(
+				SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
+						searchOptionPrompt, comboBox));
 		addFilteringInputAndButton();
 
 		return searchPanel.getPanel();
 	}
 
 	private void addFilteringInputAndButton() {
-		searchPanel.addRow(SimpleRowBuilder
-				.createRow(FillType.NONE, Anchor.WEST, filteringProperty,
-						filteringInput, buttonFilter));
+		searchPanel.addRow(
+				SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
+						filteringProperty, filteringInput, buttonFilter));
 	}
 
 	private JComboBox<String> createComboboxForSearchedProperty() {
-		JComboBox<String> comboBox = GuiElementsCreator
-				.createCombobox(new ComboboxOptions());
-		if (listRowData.getRowPropertiesData().isEmpty()) {
+		JComboBox<String> comboBox = GuiElementsCreator.createCombobox(
+				new ComboboxOptions());
+		if (listRowData.getRowPropertiesData()
+					   .isEmpty()) {
 			return comboBox;
 		}
-		listRowData.getRowPropertiesData().keySet().forEach(comboBox::addItem);
+		listRowData.getRowPropertiesData()
+				   .keySet()
+				   .forEach(comboBox::addItem);
 		comboBox.addActionListener(createActionSwitchSearchingByOption());
 		comboBox.setSelectedIndex(0);
 		return comboBox;
@@ -85,9 +88,11 @@ public class ListSearchPanelCreator<Word extends ListElement> {
 	public void switchToListProperty(String property) {
 		filteringProperty.setText(property + COLON);
 		listElementPropertyManager = listRowData.getRowPropertiesData()
-				.get(property).getFilteringHandler();
-		filteringInput = listRowData.getRowPropertiesData().get(property)
-				.getFilteringTextComponent();
+												.get(property)
+												.getFilteringHandler();
+		filteringInput = listRowData.getRowPropertiesData()
+									.get(property)
+									.getFilteringTextComponent();
 		searchPanel.removeLastRow();
 		addFilteringInputAndButton();
 		SwingUtilities.invokeLater(this::focusFirstTextfieldForCurrentProperty);
