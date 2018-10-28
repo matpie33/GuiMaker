@@ -49,7 +49,7 @@ public class ApplicationWindow extends DialogWindow {
 
 	public void initiate(AbstractPanelWithHotkeysInfo... panels) {
 		//TODO put this to another class
-		UIManager.put("ComboBox.disabledBackground", BasicColors.PURPLE_DARK_1);
+		UIManager.put("ComboBox.disabledBackground", BasicColors.BLACK_NORMAL_1);
 		UIManager.put("Label.disabledForeground", Color.WHITE);
 
 		mainApplicationPanel.add(startingPanel.createPanel(),
