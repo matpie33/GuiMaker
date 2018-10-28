@@ -25,14 +25,12 @@ public class ListSearchPanelCreator<Word extends ListElement> {
 	private JTextComponent filteringInput;
 	private ListElementPropertyManager<?, Word> listElementPropertyManager;
 	private MainPanel searchPanel;
-	private AbstractButton buttonFilter;
 	public static final String COLON = ":";
 	private AbstractButton buttonClearFilter;
 
 	public JPanel createPanel(ListRowData<Word> listRowData,
-			AbstractButton buttonFilter, AbstractButton buttonClearFilter) {
+			AbstractButton buttonClearFilter) {
 		this.buttonClearFilter = buttonClearFilter;
-		this.buttonFilter = buttonFilter;
 		this.listRowData = listRowData;
 
 		searchPanel = new MainPanel();
@@ -57,8 +55,7 @@ public class ListSearchPanelCreator<Word extends ListElement> {
 	private void addFilteringInputAndButton() {
 		searchPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.HORIZONTAL, Anchor.WEST,
-						filteringProperty, filteringInput, buttonFilter,
-						buttonClearFilter)
+						filteringProperty, filteringInput, buttonClearFilter)
 								.fillHorizontallySomeElements(filteringInput));
 	}
 

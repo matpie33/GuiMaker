@@ -4,10 +4,7 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.MoveDirection;
-import com.guimaker.list.ListElement;
-import com.guimaker.list.ListElementInitializer;
-import com.guimaker.list.ListObserver;
-import com.guimaker.list.WordInMyListExistence;
+import com.guimaker.list.*;
 import com.guimaker.list.loadAdditionalWordsHandling.FoundWordInsideVisibleRangePlusMaximumWordsStrategy;
 import com.guimaker.list.loadAdditionalWordsHandling.FoundWordInsideVisibleRangeStrategy;
 import com.guimaker.list.loadAdditionalWordsHandling.FoundWordOutsideRangeStrategy;
@@ -21,10 +18,13 @@ import com.guimaker.strings.Prompts;
 import com.guimaker.swingUtilities.ProgressUpdater;
 import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.Range;
+import com.guimaker.utilities.ThreadUtilities;
 import com.guimaker.utilities.WordSearching;
 
 import javax.swing.*;
 import javax.swing.FocusManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -48,6 +48,7 @@ public class ListWordsController<Word extends ListElement> {
 	private boolean isInEditMode;
 	private final int numberOfWordsToDisplayByFilter = 10;
 	private String wordSpecificPrompt;
+	private ListFilterHandler listFilterHandler;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
 
 	public ListWordsController(ListConfiguration listConfiguration,
@@ -62,7 +63,7 @@ public class ListWordsController<Word extends ListElement> {
 		listPanelCreator = new ListPanelCreator<>(listConfiguration,
 				applicationChangesManager, listRowCreator, this, myList);
 		this.listPanelCreator.setTitle(title);
-
+		listFilterHandler = new ListFilterHandler(this);
 		initializeFoundWordStrategies();
 	}
 
@@ -376,10 +377,9 @@ public class ListWordsController<Word extends ListElement> {
 		lastRowVisible++;
 		ListRow<Word> wordListRow = allWordsToRowNumberMap.get(lastRowVisible);
 		ListRow<Word> visibleRow = listPanelCreator.addRow(
-				wordListRow
-									  .getWord(), lastRowVisible + 1, true,
-				loadNextWords, listPanelCreator.getInputGoal());
-		if (wordListRow.isHighlighted()){
+				wordListRow.getWord(), lastRowVisible + 1, true, loadNextWords,
+				listPanelCreator.getInputGoal());
+		if (wordListRow.isHighlighted()) {
 			listPanelCreator.highlightRow(visibleRow.getJPanel());
 		}
 		allWordsToRowNumberMap.set(lastRowVisible, visibleRow);
@@ -588,53 +588,6 @@ public class ListWordsController<Word extends ListElement> {
 		return isInEditMode;
 	}
 
-	public AbstractAction createFilterAction(
-			ListSearchPanelCreator<Word> listSearchPanelCreator,
-			AbstractButton filterButton, InputGoal inputGoal) {
-		return new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Window window = SwingUtilities.getWindowAncestor(getPanel());
-				JFrame frame = (JFrame) window;
-				if (frame.getFocusOwner() != filterButton
-						&& frame.getFocusOwner()
-						!= listSearchPanelCreator.getFilteringInput()) {
-					return;
-				}
-				String text = listSearchPanelCreator.getFilteringInput()
-													.getText();
-				if (text.isEmpty()){
-					showWordsStartingFromRow(getFirstVisibleRowNumber());
-					return;
-				}
-				SortedMap<FilteredWordMatch, ListRow<Word>> words = WordSearching.filterWords(
-						getWordsWithDetails(),
-						text,
-						listSearchPanelCreator.getPropertyManagerForInput());
-				listPanelCreator.clear();
-
-				int newRowNumber = 1;
-				for (ListRow<Word> listRow : words.values()) {
-					if (newRowNumber > numberOfWordsToDisplayByFilter) {
-						break;
-					}
-					int rowNumber = listRow.getRowNumber() - 1;
-					listRow.setPanel(listPanelCreator.addRow(
-							allWordsToRowNumberMap.get(rowNumber)
-												  .getWord(), newRowNumber++,
-							true, listPanelCreator.getLoadNextWordsHandler(),
-							inputGoal)
-													 .getWrappingPanel());
-					if (listRow.isHighlighted()){
-						listPanelCreator.highlightRow(listRow.getJPanel());
-					}
-				}
-				scrollToTop();
-			}
-		};
-
-	}
-
 	public boolean isFilterInputFocused() {
 		return listPanelCreator.isFilterInputFocused();
 	}
@@ -643,8 +596,57 @@ public class ListWordsController<Word extends ListElement> {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showWordsStartingFromRow(getFirstVisibleRowNumber());
+				ThreadUtilities.callOnOtherThread(
+						() -> showWordsStartingFromRow(
+								getFirstVisibleRowNumber()));
 			}
 		};
+	}
+
+	public DocumentListener createActionFilterImmediately() {
+		return new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				listFilterHandler.scheduleFiltering();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				listFilterHandler.scheduleFiltering();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+
+			}
+		};
+	}
+
+
+	public void filterWords() {
+		String text = listPanelCreator.getFilterComponent()
+									  .getText();
+		ListElementPropertyManager filterInputPropertyManager = listPanelCreator.getFilterInputPropertyManager();
+		SortedMap<FilteredWordMatch, ListRow<Word>> words = WordSearching.filterWords(
+				getWordsWithDetails(), text, filterInputPropertyManager);
+		listPanelCreator.clear();
+
+		int newRowNumber = 1;
+		for (ListRow<Word> listRow : words.values()) {
+			if (newRowNumber > numberOfWordsToDisplayByFilter) {
+				break;
+			}
+			int rowNumber = listRow.getRowNumber() - 1;
+			listRow.setPanel(listPanelCreator.addRow(
+					allWordsToRowNumberMap.get(rowNumber)
+										  .getWord(), newRowNumber++, true,
+					listPanelCreator.getLoadNextWordsHandler(),
+					listPanelCreator.getInputGoal())
+											 .getWrappingPanel());
+			if (listRow.isHighlighted()) {
+				listPanelCreator.highlightRow(listRow.getJPanel());
+			}
+		}
+		scrollToTop();
 	}
 }

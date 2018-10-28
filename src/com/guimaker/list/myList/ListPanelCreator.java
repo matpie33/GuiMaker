@@ -10,6 +10,7 @@ import com.guimaker.enums.FillType;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListRowData;
 import com.guimaker.model.ListRow;
 import com.guimaker.model.PanelConfiguration;
@@ -26,6 +27,7 @@ import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.utilities.*;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -315,8 +317,15 @@ public class ListPanelCreator<Word extends ListElement>
 			if (!listRow.isEmpty()) {
 
 				JPanel panel = listSearchPanelCreator.createPanel(listRow,
-						createButtonFilter(listSearchPanelCreator),
 						createButtonClearFilter());
+				listRow.getRowPropertiesData()
+					   .values()
+					   .forEach(listProperty -> {
+						   listProperty.getFilteringTextComponent()
+									   .getDocument()
+									   .addDocumentListener(
+											   listWordsController.createActionFilterImmediately());
+					   });
 				filterPanel.addRow(
 						SimpleRowBuilder.createRow(FillType.HORIZONTAL,
 								Anchor.WEST, panel));
@@ -330,6 +339,7 @@ public class ListPanelCreator<Word extends ListElement>
 							public void actionPerformed(ActionEvent e) {
 								listSearchPanelCreator.getFilteringInput()
 													  .requestFocusInWindow();
+								listSearchPanelCreator.getFilteringInput().selectAll();
 							}
 						}, mainPanel.getPanel(),
 						HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
@@ -346,6 +356,14 @@ public class ListPanelCreator<Word extends ListElement>
 
 	}
 
+	public JTextComponent getFilterComponent() {
+		return listSearchPanelCreator.getFilteringInput();
+	}
+
+	public ListElementPropertyManager getFilterInputPropertyManager() {
+		return listSearchPanelCreator.getPropertyManagerForInput();
+	}
+
 	private AbstractButton createButtonClearFilter() {
 		return GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
@@ -353,17 +371,6 @@ public class ListPanelCreator<Word extends ListElement>
 				listWordsController.createActionClearFilter());
 	}
 
-	private AbstractButton createButtonFilter(
-			ListSearchPanelCreator<Word> listSearchPanelCreator) {
-		AbstractButton filterButton = GuiElementsCreator.createButtonLikeComponent(
-				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.FILTER));
-		AbstractAction action = listWordsController.createFilterAction(
-				listSearchPanelCreator, filterButton, inputGoal);
-		addHotkey(KeyEvent.VK_ENTER, action, getPanel(),
-				HotkeysDescriptions.FILTER_WORDS);
-		filterButton.addActionListener(action);
-		return filterButton;
-	}
 
 	private void createRootPanel() {
 		if (!isScrollBarInherited) {
