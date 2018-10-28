@@ -374,10 +374,14 @@ public class ListWordsController<Word extends ListElement> {
 
 	public void showNextWord(LoadNextWordsHandler loadNextWords) {
 		lastRowVisible++;
+		ListRow<Word> wordListRow = allWordsToRowNumberMap.get(lastRowVisible);
 		ListRow<Word> visibleRow = listPanelCreator.addRow(
-				allWordsToRowNumberMap.get(lastRowVisible)
+				wordListRow
 									  .getWord(), lastRowVisible + 1, true,
 				loadNextWords, listPanelCreator.getInputGoal());
+		if (wordListRow.isHighlighted()){
+			listPanelCreator.highlightRow(visibleRow.getJPanel());
+		}
 		allWordsToRowNumberMap.set(lastRowVisible, visibleRow);
 	}
 
@@ -621,6 +625,9 @@ public class ListWordsController<Word extends ListElement> {
 							true, listPanelCreator.getLoadNextWordsHandler(),
 							inputGoal)
 													 .getWrappingPanel());
+					if (listRow.isHighlighted()){
+						listPanelCreator.highlightRow(listRow.getJPanel());
+					}
 				}
 				scrollToTop();
 			}

@@ -427,15 +427,21 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public void highlightRowAndScroll(JComponent row) {
+		int rowNumber = highlightRow(row);
+		scrollTo(rowsPanel.getRows()
+						  .get(rowNumber));
+	}
+
+	public int highlightRow(JComponent row) {
 		int rowNumber = rowsPanel.getIndexOfPanel(row);
 		changePanelColor(rowNumber,
 				applicationChangesManager.getApplicationWindow()
 										 .getApplicationConfiguration()
 										 .getListRowHighlightColor());
-		scrollTo(rowsPanel.getRows()
-						  .get(rowNumber));
+
 		this.rowsPanel.getPanel()
 					  .repaint();
+		return rowNumber;
 	}
 
 	private void changePanelColor(int rowNumber, Color color) {
