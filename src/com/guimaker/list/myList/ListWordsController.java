@@ -377,7 +377,7 @@ public class ListWordsController<Word extends ListElement> {
 		ListRow<Word> visibleRow = listPanelCreator.addRow(
 				allWordsToRowNumberMap.get(lastRowVisible)
 									  .getWord(), lastRowVisible + 1, true,
-				loadNextWords, InputGoal.EDIT);
+				loadNextWords, listPanelCreator.getInputGoal());
 		allWordsToRowNumberMap.set(lastRowVisible, visibleRow);
 	}
 
@@ -586,7 +586,7 @@ public class ListWordsController<Word extends ListElement> {
 
 	public AbstractAction createFilterAction(
 			ListSearchPanelCreator<Word> listSearchPanelCreator,
-			AbstractButton filterButton) {
+			AbstractButton filterButton, InputGoal inputGoal) {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -597,10 +597,15 @@ public class ListWordsController<Word extends ListElement> {
 						!= listSearchPanelCreator.getFilteringInput()) {
 					return;
 				}
+				String text = listSearchPanelCreator.getFilteringInput()
+													.getText();
+				if (text.isEmpty()){
+					showWordsStartingFromRow(getFirstVisibleRowNumber());
+					return;
+				}
 				SortedMap<FilteredWordMatch, ListRow<Word>> words = WordSearching.filterWords(
 						getWordsWithDetails(),
-						listSearchPanelCreator.getFilteringInput()
-											  .getText(),
+						text,
 						listSearchPanelCreator.getPropertyManagerForInput());
 				listPanelCreator.clear();
 
@@ -614,7 +619,7 @@ public class ListWordsController<Word extends ListElement> {
 							allWordsToRowNumberMap.get(rowNumber)
 												  .getWord(), newRowNumber++,
 							true, listPanelCreator.getLoadNextWordsHandler(),
-							InputGoal.EDIT)
+							inputGoal)
 													 .getWrappingPanel());
 				}
 				scrollToTop();
@@ -625,5 +630,14 @@ public class ListWordsController<Word extends ListElement> {
 
 	public boolean isFilterInputFocused() {
 		return listPanelCreator.isFilterInputFocused();
+	}
+
+	public AbstractAction createActionClearFilter() {
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showWordsStartingFromRow(getFirstVisibleRowNumber());
+			}
+		};
 	}
 }

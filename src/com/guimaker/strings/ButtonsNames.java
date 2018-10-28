@@ -15,4 +15,5 @@ public class ButtonsNames {
 	public static final String CLOSE_WINDOW = "Zamknij";
 	public static final String CONFIRM = "Tak";
 	public static final String REJECT = "Nie";
+	public static final String CLEAR_FILTER = "Wyczyść filtr";
 }

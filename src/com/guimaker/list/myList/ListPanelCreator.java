@@ -180,10 +180,11 @@ public class ListPanelCreator<Word extends ListElement>
 	public ListRow<Word> addRow(Word word, int rowNumber,
 			boolean shouldShowWord, LoadWordsHandler loadWordsHandler,
 			InputGoal inputGoal) {
+		this.inputGoal = inputGoal;
 		if (!isInitialized) {
 			createElements();
 		}
-		this.inputGoal = inputGoal;
+
 		CommonListElements commonListElements = createCommonListElements(word,
 				inputGoal, rowNumber);
 		MainPanel rowPanel = null;
@@ -314,7 +315,8 @@ public class ListPanelCreator<Word extends ListElement>
 			if (!listRow.isEmpty()) {
 
 				JPanel panel = listSearchPanelCreator.createPanel(listRow,
-						createButtonFilter(listSearchPanelCreator));
+						createButtonFilter(listSearchPanelCreator),
+						createButtonClearFilter());
 				filterPanel.addRow(
 						SimpleRowBuilder.createRow(FillType.HORIZONTAL,
 								Anchor.WEST, panel));
@@ -344,12 +346,19 @@ public class ListPanelCreator<Word extends ListElement>
 
 	}
 
+	private AbstractButton createButtonClearFilter() {
+		return GuiElementsCreator.createButtonlikeComponent(
+				new ButtonOptions(ButtonType.BUTTON).text(
+						ButtonsNames.CLEAR_FILTER),
+				listWordsController.createActionClearFilter());
+	}
+
 	private AbstractButton createButtonFilter(
 			ListSearchPanelCreator<Word> listSearchPanelCreator) {
 		AbstractButton filterButton = GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.FILTER));
 		AbstractAction action = listWordsController.createFilterAction(
-				listSearchPanelCreator, filterButton);
+				listSearchPanelCreator, filterButton, inputGoal);
 		addHotkey(KeyEvent.VK_ENTER, action, getPanel(),
 				HotkeysDescriptions.FILTER_WORDS);
 		filterButton.addActionListener(action);
@@ -527,5 +536,9 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public String getUniqueName() {
 		return UNIQUE_NAME;
+	}
+
+	public InputGoal getInputGoal() {
+		return inputGoal;
 	}
 }
