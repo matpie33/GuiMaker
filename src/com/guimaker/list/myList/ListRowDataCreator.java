@@ -10,10 +10,10 @@ import javax.swing.text.JTextComponent;
 
 public class ListRowDataCreator<Word extends ListElement> {
 
-	private ListRowData listRowData;
+	private ListRowData<Word> listRowData;
 
 	public ListRowDataCreator(MainPanel rowPanel) {
-		this.listRowData = new ListRowData(rowPanel);
+		this.listRowData = new ListRowData<>(rowPanel);
 	}
 
 	public void addPropertyData(String propertyName,
@@ -27,7 +27,7 @@ public class ListRowDataCreator<Word extends ListElement> {
 
 	}
 
-	public ListRowData getListRowData() {
+	public ListRowData<Word> getListRowData() {
 		return listRowData;
 	}
 
