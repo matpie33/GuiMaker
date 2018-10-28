@@ -128,7 +128,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		return isMaximized;
 	}
 
-	protected Border getDefaultBorder() {
+	public Border getDefaultBorder() {
 		return defaultBorder;
 	}
 

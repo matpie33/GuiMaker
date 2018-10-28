@@ -1,6 +1,7 @@
 package com.guimaker.list.myList;
 
 import com.guimaker.application.ApplicationChangesManager;
+import com.guimaker.application.ApplicationWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.MoveDirection;
@@ -9,6 +10,7 @@ import com.guimaker.list.loadAdditionalWordsHandling.FoundWordInsideVisibleRange
 import com.guimaker.list.loadAdditionalWordsHandling.FoundWordInsideVisibleRangeStrategy;
 import com.guimaker.list.loadAdditionalWordsHandling.FoundWordOutsideRangeStrategy;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsForFoundWord;
+import com.guimaker.list.myList.panel.ListPanelCreator;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.FilteredWordMatch;
 import com.guimaker.model.ListRow;
@@ -49,12 +51,14 @@ public class ListWordsController<Word extends ListElement> {
 	private final int numberOfWordsToDisplayByFilter = 10;
 	private String wordSpecificPrompt;
 	private ListFilterHandler listFilterHandler;
+	private MyList<Word> myList;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
 
 	public ListWordsController(ListConfiguration listConfiguration,
 			ListRowCreator<Word> listRowCreator, String title,
 			ApplicationChangesManager applicationChangesManager,
 			ListElementInitializer<Word> wordInitializer, MyList<Word> myList) {
+		this.myList = myList;
 		this.wordInitializer = wordInitializer;
 		wordSpecificPrompt = listConfiguration.getWordSpecificDeletePrompt();
 		parentListAndWord = listConfiguration.getParentListAndWordContainingThisList();
@@ -411,14 +415,21 @@ public class ListWordsController<Word extends ListElement> {
 		listPanelCreator.removeWordsFromRangeInclusive(range);
 	}
 
-	//TODO not the best idea to pass the boolean "is for search panel" - maybe keep it as field
-	public void addNewWord(InputGoal inputGoal) {
-		add(wordInitializer.initializeElement(), inputGoal, true);
-		if (parentListAndWord != null) {
-			parentListAndWord.getLeft()
-							 .updateObservers(parentListAndWord.getRight(),
-									 ListElementModificationType.EDIT);
-		}
+	public AbstractAction addNewWord(InputGoal inputGoal) {
+		return new AbstractAction() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				add(wordInitializer.initializeElement(), inputGoal, true);
+				if (parentListAndWord != null) {
+					parentListAndWord.getLeft()
+									 .updateObservers(
+											 parentListAndWord.getRight(),
+											 ListElementModificationType.EDIT);
+				}
+			}
+		};
+
 	}
 
 	public MainPanel getPanelWithSelectedInput() {
@@ -622,7 +633,6 @@ public class ListWordsController<Word extends ListElement> {
 		};
 	}
 
-
 	public void filterWords() {
 		String text = listPanelCreator.getFilterComponent()
 									  .getText();
@@ -648,5 +658,17 @@ public class ListWordsController<Word extends ListElement> {
 			}
 		}
 		scrollToTop();
+	}
+
+	public AbstractAction createActionShowInsertWordDialog() {
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ApplicationWindow applicationWindow = applicationChangesManager.getApplicationWindow();
+				applicationWindow.showInsertWordDialog(myList,
+						applicationWindow.getApplicationConfiguration()
+										 .getInsertWordPanelPositioner());
+			}
+		};
 	}
 }
