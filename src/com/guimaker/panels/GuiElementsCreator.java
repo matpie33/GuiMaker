@@ -1,5 +1,6 @@
 package com.guimaker.panels;
 
+import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.ConditionForHotkey;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
@@ -15,6 +16,11 @@ import java.awt.event.*;
 import java.util.List;
 
 public class GuiElementsCreator {
+
+	static {
+		UIManager.put("ComboBox.disabledBackground", BasicColors.BLACK_NORMAL_1);
+		UIManager.put("Label.disabledForeground", Color.WHITE);
+	}
 
 	public static JLabel createLabel(ComponentOptions options) {
 		JLabel label = new JLabel();
