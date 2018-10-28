@@ -22,6 +22,8 @@ public class ListConfiguration {
 	private String wordSpecificDeletePrompt;
 
 	public ListConfiguration(String wordSpecificDeletePrompt) {
+		//TODO provide method in listElement: deletePrompt() that returns a
+		// string displayed while trying to delete the specific word
 		this.wordSpecificDeletePrompt = wordSpecificDeletePrompt;
 	}
 
