@@ -4,7 +4,6 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.DialogWindow;
 import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.Anchor;
-import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
@@ -14,9 +13,7 @@ import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.*;
 import com.guimaker.model.ListRow;
 import com.guimaker.model.PanelConfiguration;
-import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComponentOptions;
-import com.guimaker.options.ScrollPaneOptions;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
 import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
@@ -49,31 +46,26 @@ public class ListPanelCreator<Word extends ListElement>
 	private JLabel titleLabel;
 	private ListRowCreator<Word> listRow;
 	private ApplicationChangesManager applicationChangesManager;
-	private boolean enableWordAdding;
 	private AbstractButton buttonLoadNextWords;
 	private AbstractButton buttonLoadPreviousWords;
 	private LoadNextWordsHandler loadNextWordsHandler;
 	private LoadPreviousWordsHandler loadPreviousWordsHandler;
 	private List<AbstractButton> navigationButtons;
 	private JComponent listElementsPanel;
-	private boolean isScrollBarInherited;
-	private boolean enableWordSearching;
-	private boolean showButtonsNextAndPrevious;
-	private boolean isSkipTitle;
 	private Color labelsColor = Color.WHITE;
-	private boolean scrollBarSizeFittingContent;
 	private InputGoal inputGoal;
-	private boolean hasParentList;
 	private ListSearchPanelCreator<Word> listSearchPanelCreator;
 	private final static String UNIQUE_NAME = "list panel creator";
 	private boolean isInitialized = false;
 	private MainPanel filterPanel;
 	private ListElementsCreator<Word> listElementsCreator;
+	private ListConfiguration listConfiguration;
 
 	public ListPanelCreator(ListConfiguration listConfiguration,
 			ApplicationChangesManager applicationChangesManager,
 			ListRowCreator<Word> listRow, ListWordsController<Word> controller,
 			MyList<Word> myList) {
+		this.listConfiguration = listConfiguration;
 		mainPanel.setRowsBorder(null);
 		listElementsCreator = new ListElementsCreator<>(controller, this,
 				myList, applicationChangesManager.getApplicationWindow());
@@ -83,10 +75,6 @@ public class ListPanelCreator<Word extends ListElement>
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
 		this.applicationChangesManager = applicationChangesManager;
 		listWordsController = controller;
-		isSkipTitle = listConfiguration.isSkipTitle();
-		hasParentList =
-				listConfiguration.getParentListAndWordContainingThisList()
-						!= null;
 
 		Color contentColor = BasicColors.PURPLE_DARK_1;
 		rowsPanel = new MainPanel(
@@ -94,6 +82,9 @@ public class ListPanelCreator<Word extends ListElement>
 										.setPanelDisplayMode(
 												listConfiguration.getDisplayMode())
 										.putRowsAsHighestAsPossible());
+		boolean hasParentList =
+				listConfiguration.getParentListAndWordContainingThisList()
+						!= null;
 		setParentDialog(applicationChangesManager.getApplicationWindow());
 		if (hasParentList) {
 			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
@@ -109,7 +100,8 @@ public class ListPanelCreator<Word extends ListElement>
 		this.listRow = listRow;
 
 		navigationButtons = new ArrayList<>();
-		unwrapConfiguration(listConfiguration);
+		addNavigationButtons(
+				listConfiguration.getAdditionalNavigationButtons());
 		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
 		addElementsForEmptyList();
 		createButtonsShowNextAndPrevious();
@@ -119,7 +111,7 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	private void initializeNavigationButtons() {
-		if (enableWordAdding) {
+		if (listConfiguration.isWordAddingEnabled()) {
 			navigationButtons.add(listElementsCreator.createButtonAddWord());
 		}
 		setNavigationButtons(
@@ -133,19 +125,8 @@ public class ListPanelCreator<Word extends ListElement>
 				listElementsCreator.createButtonAddRow(InputGoal.EDIT)));
 	}
 
-	private void unwrapConfiguration(ListConfiguration listConfiguration) {
-		this.enableWordAdding = listConfiguration.isWordAddingEnabled();
-		this.isScrollBarInherited = listConfiguration.isScrollBarInherited();
-		this.enableWordSearching = listConfiguration.isWordSearchingEnabled();
-		showButtonsNextAndPrevious = listConfiguration.isShowButtonsLoadNextPreviousWords();
-		scrollBarSizeFittingContent = listConfiguration.isScrollBarSizeFittingContent();
-		addNavigationButtons(
-				listConfiguration.getAdditionalNavigationButtons());
-		//TODO redundant code - keep reference to list configuration instead of keep all the params in this class
-	}
-
 	public void inheritScrollPane() {
-		isScrollBarInherited = false;
+		listConfiguration.inheritScrollbar(true);
 	}
 
 	private void addNavigationButtons(AbstractButton... buttons) {
@@ -169,7 +150,7 @@ public class ListPanelCreator<Word extends ListElement>
 				createButtonShowNextOrPreviousWords(loadNextWordsHandler));
 		buttonLoadPreviousWords.addActionListener(
 				createButtonShowNextOrPreviousWords(loadPreviousWordsHandler));
-		if (!showButtonsNextAndPrevious) {
+		if (!listConfiguration.isShowButtonsLoadNextPreviousWords()) {
 			buttonLoadPreviousWords.setVisible(false);
 			buttonLoadNextWords.setVisible(false);
 		}
@@ -241,7 +222,7 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	private void createMainPanelElements() {
-		if (!isSkipTitle) {
+		if (!listConfiguration.isSkipTitle()) {
 			mainPanel.addRow(
 					SimpleRowBuilder.createRow(FillType.NONE, Anchor.CENTER,
 							titleLabel));
@@ -273,7 +254,7 @@ public class ListPanelCreator<Word extends ListElement>
 		rowsPanel.removeRow(0);
 		isInitialized = true;
 
-		if (enableWordSearching) {
+		if (listConfiguration.isWordSearchingEnabled()) {
 			ListRowData<Word> listRow = this.listRow.createListRow(
 					listWordsController.getWordInitializer()
 									   .initializeElement(),
@@ -315,7 +296,8 @@ public class ListPanelCreator<Word extends ListElement>
 			}
 		}
 
-		if (!enableWordSearching && !enableWordAdding) {
+		if (!listConfiguration.isWordSearchingEnabled()
+				&& !listConfiguration.isWordAddingEnabled()) {
 			mainPanel.getPanel()
 					 .setOpaque(false);
 		}
@@ -331,10 +313,10 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	private void createRootPanel() {
-		if (!isScrollBarInherited) {
-			parentScrollPane = listElementsCreator.createWrappingScrollPane
-					(rowsPanel);
-			if (!scrollBarSizeFittingContent) {
+		if (!listConfiguration.isScrollBarInherited()) {
+			parentScrollPane = listElementsCreator.createWrappingScrollPane(
+					rowsPanel);
+			if (!listConfiguration.isScrollBarSizeFittingContent()) {
 				parentScrollPane.setPreferredSize(scrollPanesSize);
 			}
 			listElementsPanel = parentScrollPane;
@@ -377,7 +359,7 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public void scrollTo(JComponent panel) {
-		if (isScrollBarInherited) {
+		if (listConfiguration.isScrollBarInherited()) {
 			//TODO keep reference to the inherited scrollbar and use it to scroll
 			return;
 		}
@@ -389,7 +371,7 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	public void scrollToBottom() {
-		if (isScrollBarInherited) {
+		if (listConfiguration.isScrollBarInherited()) {
 			return;
 		}
 
