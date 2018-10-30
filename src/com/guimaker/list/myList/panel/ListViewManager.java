@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ListPanelCreator<Word extends ListElement>
+public class ListViewManager<Word extends ListElement>
 		extends AbstractPanelWithHotkeysInfo {
 
 	private ListInputsSelectionManager listInputsSelectionManager;
@@ -61,7 +61,7 @@ public class ListPanelCreator<Word extends ListElement>
 	private ListElementsCreator<Word> listElementsCreator;
 	private ListConfiguration listConfiguration;
 
-	public ListPanelCreator(ListConfiguration listConfiguration,
+	public ListViewManager(ListConfiguration listConfiguration,
 			ApplicationChangesManager applicationChangesManager,
 			ListRowCreator<Word> listRow, ListWordsController<Word> controller,
 			MyList<Word> myList) {

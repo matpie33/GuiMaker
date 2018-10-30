@@ -23,15 +23,15 @@ import java.awt.event.KeyEvent;
 public class ListElementsCreator<Word extends ListElement> {
 
 	private ListWordsController<Word> listWordsController;
-	private ListPanelCreator<Word> listPanelCreator;
+	private ListViewManager<Word> listViewManager;
 	private MyList<Word> myList;
 	private ApplicationWindow applicationWindow;
 
 	public ListElementsCreator(ListWordsController<Word> listWordsController,
-			ListPanelCreator<Word> listPanelCreator, MyList<Word> myList,
+			ListViewManager<Word> listViewManager, MyList<Word> myList,
 			ApplicationWindow applicationWindow) {
 		this.listWordsController = listWordsController;
-		this.listPanelCreator = listPanelCreator;
+		this.listViewManager = listViewManager;
 		this.myList = myList;
 		this.applicationWindow = applicationWindow;
 	}
@@ -92,7 +92,7 @@ public class ListElementsCreator<Word extends ListElement> {
 		String hotkeyDescription = HotkeysDescriptions.ADD_WORD;
 		int keyEvent = KeyEvent.VK_I;
 		//TODO add in my list a parameter with hotkeys mapping for add/search panels
-		return listPanelCreator.createButtonWithHotkey(KeyModifiers.CONTROL,
+		return listViewManager.createButtonWithHotkey(KeyModifiers.CONTROL,
 				keyEvent,
 				listWordsController.createActionShowInsertWordDialog(), name,
 				hotkeyDescription);
@@ -110,7 +110,7 @@ public class ListElementsCreator<Word extends ListElement> {
 		return GuiElementsCreator.createScrollPane(
 				new ScrollPaneOptions().opaque(false)
 									   .componentToWrap(rowsPanel.getPanel())
-									   .border(listPanelCreator.getDefaultBorder()));
+									   .border(listViewManager.getDefaultBorder()));
 	}
 
 }
