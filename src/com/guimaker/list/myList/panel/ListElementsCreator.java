@@ -1,12 +1,11 @@
 package com.guimaker.list.myList.panel;
 
-import com.guimaker.application.ApplicationWindow;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.myList.ListWordsController;
-import com.guimaker.list.myList.MyList;
 import com.guimaker.options.ButtonOptions;
+import com.guimaker.options.ComponentOptions;
 import com.guimaker.options.ScrollPaneOptions;
 import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
@@ -23,22 +22,19 @@ import java.awt.event.KeyEvent;
 public class ListElementsCreator<Word extends ListElement> {
 
 	private ListWordsController<Word> listWordsController;
-	private ListViewManager<Word> listViewManager;
-	private MyList<Word> myList;
-	private ApplicationWindow applicationWindow;
+	private ListPanelCreator<Word> listPanelCreator;
 
 	public ListElementsCreator(ListWordsController<Word> listWordsController,
-			ListViewManager<Word> listViewManager, MyList<Word> myList,
-			ApplicationWindow applicationWindow) {
+			ListPanelCreator<Word> listPanelCreator) {
 		this.listWordsController = listWordsController;
-		this.listViewManager = listViewManager;
-		this.myList = myList;
-		this.applicationWindow = applicationWindow;
+		this.listPanelCreator = listPanelCreator;
 	}
 
-	public AbstractButton createAndAddButtonLoadWords(String buttonName) {
+	public AbstractButton createButtonLoadWords(String buttonName,
+			AbstractAction abstractAction) {
 		AbstractButton button = GuiElementsCreator.createButtonlikeComponent(
-				new ButtonOptions(ButtonType.BUTTON).text(buttonName), null);
+				new ButtonOptions(ButtonType.BUTTON).text(buttonName),
+				abstractAction);
 		button.setEnabled(false);
 		return button;
 	}
@@ -92,7 +88,7 @@ public class ListElementsCreator<Word extends ListElement> {
 		String hotkeyDescription = HotkeysDescriptions.ADD_WORD;
 		int keyEvent = KeyEvent.VK_I;
 		//TODO add in my list a parameter with hotkeys mapping for add/search panels
-		return listViewManager.createButtonWithHotkey(KeyModifiers.CONTROL,
+		return listPanelCreator.createButtonWithHotkey(KeyModifiers.CONTROL,
 				keyEvent,
 				listWordsController.createActionShowInsertWordDialog(), name,
 				hotkeyDescription);
@@ -110,7 +106,11 @@ public class ListElementsCreator<Word extends ListElement> {
 		return GuiElementsCreator.createScrollPane(
 				new ScrollPaneOptions().opaque(false)
 									   .componentToWrap(rowsPanel.getPanel())
-									   .border(listViewManager.getDefaultBorder()));
+									   .border(listPanelCreator.getDefaultBorder()));
 	}
 
+	public JLabel createTitleLabel(String title) {
+		return GuiElementsCreator.createLabel(
+				new ComponentOptions().text(title));
+	}
 }

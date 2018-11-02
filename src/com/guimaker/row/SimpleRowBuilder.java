@@ -4,6 +4,7 @@ import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 
 import javax.swing.*;
+import java.util.List;
 
 public class SimpleRowBuilder {
 
@@ -16,6 +17,12 @@ public class SimpleRowBuilder {
 	public static AbstractSimpleRow createRow(FillType fillingType,
 			JComponent... components) {
 		return createRow(fillingType, Anchor.NORTHWEST, components);
+	}
+
+	public static AbstractSimpleRow createRow(FillType fillingType,
+			List<? extends JComponent> components) {
+		return createRow(fillingType, Anchor.NORTHWEST, components.toArray
+				(new JComponent[]{}));
 	}
 
 	public static AbstractSimpleRow createRowStartingFromColumn(

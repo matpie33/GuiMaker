@@ -65,8 +65,7 @@ public class ListWordsController<Word extends ListElement> {
 		progressUpdater = new ProgressUpdater();
 		this.applicationChangesManager = applicationChangesManager;
 		listViewManager = new ListViewManager<>(listConfiguration,
-				applicationChangesManager, listRowCreator, this, myList);
-		this.listViewManager.setTitle(title);
+				applicationChangesManager, listRowCreator, this, title);
 		listFilterHandler = new ListFilterHandler(this);
 		initializeFoundWordStrategies();
 	}
