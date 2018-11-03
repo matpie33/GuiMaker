@@ -46,6 +46,7 @@ public class MainPanel {
 	private boolean rowsHaveNonZeroWeightsY;
 	private static Color defaultColor;
 	private boolean opaque = true;
+	private boolean opaqueRows = true;
 
 	public static void setDefaultColor(Color defaultColor) {
 		MainPanel.defaultColor = defaultColor;
@@ -197,15 +198,19 @@ public class MainPanel {
 			panel.setBorder(
 					borderToUse != null ? borderToUse : row.getBorder());
 		}
-		if (panel instanceof JPanel && opaque && row.isOpaque() && (
+		if (panel instanceof JPanel  && (
 				rowColor != null || row.getColor() != null)) {
 			panel.setBackground(
 					row.getColor() != null ? row.getColor() : rowColor);
-			panel.setOpaque(true);
+			panel.setOpaque(opaque && row.isOpaque());
+		}
+		if (!opaqueRows){
+			panel.setOpaque(false);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
 		return panel;
 	}
+
 
 	private Map<JComponent, Integer> mapComponentToFilling(
 			AbstractSimpleRow row) {
@@ -656,6 +661,10 @@ public class MainPanel {
 						   .forEach(entry -> panel.add(entry.getKey(),
 								   entry.getValue()));
 
+	}
+
+	public void setOpaqueRows(boolean opaque) {
+		opaqueRows = opaque;
 	}
 
 	private enum Direction {

@@ -92,8 +92,6 @@ public class ListViewManager<Word extends ListElement> {
 			ListRowData<Word> listRow = this.listRow.createListRow(word,
 					commonListElements, inputGoal);
 			rowPanel = listRow.getRowPanel();
-			rowPanel.getPanel()
-					.setOpaque(false);
 			AbstractSimpleRow abstractSimpleRow = SimpleRowBuilder.createRow(
 					FillType.HORIZONTAL, Anchor.NORTH, rowPanel.getPanel());
 			loadWordsHandler.showWord(abstractSimpleRow);

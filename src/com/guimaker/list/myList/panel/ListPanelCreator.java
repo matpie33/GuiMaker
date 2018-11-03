@@ -15,6 +15,7 @@ import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
+import com.guimaker.strings.Prompts;
 import com.guimaker.utilities.ColorChanger;
 import com.guimaker.utilities.CommonListElements;
 
@@ -81,14 +82,16 @@ public class ListPanelCreator<Word extends ListElement>
 	}
 
 	private void setMainPanelProperties() {
-		boolean hasParentList =
-				listConfiguration.getParentListAndWordContainingThisList()
-						!= null;
-		if (hasParentList) {
+		if (hasParentList()) {
 			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
 			mainPanel.setBackgroundColor(null);
 		}
 		mainPanel.setRowsBorder(null);
+	}
+
+	private boolean hasParentList() {
+		return listConfiguration.getParentListAndWordContainingThisList()
+				!= null;
 	}
 
 	private void addMainPanelElements() {
@@ -148,15 +151,13 @@ public class ListPanelCreator<Word extends ListElement>
 												listConfiguration.getDisplayMode())
 										.putRowsAsHighestAsPossible());
 
-		rowsPanel.setWrappingPanelBorder(getDefaultBorder());
 		addElementsForEmptyList();
 
-		boolean hasParentList =
-				listConfiguration.getParentListAndWordContainingThisList()
-						!= null;
+		boolean hasParentList = hasParentList();
 		if (hasParentList) {
 			rowsPanel.setWrappingPanelBorder(getDefaultBorder());
 		}
+		rowsPanel.setOpaqueRows(false);
 	}
 
 	public CommonListElements createCommonListElements(Word word,
@@ -196,8 +197,8 @@ public class ListPanelCreator<Word extends ListElement>
 
 	public void addElementsForEmptyList() {
 		rowsPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
-				GuiElementsCreator.createLabel(new ComponentOptions().text(
-						com.guimaker.strings.Prompts.EMPTY_LIST)),
+				GuiElementsCreator.createLabel(
+						new ComponentOptions().text(Prompts.EMPTY_LIST)),
 				listElementsCreator.createButtonAddRow(InputGoal.EDIT)));
 	}
 
@@ -208,8 +209,19 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public void setParentDialog(DialogWindow dialog) {
 		super.setParentDialog(dialog);
-		mainPanel.setBackgroundColor(dialog.getParentConfiguration()
-										   .getContentPanelColor());
+		if (hasMoreThan1Panel()) {
+			mainPanel.setBackgroundColor(dialog.getParentConfiguration()
+											   .getContentPanelColor());
+		}
+		else{
+			mainPanel.getPanel().setOpaque(false);
+		}
+
 	}
 
+	private boolean hasMoreThan1Panel() {
+		return listConfiguration.isShowButtonsLoadNextPreviousWords()
+				|| listConfiguration.isWordSearchingEnabled()
+				|| listConfiguration.isWordAddingEnabled();
+	}
 }
