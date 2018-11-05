@@ -38,31 +38,26 @@ public class ListViewManager<Word extends ListElement> {
 	private final static String UNIQUE_NAME = "list panel creator";
 	private boolean isInitialized = false;
 	private ListConfiguration listConfiguration;
-	private ListPanelCreator listPanelCreator;
+	private ListPanelCreator<Word> listPanelCreator;
 
 	public ListViewManager(ListConfiguration listConfiguration,
 			ApplicationChangesManager applicationChangesManager,
 			ListRowCreator<Word> listRow, ListWordsController<Word> controller,
 			String title) {
 		this.listConfiguration = listConfiguration;
-		listPanelCreator = new ListPanelCreator(listConfiguration, title, this,
-				controller);
-		listPanelCreator.createPanel();
-		listPanelCreator.setParentDialog(
+		listPanelCreator = new ListPanelCreator<>(listConfiguration, title,
+				this, controller,
 				applicationChangesManager.getApplicationWindow());
-
+		listPanelCreator.createPanel();
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
 		this.applicationChangesManager = applicationChangesManager;
 		listWordsController = controller;
-
 		loadNextWordsHandler = new LoadNextWordsHandler(listWordsController,
 				listPanelCreator.getRowsPanel());
 		loadPreviousWordsHandler = new LoadPreviousWordsHandler(
 				listWordsController, listPanelCreator.getRowsPanel());
 		this.listRow = listRow;
-
 		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
-
 	}
 
 	public void inheritScrollPane() {

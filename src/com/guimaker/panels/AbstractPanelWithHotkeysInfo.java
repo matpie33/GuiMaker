@@ -47,6 +47,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	private boolean navigateBetweenInputsByHotkeys;
 	private boolean isReady;
 	private Color contentColor;
+	private Color hotkeysPanelColor;
 
 	public AbstractPanelWithHotkeysInfo() {
 		mainPanel = new MainPanel();
@@ -155,7 +156,9 @@ public abstract class AbstractPanelWithHotkeysInfo {
 			return;
 		}
 		AbstractSimpleRow row = SimpleRowBuilder.createRow(FillType.HORIZONTAL,
-				Anchor.SOUTH, hotkeysPanel.getPanel());
+				Anchor.SOUTH, hotkeysPanel.getPanel())
+												.setBorder(getDefaultBorder()
+														).setColor(hotkeysPanelColor);
 		MainPanel panelForHotkeys = parentPanelForHotkeys();
 
 		if (hotkeysPanelIndex == -1) {
@@ -255,8 +258,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		//TODO this should be set in constructor
 		parentDialog = parent;
 		ApplicationConfiguration parentConfiguration = parent.getParentConfiguration();
-		hotkeysPanel.setBackgroundColor(
-				parentConfiguration.getPanelBackgroundColor());
+		hotkeysPanelColor = parentConfiguration.getHotkeysPanelColor();
 		mainPanel.setBackgroundColor(
 				parentConfiguration.getPanelBackgroundColor());
 		mainPanel.setRowColor(parentConfiguration.getContentPanelColor());

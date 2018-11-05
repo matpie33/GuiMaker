@@ -12,6 +12,7 @@ public class ApplicationConfiguration {
 	private String title;
 	private Color panelBackgroundColor;
 	private Color contentPanelColor;
+	private Color hotkeysPanelColor;
 
 	public ApplicationConfiguration(String title) {
 		this.title = title;
@@ -68,6 +69,15 @@ public class ApplicationConfiguration {
 	public ApplicationConfiguration setContentPanelColor(
 			Color contentPanelColor) {
 		this.contentPanelColor = contentPanelColor;
+		return this;
+	}
+
+	public Color getHotkeysPanelColor() {
+		return hotkeysPanelColor;
+	}
+
+	public ApplicationConfiguration setHotkeysPanelColor(Color hotkeysPanelColor) {
+		this.hotkeysPanelColor = hotkeysPanelColor;
 		return this;
 	}
 }

@@ -1,5 +1,6 @@
 package com.guimaker.list.myList.panel;
 
+import com.guimaker.application.ApplicationWindow;
 import com.guimaker.application.DialogWindow;
 import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.Anchor;
@@ -43,11 +44,13 @@ public class ListPanelCreator<Word extends ListElement>
 
 	public ListPanelCreator(ListConfiguration listConfiguration, String title,
 			ListViewManager listViewManager,
-			ListWordsController<Word> controller) {
+			ListWordsController<Word> controller,
+			ApplicationWindow applicationWindow) {
 		listElementsCreator = new ListElementsCreator<>(controller, this);
 		this.listConfiguration = listConfiguration;
 		this.title = title;
 		this.listViewManager = listViewManager;
+		setParentDialog(applicationWindow);
 		setMainPanelProperties();
 		createRowsPanel();
 		createFilterPanel();
@@ -209,7 +212,7 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public void setParentDialog(DialogWindow dialog) {
 		super.setParentDialog(dialog);
-		if (hasMoreThan1Panel()) {
+		if (hasMoreThan1Panel() ) {
 			mainPanel.setBackgroundColor(dialog.getParentConfiguration()
 											   .getContentPanelColor());
 		}
