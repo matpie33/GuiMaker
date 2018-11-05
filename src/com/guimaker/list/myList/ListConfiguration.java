@@ -1,13 +1,16 @@
 package com.guimaker.list.myList;
 
+import com.guimaker.application.ApplicationChangesManager;
+import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.ListElementInitializer;
 import com.guimaker.utilities.Pair;
 
 import javax.swing.*;
 
-public class ListConfiguration {
+public class ListConfiguration<Word extends ListElement> {
 
 	private boolean enableWordAdding = true;
 	private boolean inheritScrollbar = false;
@@ -20,11 +23,46 @@ public class ListConfiguration {
 	private ListInputsSelectionManager allInputsSelectionManager;
 	private Pair<MyList, ListElement> parentListAndWordContainingThisList;
 	private String wordSpecificDeletePrompt;
+	private ListRowCreator<Word> listRowCreator;
+	private ListElementInitializer<Word> listElementInitializer;
+	private String title;
+	private DialogWindow dialogWindow;
+	private ApplicationChangesManager applicationChangesManager;
 
-	public ListConfiguration(String wordSpecificDeletePrompt) {
+
+	public ListConfiguration(String wordSpecificDeletePrompt,
+			ListRowCreator<Word> listRowCreator,
+			ListElementInitializer<Word> listElementInitializer, String title,
+			DialogWindow dialogWindow,
+			ApplicationChangesManager applicationChangesManager) {
 		//TODO provide method in listElement: deletePrompt() that returns a
 		// string displayed while trying to delete the specific word
 		this.wordSpecificDeletePrompt = wordSpecificDeletePrompt;
+		this.listRowCreator = listRowCreator;
+		this.listElementInitializer = listElementInitializer;
+		this.title = title;
+		this.dialogWindow = dialogWindow;
+		this.applicationChangesManager = applicationChangesManager;
+	}
+
+	public ListRowCreator<Word> getListRowCreator() {
+		return listRowCreator;
+	}
+
+	public ListElementInitializer<Word> getListElementInitializer() {
+		return listElementInitializer;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public DialogWindow getDialogWindow() {
+		return dialogWindow;
+	}
+
+	public ApplicationChangesManager getApplicationChangesManager() {
+		return applicationChangesManager;
 	}
 
 	public String getWordSpecificDeletePrompt() {
@@ -35,7 +73,7 @@ public class ListConfiguration {
 		return displayMode;
 	}
 
-	public ListConfiguration displayMode(PanelDisplayMode displayMode) {
+	public ListConfiguration<Word> displayMode(PanelDisplayMode displayMode) {
 		this.displayMode = displayMode;
 		return this;
 	}
@@ -44,7 +82,7 @@ public class ListConfiguration {
 		return parentListAndWordContainingThisList;
 	}
 
-	public ListConfiguration parentListAndWordContainingThisList(
+	public ListConfiguration<Word> parentListAndWordContainingThisList(
 			MyList parentList, ListElement parentWordContainingThisList) {
 		parentListAndWordContainingThisList = new Pair<>(parentList,
 				parentWordContainingThisList);
@@ -55,7 +93,7 @@ public class ListConfiguration {
 		return skipTitle;
 	}
 
-	public ListConfiguration skipTitle(boolean skipTitle) {
+	public ListConfiguration<Word> skipTitle(boolean skipTitle) {
 		this.skipTitle = skipTitle;
 		return this;
 	}
@@ -64,7 +102,7 @@ public class ListConfiguration {
 		return allInputsSelectionManager;
 	}
 
-	public ListConfiguration allInputsSelectionManager(
+	public ListConfiguration<Word> allInputsSelectionManager(
 			ListInputsSelectionManager allInputsSelectionManager) {
 		this.allInputsSelectionManager = allInputsSelectionManager;
 		return this;
@@ -74,7 +112,8 @@ public class ListConfiguration {
 		return enableWordSearching;
 	}
 
-	public ListConfiguration enableWordSearching(boolean enableWordSearching) {
+	public ListConfiguration<Word> enableWordSearching(boolean
+			enableWordSearching) {
 		this.enableWordSearching = enableWordSearching;
 		return this;
 	}
@@ -83,7 +122,7 @@ public class ListConfiguration {
 		return enableWordAdding;
 	}
 
-	public ListConfiguration enableWordAdding(boolean enableWordAdding) {
+	public ListConfiguration<Word> enableWordAdding(boolean enableWordAdding) {
 		this.enableWordAdding = enableWordAdding;
 		return this;
 	}
@@ -92,12 +131,12 @@ public class ListConfiguration {
 		return inheritScrollbar;
 	}
 
-	public ListConfiguration inheritScrollbar(boolean inheritScrollbar) {
+	public ListConfiguration<Word> inheritScrollbar(boolean inheritScrollbar) {
 		this.inheritScrollbar = inheritScrollbar;
 		return this;
 	}
 
-	public ListConfiguration scrollBarFitsContent(boolean fitsContent) {
+	public ListConfiguration<Word> scrollBarFitsContent(boolean fitsContent) {
 		this.scrollBarSizeFittingContent = fitsContent;
 		return this;
 	}
@@ -106,13 +145,13 @@ public class ListConfiguration {
 		return showButtonsLoadNextPreviousWords;
 	}
 
-	public ListConfiguration showButtonsLoadNextPreviousWords(
+	public ListConfiguration<Word> showButtonsLoadNextPreviousWords(
 			boolean showButtonsLoadNextPreviousWords) {
 		this.showButtonsLoadNextPreviousWords = showButtonsLoadNextPreviousWords;
 		return this;
 	}
 
-	public ListConfiguration withAdditionalNavigationButtons(
+	public ListConfiguration<Word> withAdditionalNavigationButtons(
 			AbstractButton... buttons) {
 		this.additionalNavigationButtons = buttons;
 		return this;

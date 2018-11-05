@@ -58,6 +58,8 @@ public class ListWordsController<Word extends ListElement> {
 			ListRowCreator<Word> listRowCreator, String title,
 			ApplicationChangesManager applicationChangesManager,
 			ListElementInitializer<Word> wordInitializer, MyList<Word> myList) {
+		//TODO do not pass around list row creator, title etc, they are
+		// already contained in list configuration
 		this.myList = myList;
 		this.wordInitializer = wordInitializer;
 		wordSpecificPrompt = listConfiguration.getWordSpecificDeletePrompt();

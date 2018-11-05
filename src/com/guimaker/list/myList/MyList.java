@@ -29,19 +29,16 @@ public class MyList<Word extends ListElement>
 	private ListRowCreator<Word> listRowCreator;
 	private MyList<Word> sourceList;
 
-	public MyList(DialogWindow parentDialog,
-			ApplicationChangesManager applicationChangesManager,
-			ListRowCreator<Word> listRowCreator, String title,
-			ListConfiguration listConfiguration,
-			ListElementInitializer wordInitializer) {
-		this.listRowCreator = listRowCreator;
-		this.applicationChangesManager = applicationChangesManager;
-		this.parent = parentDialog;
+	public MyList(ListConfiguration<Word> listConfiguration) {
+		this.listRowCreator = listConfiguration.getListRowCreator();
+		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
+		this.parent = listConfiguration.getDialogWindow();
+		this.wordInitializer = listConfiguration.getListElementInitializer();
+		this.title = listConfiguration.getTitle();
 		listController = new ListWordsController<>(listConfiguration,
 				listRowCreator, title, applicationChangesManager,
 				wordInitializer, this);
-		this.wordInitializer = wordInitializer;
-		this.title = title;
+
 	}
 
 	@Override
