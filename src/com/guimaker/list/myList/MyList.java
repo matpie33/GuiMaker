@@ -35,9 +35,7 @@ public class MyList<Word extends ListElement>
 		this.parent = listConfiguration.getDialogWindow();
 		this.wordInitializer = listConfiguration.getListElementInitializer();
 		this.title = listConfiguration.getTitle();
-		listController = new ListWordsController<>(listConfiguration,
-				listRowCreator, title, applicationChangesManager,
-				wordInitializer, this);
+		listController = new ListWordsController<>(listConfiguration, this);
 
 	}
 

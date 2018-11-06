@@ -1,6 +1,5 @@
 package com.guimaker.list.myList.panel;
 
-import com.guimaker.application.ApplicationWindow;
 import com.guimaker.application.DialogWindow;
 import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.Anchor;
@@ -30,7 +29,7 @@ public class ListPanelCreator<Word extends ListElement>
 		extends AbstractPanelWithHotkeysInfo {
 
 	private ListConfiguration listConfiguration;
-	private ListElementsCreator listElementsCreator;
+	private ListElementsCreator<Word> listElementsCreator;
 	private String title;
 	private MainPanel filterPanel;
 	private ListViewManager listViewManager;
@@ -42,15 +41,15 @@ public class ListPanelCreator<Word extends ListElement>
 	private AbstractButton buttonLoadPreviousWords;
 	private AbstractButton buttonLoadNextWords;
 
-	public ListPanelCreator(ListConfiguration listConfiguration, String title,
-			ListViewManager listViewManager,
-			ListWordsController<Word> controller,
-			ApplicationWindow applicationWindow) {
-		listElementsCreator = new ListElementsCreator<>(controller, this);
+	public ListPanelCreator(ListConfiguration listConfiguration,
+			ListViewManager<Word> listViewManager,
+			ListWordsController<Word> controller) {
+		listElementsCreator = new ListElementsCreator<>(controller,
+				this);
 		this.listConfiguration = listConfiguration;
-		this.title = title;
+		this.title = listConfiguration.getTitle();
 		this.listViewManager = listViewManager;
-		setParentDialog(applicationWindow);
+		setParentDialog(listConfiguration.getDialogWindow());
 		setMainPanelProperties();
 		createRowsPanel();
 		createFilterPanel();
@@ -212,12 +211,13 @@ public class ListPanelCreator<Word extends ListElement>
 	@Override
 	public void setParentDialog(DialogWindow dialog) {
 		super.setParentDialog(dialog);
-		if (hasMoreThan1Panel() ) {
+		if (hasMoreThan1Panel()) {
 			mainPanel.setBackgroundColor(dialog.getParentConfiguration()
 											   .getContentPanelColor());
 		}
-		else{
-			mainPanel.getPanel().setOpaque(false);
+		else {
+			mainPanel.getPanel()
+					 .setOpaque(false);
 		}
 
 	}

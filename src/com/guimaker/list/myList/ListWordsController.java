@@ -54,20 +54,15 @@ public class ListWordsController<Word extends ListElement> {
 	private MyList<Word> myList;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
 
-	public ListWordsController(ListConfiguration listConfiguration,
-			ListRowCreator<Word> listRowCreator, String title,
-			ApplicationChangesManager applicationChangesManager,
-			ListElementInitializer<Word> wordInitializer, MyList<Word> myList) {
-		//TODO do not pass around list row creator, title etc, they are
-		// already contained in list configuration
+	public ListWordsController(ListConfiguration<Word> listConfiguration,
+			MyList<Word> myList) {
 		this.myList = myList;
-		this.wordInitializer = wordInitializer;
+		this.wordInitializer = listConfiguration.getListElementInitializer();
 		wordSpecificPrompt = listConfiguration.getWordSpecificDeletePrompt();
 		parentListAndWord = listConfiguration.getParentListAndWordContainingThisList();
 		progressUpdater = new ProgressUpdater();
-		this.applicationChangesManager = applicationChangesManager;
-		listViewManager = new ListViewManager<>(listConfiguration,
-				applicationChangesManager, listRowCreator, this, title);
+		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
+		listViewManager = new ListViewManager<>(listConfiguration, this);
 		listFilterHandler = new ListFilterHandler(this);
 		initializeFoundWordStrategies();
 	}
@@ -381,8 +376,8 @@ public class ListWordsController<Word extends ListElement> {
 	public void showNextWord(LoadNextWordsHandler loadNextWords) {
 		lastRowVisible++;
 		ListRow<Word> wordListRow = allWordsToRowNumberMap.get(lastRowVisible);
-		ListRow<Word> visibleRow = listViewManager.addRow(
-				wordListRow.getWord(), lastRowVisible + 1, true, loadNextWords,
+		ListRow<Word> visibleRow = listViewManager.addRow(wordListRow.getWord(),
+				lastRowVisible + 1, true, loadNextWords,
 				listViewManager.getInputGoal());
 		if (wordListRow.isHighlighted()) {
 			listViewManager.highlightRow(visibleRow.getJPanel());

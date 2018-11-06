@@ -28,7 +28,7 @@ public class ListViewManager<Word extends ListElement> {
 
 	private ListInputsSelectionManager listInputsSelectionManager;
 	private ListWordsController<Word> listWordsController;
-	private ListRowCreator<Word> listRow;
+	private ListRowCreator<Word> listRowCreator;
 	private ApplicationChangesManager applicationChangesManager;
 	private LoadNextWordsHandler loadNextWordsHandler;
 	private LoadPreviousWordsHandler loadPreviousWordsHandler;
@@ -40,23 +40,20 @@ public class ListViewManager<Word extends ListElement> {
 	private ListConfiguration listConfiguration;
 	private ListPanelCreator<Word> listPanelCreator;
 
-	public ListViewManager(ListConfiguration listConfiguration,
-			ApplicationChangesManager applicationChangesManager,
-			ListRowCreator<Word> listRow, ListWordsController<Word> controller,
-			String title) {
+	public ListViewManager(ListConfiguration<Word> listConfiguration,
+			ListWordsController<Word> controller) {
 		this.listConfiguration = listConfiguration;
-		listPanelCreator = new ListPanelCreator<>(listConfiguration, title,
-				this, controller,
-				applicationChangesManager.getApplicationWindow());
+		listPanelCreator = new ListPanelCreator<>(listConfiguration, this,
+				controller);
 		listPanelCreator.createPanel();
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
-		this.applicationChangesManager = applicationChangesManager;
+		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
 		loadNextWordsHandler = new LoadNextWordsHandler(listWordsController,
 				listPanelCreator.getRowsPanel());
 		loadPreviousWordsHandler = new LoadPreviousWordsHandler(
 				listWordsController, listPanelCreator.getRowsPanel());
-		this.listRow = listRow;
+		this.listRowCreator = listConfiguration.getListRowCreator();
 		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
 	}
 
@@ -84,7 +81,7 @@ public class ListViewManager<Word extends ListElement> {
 				word, inputGoal, rowNumber, labelsColor);
 		MainPanel rowPanel = null;
 		if (shouldShowWord) {
-			ListRowData<Word> listRow = this.listRow.createListRow(word,
+			ListRowData<Word> listRow = this.listRowCreator.createListRow(word,
 					commonListElements, inputGoal);
 			rowPanel = listRow.getRowPanel();
 			AbstractSimpleRow abstractSimpleRow = SimpleRowBuilder.createRow(
@@ -143,7 +140,7 @@ public class ListViewManager<Word extends ListElement> {
 		isInitialized = true;
 
 		if (listConfiguration.isWordSearchingEnabled()) {
-			ListRowData<Word> listRow = this.listRow.createListRow(
+			ListRowData<Word> listRow = this.listRowCreator.createListRow(
 					listWordsController.getWordInitializer()
 									   .initializeElement(),
 					CommonListElements.forSingleRowOnly(Color.WHITE),
@@ -304,9 +301,9 @@ public class ListViewManager<Word extends ListElement> {
 			InputGoal customInputGoal, boolean highlighted) {
 		CommonListElements commonListElements = listPanelCreator.createCommonListElements(
 				word, this.inputGoal, rowNumber, labelsColor);
-		MainPanel newPanel = listRow.createListRow(word, commonListElements,
+		MainPanel newPanel = listRowCreator.createListRow(word, commonListElements,
 				customInputGoal == null ? this.inputGoal : customInputGoal)
-									.getRowPanel();
+										   .getRowPanel();
 		if (highlighted) {
 			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
