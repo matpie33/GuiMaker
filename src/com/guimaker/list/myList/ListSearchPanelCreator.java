@@ -125,4 +125,14 @@ public class ListSearchPanelCreator<Word extends ListElement> {
 	public ListElementPropertyManager<?, Word> getPropertyManagerForInput() {
 		return listElementPropertyManager;
 	}
+
+	public AbstractAction createActionFocusAndSelectAllInFilterTextField() {
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getFilteringInput().requestFocusInWindow();
+				getFilteringInput().selectAll();
+			}
+		};
+	}
 }

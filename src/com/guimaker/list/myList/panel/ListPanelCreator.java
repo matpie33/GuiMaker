@@ -62,26 +62,13 @@ public class ListPanelCreator<Word extends ListElement>
 		filterPanel.setRowColor(BasicColors.GREEN_BRIGHT_1);
 	}
 
-	public void addPanelToFilterPanel(JPanel panelToAdd) {
-		filterPanel.addRow(
-				SimpleRowBuilder.createRow(FillType.HORIZONTAL, Anchor.WEST,
-						panelToAdd));
-	}
-
 	@Override
 	public void createElements() {
 		createRootPanel();
 		addMainPanelElements();
-		adjustVisibilityOfShowNextPreviousWordsButtons();
 	}
 
-	private void adjustVisibilityOfShowNextPreviousWordsButtons() {
-		if (!listConfiguration.isShowButtonsLoadNextPreviousWords()) {
-			//TODO list panel updater should do it
-			buttonLoadPreviousWords.setVisible(false);
-			buttonLoadNextWords.setVisible(false);
-		}
-	}
+
 
 	private void setMainPanelProperties() {
 		if (hasParentList()) {
@@ -189,9 +176,7 @@ public class ListPanelCreator<Word extends ListElement>
 		return listElementsCreator.createButtonClearFilter();
 	}
 
-	public void removeFilterPanel() {
-		mainPanel.removeRowWithElements(filterPanel.getPanel());
-	}
+
 
 	public JScrollPane getScrollPane() {
 		return scrollPane;
@@ -226,5 +211,13 @@ public class ListPanelCreator<Word extends ListElement>
 		return listConfiguration.isShowButtonsLoadNextPreviousWords()
 				|| listConfiguration.isWordSearchingEnabled()
 				|| listConfiguration.isWordAddingEnabled();
+	}
+
+	public MainPanel getMainPanel() {
+		return mainPanel;
+	}
+
+	public MainPanel getFilterPanel() {
+		return filterPanel;
 	}
 }

@@ -39,13 +39,18 @@ public class ListViewManager<Word extends ListElement> {
 	private boolean isInitialized = false;
 	private ListConfiguration listConfiguration;
 	private ListPanelCreator<Word> listPanelCreator;
+	private ListPanelUpdater listPanelUpdater;
 
 	public ListViewManager(ListConfiguration<Word> listConfiguration,
 			ListWordsController<Word> controller) {
 		this.listConfiguration = listConfiguration;
 		listPanelCreator = new ListPanelCreator<>(listConfiguration, this,
 				controller);
+		listPanelUpdater = new ListPanelUpdater(listPanelCreator,
+				listConfiguration);
 		listPanelCreator.createPanel();
+		listPanelUpdater.adjustVisibilityOfShowNextPreviousWordsButtons();
+
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
@@ -88,16 +93,14 @@ public class ListViewManager<Word extends ListElement> {
 					FillType.HORIZONTAL, Anchor.NORTH, rowPanel.getPanel());
 			loadWordsHandler.showWord(abstractSimpleRow);
 		}
-		else if (!listPanelCreator.getButtonLoadNextWords()
-								  .isEnabled()) {
-			listPanelCreator.getButtonLoadNextWords()
-							.setEnabled(true);
+		else {
+			listPanelUpdater.enableButtonLoadNextWords();
+			listPanelUpdater.updateRowsPanel();
 		}
 		if (rowPanel != null && listInputsSelectionManager != null) {
 			rowPanel.addManager(listInputsSelectionManager);
 		}
-		listPanelCreator.getRowsPanel()
-						.updateView();
+
 		return new ListRow<>(word, rowPanel,
 				commonListElements.getRowNumberLabel(), rowNumber);
 	}
@@ -122,8 +125,7 @@ public class ListViewManager<Word extends ListElement> {
 						listPanelCreator.getButtonLoadNextWords(),
 						listPanelCreator.getButtonLoadPreviousWords(),
 						hasMoreWordsToShow);
-				listPanelCreator.getRowsPanel()
-								.updateView();
+				listPanelUpdater.updateRowsPanel();
 			}
 		};
 
@@ -135,8 +137,7 @@ public class ListViewManager<Word extends ListElement> {
 
 	public void createElements() {
 
-		listPanelCreator.getRowsPanel()
-						.removeRow(0);
+		listPanelUpdater.removeFirstRowInRowsPanel();
 		isInitialized = true;
 
 		if (listConfiguration.isWordSearchingEnabled()) {
@@ -157,34 +158,23 @@ public class ListViewManager<Word extends ListElement> {
 									   .addDocumentListener(
 											   listWordsController.createActionFilterImmediately());
 					   });
-				listPanelCreator.addPanelToFilterPanel(panel);
+				listPanelUpdater.addPanelToFilterPanel(panel);
 				listPanelCreator.addHotkey(KeyModifiers.CONTROL,
 						KeyEvent.VK_SPACE,
 						listSearchPanelCreator.createActionSwitchComboboxValue(),
 						listPanelCreator.getPanel(),
 						HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
 				listPanelCreator.addHotkey(KeyModifiers.CONTROL, KeyEvent.VK_F,
-						new AbstractAction() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								listSearchPanelCreator.getFilteringInput()
-													  .requestFocusInWindow();
-								listSearchPanelCreator.getFilteringInput()
-													  .selectAll();
-							}
-						}, listPanelCreator.getPanel(),
+						listSearchPanelCreator.createActionFocusAndSelectAllInFilterTextField(),
+						listPanelCreator.getPanel(),
 						HotkeysDescriptions.FOCUS_FILTERING_PANEL);
 			}
 			else {
-				listPanelCreator.removeFilterPanel();
+				listPanelUpdater.removeFilterPanel();
 			}
 		}
 
-		if (!listConfiguration.isWordSearchingEnabled()
-				&& !listConfiguration.isWordAddingEnabled()) {
-			listPanelCreator.getPanel()
-							.setOpaque(false);
-		}
+		listPanelUpdater.disablePanelOpacityIfWithoutAddAndSearch();
 
 	}
 
@@ -203,8 +193,7 @@ public class ListViewManager<Word extends ListElement> {
 	}
 
 	public void clearHighlightedRow(JComponent row) {
-		listPanelCreator.getRowsPanel()
-						.clearPanelColor(row);
+		listPanelUpdater.clearHighlightedRow(row);
 	}
 
 	public void highlightRowAndScroll(JComponent row) {
@@ -234,52 +223,24 @@ public class ListViewManager<Word extends ListElement> {
 	}
 
 	public void scrollTo(JComponent panel) {
-		if (listConfiguration.isScrollBarInherited()) {
-			//TODO keep reference to the inherited scrollbar and use it to scroll
-			return;
-		}
-		SwingUtilities.invokeLater(() -> {
-			int r = panel.getY();
-			listPanelCreator.getScrollPane()
-							.getViewport()
-							.setViewPosition(new Point(0, r));
-		});
+		listPanelUpdater.scrollTo(panel);
 	}
 
 	public void scrollToBottom() {
-		if (listConfiguration.isScrollBarInherited()) {
-			return;
-		}
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				// TODO swing utilities
-				JScrollBar scrollBar = listPanelCreator.getScrollPane()
-													   .getVerticalScrollBar();
-				scrollBar.setValue(scrollBar.getMaximum());
-			}
-		});
+		listPanelUpdater.scrollToBottom();
 
 	}
 
-	public int removeRow(JComponent panel) {
-		int rowNumber = listPanelCreator.getRowsPanel()
-										.getIndexOfPanel(panel);
-		listPanelCreator.getRowsPanel()
-						.removeRow(rowNumber);
-		return rowNumber;
+	public void removeRow(JComponent panel) {
+		listPanelUpdater.removeRow(panel);
 	}
 
 	public void clear() {
-		listPanelCreator.getRowsPanel()
-						.clear();
+		listPanelUpdater.clearRowsPanel();
 	}
 
 	public void scrollToTop() {
-		SwingUtilities.invokeLater(() -> listPanelCreator.getScrollPane()
-														 .getVerticalScrollBar()
-														 .setValue(0));
+		listPanelUpdater.scrollToTop();
 	}
 
 	public int getNumberOfListRows() {
@@ -288,20 +249,19 @@ public class ListViewManager<Word extends ListElement> {
 	}
 
 	public void enableButtonShowPreviousWords() {
-		listPanelCreator.getButtonLoadPreviousWords()
-						.setEnabled(true);
+		listPanelUpdater.enableButtonLoadPreviousWords();
 	}
 
 	public void toggleEnabledState() {
-		listPanelCreator.getRowsPanel()
-						.toggleEnabledState();
+		listPanelUpdater.toggleRowsPanelEnabledState();
 	}
 
 	public MainPanel repaintWord(Word word, int rowNumber, JComponent oldPanel,
 			InputGoal customInputGoal, boolean highlighted) {
 		CommonListElements commonListElements = listPanelCreator.createCommonListElements(
 				word, this.inputGoal, rowNumber, labelsColor);
-		MainPanel newPanel = listRowCreator.createListRow(word, commonListElements,
+		MainPanel newPanel = listRowCreator.createListRow(word,
+				commonListElements,
 				customInputGoal == null ? this.inputGoal : customInputGoal)
 										   .getRowPanel();
 		if (highlighted) {
@@ -318,10 +278,9 @@ public class ListViewManager<Word extends ListElement> {
 											 .getListRowEditTemporarilyColor());
 			newPanel.updateView();
 		}
-		listPanelCreator.getRowsPanel()
-						.replacePanel(oldPanel, newPanel.getPanel());
-		listPanelCreator.getRowsPanel()
-						.updateView();
+		listPanelUpdater.replacePanelsInRowsPanel(oldPanel,
+				newPanel.getPanel());
+
 		return newPanel;
 	}
 
