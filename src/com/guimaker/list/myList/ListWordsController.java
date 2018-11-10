@@ -391,7 +391,7 @@ public class ListWordsController<Word extends ListElement> {
 
 	public void showWordsStartingFromRow(int firstRowToLoad) {
 		listViewManager.clear();
-		if (firstRowToLoad > 0) {
+		if (firstRowToLoad > MAXIMUM_WORDS_TO_SHOW) {
 			listViewManager.enableButtonShowPreviousWords();
 		}
 		lastRowVisible = Math.max(firstRowToLoad - 1, -1);
@@ -403,6 +403,7 @@ public class ListWordsController<Word extends ListElement> {
 			//TODO do not pass around load words handler, use some enum: next/previous word
 			progressUpdater.updateProgress();
 		}
+		lastRowVisible--;
 		listViewManager.updateRowsPanel();
 
 	}
