@@ -43,8 +43,8 @@ public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy
 
 	@Override
 	public void execute() {
-		LoadWordsHandler loadWordsHandler = null;
-		int numberOfWordsToLoad = 0;
+		LoadWordsHandler loadWordsHandler;
+		int numberOfWordsToLoad;
 		if (wordAboveRange) {
 			loadWordsHandler = loadNextWordsHandler;
 			numberOfWordsToLoad = distanceFromLastRow;

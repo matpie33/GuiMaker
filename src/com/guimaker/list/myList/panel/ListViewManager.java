@@ -4,6 +4,7 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.InputGoal;
+import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementPropertyManager;
@@ -35,7 +36,6 @@ public class ListViewManager<Word extends ListElement> {
 	private Color labelsColor = Color.WHITE;
 	private InputGoal inputGoal;
 	private ListSearchPanelCreator<Word> listSearchPanelCreator;
-	private final static String UNIQUE_NAME = "list panel creator";
 	private boolean isInitialized = false;
 	private ListConfiguration listConfiguration;
 	private ListPanelCreator<Word> listPanelCreator;
@@ -46,20 +46,20 @@ public class ListViewManager<Word extends ListElement> {
 		this.listConfiguration = listConfiguration;
 		listPanelCreator = new ListPanelCreator<>(listConfiguration, this,
 				controller);
-		listPanelUpdater = new ListPanelUpdater(listPanelCreator,
-				listConfiguration);
-		listPanelCreator.createPanel();
-		listPanelUpdater.adjustVisibilityOfShowNextPreviousWordsButtons();
+
 
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
-		loadNextWordsHandler = new LoadNextWordsHandler(listWordsController,
-				listPanelCreator.getRowsPanel());
+		loadNextWordsHandler = new LoadNextWordsHandler(listWordsController);
 		loadPreviousWordsHandler = new LoadPreviousWordsHandler(
 				listWordsController, listPanelCreator.getRowsPanel());
 		this.listRowCreator = listConfiguration.getListRowCreator();
 		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
+		listPanelUpdater = new ListPanelUpdater(listPanelCreator,
+				listConfiguration);
+		listPanelCreator.createPanel();
+		listPanelUpdater.adjustVisibilityOfShowNextPreviousWordsButtons();
 	}
 
 	public void inheritScrollPane() {
@@ -75,7 +75,7 @@ public class ListViewManager<Word extends ListElement> {
 	}
 
 	public ListRow<Word> addRow(Word word, int rowNumber,
-			boolean shouldShowWord, LoadWordsHandler loadWordsHandler,
+			boolean shouldShowWord, ListWordsLoadingDirection loadingDirection,
 			InputGoal inputGoal) {
 		this.inputGoal = inputGoal;
 		if (!isInitialized) {
@@ -91,7 +91,7 @@ public class ListViewManager<Word extends ListElement> {
 			rowPanel = listRow.getRowPanel();
 			AbstractSimpleRow abstractSimpleRow = SimpleRowBuilder.createRow(
 					FillType.HORIZONTAL, Anchor.NORTH, rowPanel.getPanel());
-			loadWordsHandler.showWord(abstractSimpleRow);
+			listPanelUpdater.loadWords(loadingDirection, abstractSimpleRow);
 		}
 		else {
 			listPanelUpdater.enableButtonLoadNextWords();

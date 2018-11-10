@@ -10,8 +10,6 @@ public interface LoadWordsHandler {
 
 	public Range getRangeOfWordsToRemove(int numberOfAddedWords);
 
-	public JComponent showWord(AbstractSimpleRow simpleRow);
-
 	public boolean shouldContinue(int lastRowVisible,
 			int allWordsToRowNumberMapSize);
 

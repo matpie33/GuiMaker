@@ -2,7 +2,9 @@ package com.guimaker.list.myList.panel;
 
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
+import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.myList.ListConfiguration;
+import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 
 import javax.swing.*;
@@ -133,5 +135,17 @@ public class ListPanelUpdater {
 						.replacePanel(oldPanel, panel);
 		listPanelCreator.getRowsPanel()
 						.updateView();
+	}
+
+	public void loadWords(ListWordsLoadingDirection loadingDirection,
+			AbstractSimpleRow abstractSimpleRow) {
+		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)){
+			listPanelCreator.getRowsPanel().addRow(abstractSimpleRow);
+		}
+		else{
+			listPanelCreator.getRowsPanel().insertRow(1, abstractSimpleRow);
+			//TODO should I really insert in case of previous words loading?
+		}
+
 	}
 }

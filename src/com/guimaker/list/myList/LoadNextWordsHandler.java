@@ -1,35 +1,25 @@
 package com.guimaker.list.myList;
 
-import com.guimaker.panels.MainPanel;
-import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;
 
 public class LoadNextWordsHandler implements LoadWordsHandler {
 	private ListWordsController listWordsController;
-	private MainPanel rowsPanel;
 	//TODO move to "loadAdditionalWordsHandling" package
 
-	public LoadNextWordsHandler(ListWordsController listWordsController,
-			MainPanel rowsPanel) {
+	public LoadNextWordsHandler(ListWordsController listWordsController) {
 		this.listWordsController = listWordsController;
-		this.rowsPanel = rowsPanel;
 	}
 
 	@Override
 	public void addWord() {
-		listWordsController.showNextWord(this);
+		listWordsController.showNextWord();
 	}
 
 	@Override
 	public Range getRangeOfWordsToRemove(int numberOfAddedWords) {
 		return new Range(1, numberOfAddedWords);
-	}
-
-	@Override
-	public JComponent showWord(AbstractSimpleRow abstractSimpleRow) {
-		return rowsPanel.addRow(abstractSimpleRow);
 	}
 
 	@Override

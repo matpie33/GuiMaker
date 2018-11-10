@@ -4,6 +4,7 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.ApplicationWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
+import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.enums.MoveDirection;
 import com.guimaker.list.*;
 import com.guimaker.list.loadAdditionalWordsHandling.FoundWordInsideVisibleRangePlusMaximumWordsStrategy;
@@ -116,7 +117,7 @@ public class ListWordsController<Word extends ListElement> {
 			ListRow<Word> newWord = listViewManager.addRow(r,
 					allWordsToRowNumberMap.size() + 1,
 					canNewWordBeDisplayed && tryToShowWord,
-					listViewManager.getLoadNextWordsHandler(), inputGoal);
+					ListWordsLoadingDirection.NEXT, inputGoal);
 			allWordsToRowNumberMap.add(newWord);
 			if (canNewWordBeDisplayed && tryToShowWord) {
 				lastRowVisible = allWordsToRowNumberMap.size() - 1;
@@ -361,23 +362,23 @@ public class ListWordsController<Word extends ListElement> {
 		return lastRowVisible - MAXIMUM_WORDS_TO_SHOW + 1;
 	}
 
-	public void showPreviousWord(LoadPreviousWordsHandler loadPreviousWords) {
+	public void showPreviousWord() {
 		//TODO lots of magic numbers
 		lastRowVisible--;
 		int rowNumber = getFirstVisibleRowNumber();
 		ListRow<Word> addedWord = listViewManager.addRow(
 				allWordsToRowNumberMap.get(rowNumber)
 									  .getWord(), rowNumber + 1, true,
-				loadPreviousWords, InputGoal.EDIT);
+				ListWordsLoadingDirection.PREVIOUS, InputGoal.EDIT);
 		allWordsToRowNumberMap.set(rowNumber, addedWord);
 
 	}
 
-	public void showNextWord(LoadNextWordsHandler loadNextWords) {
+	public void showNextWord() {
 		lastRowVisible++;
 		ListRow<Word> wordListRow = allWordsToRowNumberMap.get(lastRowVisible);
 		ListRow<Word> visibleRow = listViewManager.addRow(wordListRow.getWord(),
-				lastRowVisible + 1, true, loadNextWords,
+				lastRowVisible + 1, true, ListWordsLoadingDirection.NEXT,
 				listViewManager.getInputGoal());
 		if (wordListRow.isHighlighted()) {
 			listViewManager.highlightRow(visibleRow.getJPanel());
@@ -395,7 +396,7 @@ public class ListWordsController<Word extends ListElement> {
 		for (int i = 0;
 			 i < getMaximumWordsToShow() && loadNextWordsHandler.shouldContinue(
 					 lastRowVisible, allWordsToRowNumberMap.size() - 1); i++) {
-			showNextWord(loadNextWordsHandler);
+			showNextWord();
 			//TODO do not pass around load words handler, use some enum: next/previous word
 			progressUpdater.updateProgress();
 		}
@@ -646,7 +647,7 @@ public class ListWordsController<Word extends ListElement> {
 			listRow.setPanel(listViewManager.addRow(
 					allWordsToRowNumberMap.get(rowNumber)
 										  .getWord(), newRowNumber++, true,
-					listViewManager.getLoadNextWordsHandler(),
+					ListWordsLoadingDirection.NEXT,
 					listViewManager.getInputGoal())
 											.getWrappingPanel());
 			if (listRow.isHighlighted()) {
