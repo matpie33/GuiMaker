@@ -49,7 +49,7 @@ public class ListElementsCreator<Word extends ListElement> {
 	public AbstractButton createButtonAddRow(InputGoal inputGoal) {
 		return GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.ADD_ROW),
-				listWordsController.addNewWord(inputGoal));
+				listWordsController.createActionAddNewWord(inputGoal));
 	}
 
 	private AbstractButton createButtonEditWord(Word word) {

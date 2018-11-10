@@ -412,7 +412,7 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.removeWordsFromRangeInclusive(range);
 	}
 
-	public AbstractAction addNewWord(InputGoal inputGoal) {
+	public AbstractAction createActionAddNewWord(InputGoal inputGoal) {
 		return new AbstractAction() {
 
 			@Override
@@ -424,9 +424,29 @@ public class ListWordsController<Word extends ListElement> {
 											 parentListAndWord.getRight(),
 											 ListElementModificationType.EDIT);
 				}
+
+				listViewManager.updateRowsPanel();
+				requestFirstTextfieldInPanel();
+
 			}
 		};
 
+	}
+
+	private void requestFirstTextfieldInPanel() {
+		JComponent jPanel = allWordsToRowNumberMap.get(
+				allWordsToRowNumberMap.size() - 1)
+												  .getJPanel();
+		if (jPanel.getComponents().length == 1
+				&& jPanel.getComponents()[0] instanceof JPanel) {
+			JPanel panel = (JPanel) jPanel.getComponents()[0];
+			Optional<Component> firstTextField = Arrays.stream(
+					panel.getComponents())
+													   .filter(JTextComponent.class::isInstance)
+													   .findFirst();
+			SwingUtilities.invokeLater(() -> firstTextField.ifPresent(
+					Component::requestFocusInWindow));
+		}
 	}
 
 	public MainPanel getPanelWithSelectedInput() {
