@@ -147,4 +147,42 @@ public class ListPanelUpdater {
 		}
 
 	}
+
+	public void enableOrDisableLoadWordsButton(boolean shouldDisable,
+			ListWordsLoadingDirection direction) {
+		if (shouldDisable){
+			getButtonByDirection(direction).setEnabled(false);
+		}
+		else {
+			AbstractButton oppositeButton = getOppositeButton(direction);
+			if (!oppositeButton.isEnabled()){
+				oppositeButton.setEnabled(true);
+			}
+		}
+	}
+
+	private AbstractButton getOppositeButton(
+			ListWordsLoadingDirection direction) {
+		if (direction.equals(ListWordsLoadingDirection.NEXT)){
+			return listPanelCreator.getButtonLoadPreviousWords();
+		}
+		else{
+			return listPanelCreator.getButtonLoadNextWords();
+		}
+	}
+
+	private AbstractButton getButtonByDirection(
+			ListWordsLoadingDirection direction) {
+		if (direction.equals(ListWordsLoadingDirection.NEXT)){
+			return listPanelCreator.getButtonLoadNextWords();
+		}
+		else{
+			return listPanelCreator.getButtonLoadPreviousWords();
+		}
+	}
+
+	public void updatePanel() {
+		listPanelCreator.getPanel().repaint();
+		listPanelCreator.getPanel().revalidate();
+	}
 }

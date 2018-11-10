@@ -342,42 +342,42 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.scrollToTop();
 	}
 
-	public int addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler) {
-		int numberOfElementsToAdd = (int) Math.round(
-				(double) getMaximumWordsToShow() / (double) 2);
-		return addSuccessiveWords(loadWordsHandler, numberOfElementsToAdd);
+	public void addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler,
+			int numberOfListRows) {
+		addSuccessiveWords(loadWordsHandler, MAXIMUM_WORDS_TO_SHOW,
+				numberOfListRows);
 	}
 
-	public int addSuccessiveWords(LoadWordsHandler loadWordsHandler,
-			double numberOfElementsToAdd) {
+	public void addSuccessiveWords(LoadWordsHandler loadWordsHandler,
+			int numberOfElementsToAdd, int numberOfListRows) {
 		int i = 0;
+		recalculateLastRowVisible(loadWordsHandler, numberOfListRows);
 		while (i < numberOfElementsToAdd && loadWordsHandler.shouldContinue(
 				lastRowVisible, allWordsToRowNumberMap.size())) {
-			loadWordsHandler.addWord();
+			showNextWord();
 			i++;
 		}
-		return i;
+		lastRowVisible--;
 	}
 
+	private void recalculateLastRowVisible(LoadWordsHandler loadWordsHandler,
+			int numberOfListRows) {
+		if (loadWordsHandler instanceof LoadNextWordsHandler) {
+			lastRowVisible++;
+		}
+		else {
+			lastRowVisible = Math.max(
+					lastRowVisible - numberOfListRows - MAXIMUM_WORDS_TO_SHOW
+							+ 1, 0);
+		}
+	}
 
 	public int getFirstVisibleRowNumber() {
-		return lastRowVisible - MAXIMUM_WORDS_TO_SHOW + 1;
-	}
-
-	public void showPreviousWord() {
-		//TODO lots of magic numbers
-		lastRowVisible--;
-		int rowNumber = getFirstVisibleRowNumber();
-		ListRow<Word> addedWord = listViewManager.addRow(
-				allWordsToRowNumberMap.get(rowNumber)
-									  .getWord(), rowNumber + 1, true,
-				ListWordsLoadingDirection.PREVIOUS, InputGoal.EDIT);
-		allWordsToRowNumberMap.set(rowNumber, addedWord);
-
+		return lastRowVisible - listViewManager.getNumberOfListRows() + 1;
 	}
 
 	public void showNextWord() {
-		lastRowVisible++;
+
 		ListRow<Word> wordListRow = allWordsToRowNumberMap.get(lastRowVisible);
 		ListRow<Word> visibleRow = listViewManager.addRow(wordListRow.getWord(),
 				lastRowVisible + 1, true, ListWordsLoadingDirection.NEXT,
@@ -386,6 +386,7 @@ public class ListWordsController<Word extends ListElement> {
 			listViewManager.highlightRow(visibleRow.getJPanel());
 		}
 		allWordsToRowNumberMap.set(lastRowVisible, visibleRow);
+		lastRowVisible++;
 	}
 
 	public void showWordsStartingFromRow(int firstRowToLoad) {
@@ -397,11 +398,12 @@ public class ListWordsController<Word extends ListElement> {
 		LoadNextWordsHandler loadNextWordsHandler = listViewManager.getLoadNextWordsHandler();
 		for (int i = 0;
 			 i < getMaximumWordsToShow() && loadNextWordsHandler.shouldContinue(
-					 lastRowVisible, allWordsToRowNumberMap.size() - 1); i++) {
+					 lastRowVisible, allWordsToRowNumberMap.size()); i++) {
 			showNextWord();
 			//TODO do not pass around load words handler, use some enum: next/previous word
 			progressUpdater.updateProgress();
 		}
+		listViewManager.updateRowsPanel();
 
 	}
 
@@ -603,9 +605,13 @@ public class ListWordsController<Word extends ListElement> {
 			public void actionPerformed(ActionEvent e) {
 				ThreadUtilities.callOnOtherThread(
 						() -> showWordsStartingFromRow(
-								getFirstVisibleRowNumber()));
+								getStartOfRangeOfDisplayedWords()));
 			}
 		};
+	}
+
+	public int getStartOfRangeOfDisplayedWords() {
+		return lastRowVisible - MAXIMUM_WORDS_TO_SHOW + 2;
 	}
 
 	public DocumentListener createActionFilterImmediately() {
@@ -652,6 +658,7 @@ public class ListWordsController<Word extends ListElement> {
 			}
 		}
 		scrollToTop();
+		listViewManager.updateRowsPanel();
 	}
 
 	public AbstractAction createActionShowInsertWordDialog() {
@@ -664,5 +671,9 @@ public class ListWordsController<Word extends ListElement> {
 										 .getInsertWordPanelPositioner());
 			}
 		};
+	}
+
+	public boolean isLastRowVisible() {
+		return lastRowVisible == allWordsToRowNumberMap.size() - 1;
 	}
 }

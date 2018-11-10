@@ -1,21 +1,13 @@
 package com.guimaker.list.myList;
 
+import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;
 
 public class LoadNextWordsHandler implements LoadWordsHandler {
-	private ListWordsController listWordsController;
 	//TODO move to "loadAdditionalWordsHandling" package
 
-	public LoadNextWordsHandler(ListWordsController listWordsController) {
-		this.listWordsController = listWordsController;
-	}
-
-	@Override
-	public void addWord() {
-		listWordsController.showNextWord();
-	}
 
 	@Override
 	public Range getRangeOfWordsToRemove(int numberOfAddedWords) {
@@ -29,15 +21,14 @@ public class LoadNextWordsHandler implements LoadWordsHandler {
 	}
 
 	@Override
-	public void enableOrDisableLoadWordsButtons(
-			AbstractButton buttonLoadNextWords,
-			AbstractButton buttonLoadPreviousWords,
-			boolean hasMoreWordsToShow) {
-		if (!hasMoreWordsToShow) {
-			buttonLoadNextWords.setEnabled(false);
-		}
-		else if (!buttonLoadPreviousWords.isEnabled()) {
-			buttonLoadPreviousWords.setEnabled(true);
-		}
+	public boolean shouldDisableLoadWordsButton(
+			ListWordsController listWordsController) {
+		return listWordsController.isLastRowVisible();
 	}
+
+	@Override
+	public ListWordsLoadingDirection getDirection() {
+		return ListWordsLoadingDirection.NEXT;
+	}
+
 }

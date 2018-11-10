@@ -81,7 +81,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		JTextComponent input = (JTextComponent) e.getSource();
 		boolean somethingHasChanged = !input.getText()
 											.equals(previousValueOfTextInput);
-		if (isTextFieldEmpty(input) && !somethingHasChanged) {
+		if (isTextFieldEmpty(input) || !somethingHasChanged) {
 			return;
 		}
 		Property propertyNewValue = validateAndConvertToProperty(input);

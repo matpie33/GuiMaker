@@ -59,6 +59,6 @@ public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy
 		listWordsController.removeRowsFromRangeInclusive(
 				loadWordsHandler.getRangeOfWordsToRemove(numberOfWordsToLoad));
 		listWordsController.addSuccessiveWords(loadWordsHandler,
-				numberOfWordsToLoad);
+				numberOfWordsToLoad, listWordsController.getNumberOfWords());
 	}
 }

@@ -50,7 +50,7 @@ public class ListViewManager<Word extends ListElement> {
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
-		loadNextWordsHandler = new LoadNextWordsHandler(listWordsController);
+		loadNextWordsHandler = new LoadNextWordsHandler();
 		loadPreviousWordsHandler = new LoadPreviousWordsHandler(
 				listWordsController, listPanelCreator.getRowsPanel());
 		this.listRowCreator = listConfiguration.getListRowCreator();
@@ -110,20 +110,15 @@ public class ListViewManager<Word extends ListElement> {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int numberOfAddedWords = listWordsController.addNextHalfOfMaximumWords(
-						loadWordsHandler);
-				if (numberOfAddedWords > 0) {
-					removeWordsFromRangeInclusive(
-							loadWordsHandler.getRangeOfWordsToRemove(
-									numberOfAddedWords));
-				}
-				boolean hasMoreWordsToShow = numberOfAddedWords == Math.ceil(
-						(double) listWordsController.getMaximumWordsToShow()
-								/ 2);
-				loadWordsHandler.enableOrDisableLoadWordsButtons(
-						listPanelCreator.getButtonLoadNextWords(),
-						listPanelCreator.getButtonLoadPreviousWords(),
-						hasMoreWordsToShow);
+				int numberOfListRows = getNumberOfListRows();
+				listPanelUpdater.clearRowsPanel();
+				listWordsController.addNextHalfOfMaximumWords(loadWordsHandler,
+						numberOfListRows);
+				boolean shouldDisable = loadWordsHandler.shouldDisableLoadWordsButton(
+						listWordsController);
+				listPanelUpdater.enableOrDisableLoadWordsButton(shouldDisable,
+						loadWordsHandler.getDirection());
+
 				listPanelUpdater.updateRowsPanel();
 			}
 		};
@@ -298,5 +293,9 @@ public class ListViewManager<Word extends ListElement> {
 
 	public JPanel getPanel() {
 		return listPanelCreator.getPanel();
+	}
+
+	public void updateRowsPanel() {
+		listPanelUpdater.updatePanel();
 	}
 }
