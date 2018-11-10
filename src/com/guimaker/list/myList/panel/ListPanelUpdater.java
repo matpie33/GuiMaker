@@ -143,8 +143,7 @@ public class ListPanelUpdater {
 			listPanelCreator.getRowsPanel().addRow(abstractSimpleRow);
 		}
 		else{
-			listPanelCreator.getRowsPanel().insertRow(1, abstractSimpleRow);
-			//TODO should I really insert in case of previous words loading?
+			listPanelCreator.getRowsPanel().insertRow(0, abstractSimpleRow);
 		}
 
 	}

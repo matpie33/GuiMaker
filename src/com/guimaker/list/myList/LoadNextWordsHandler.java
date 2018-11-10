@@ -19,7 +19,7 @@ public class LoadNextWordsHandler implements LoadWordsHandler {
 
 	@Override
 	public Range getRangeOfWordsToRemove(int numberOfAddedWords) {
-		return new Range(1, numberOfAddedWords);
+		return new Range(0, numberOfAddedWords - 1);
 	}
 
 	@Override

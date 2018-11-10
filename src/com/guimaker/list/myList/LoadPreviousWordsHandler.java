@@ -23,7 +23,7 @@ public class LoadPreviousWordsHandler implements LoadWordsHandler {
 
 	@Override
 	public Range getRangeOfWordsToRemove(int numberOfAddedWords) {
-		int lastRowIndex = rowsPanel.getNumberOfRows() - 2;
+		int lastRowIndex = rowsPanel.getNumberOfRows() - 1;
 		return new Range(lastRowIndex - numberOfAddedWords + 1, lastRowIndex);
 	}
 

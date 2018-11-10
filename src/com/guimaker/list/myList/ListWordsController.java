@@ -111,6 +111,7 @@ public class ListWordsController<Word extends ListElement> {
 				else if (!canNewWordBeDisplayed) {
 					removeFirstRow();
 					canNewWordBeDisplayed = true;
+					listViewManager.enableButtonShowPreviousWords();
 				}
 			}
 
@@ -342,8 +343,8 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public int addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler) {
-		double numberOfElementsToAdd =
-				(double) getMaximumWordsToShow() / (double) 2;
+		int numberOfElementsToAdd = (int) Math.round(
+				(double) getMaximumWordsToShow() / (double) 2);
 		return addSuccessiveWords(loadWordsHandler, numberOfElementsToAdd);
 	}
 
@@ -357,6 +358,7 @@ public class ListWordsController<Word extends ListElement> {
 		}
 		return i;
 	}
+
 
 	public int getFirstVisibleRowNumber() {
 		return lastRowVisible - MAXIMUM_WORDS_TO_SHOW + 1;
@@ -401,11 +403,6 @@ public class ListWordsController<Word extends ListElement> {
 			progressUpdater.updateProgress();
 		}
 
-	}
-
-	public void clearVisibleRows() {
-		listViewManager.removeWordsFromRangeInclusive(
-				new Range(1, listViewManager.getNumberOfListRows()));
 	}
 
 	public void removeRowsFromRangeInclusive(Range range) {

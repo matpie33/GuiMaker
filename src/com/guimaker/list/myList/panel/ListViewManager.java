@@ -47,7 +47,6 @@ public class ListViewManager<Word extends ListElement> {
 		listPanelCreator = new ListPanelCreator<>(listConfiguration, this,
 				controller);
 
-
 		listSearchPanelCreator = new ListSearchPanelCreator<>();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
