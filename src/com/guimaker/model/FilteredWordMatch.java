@@ -1,5 +1,7 @@
 package com.guimaker.model;
 
+import com.guimaker.list.ListElement;
+
 import java.util.Comparator;
 
 public class FilteredWordMatch implements Comparable {
@@ -8,10 +10,13 @@ public class FilteredWordMatch implements Comparable {
 
 	private int numberOfUnmatchedWords;
 
+	private ListElement listElement;
+
 	public FilteredWordMatch(double averagePercentageOfLettersMatched,
-			int numberOfUnmatchedWords) {
+			int numberOfUnmatchedWords, ListElement listElement) {
 		this.averagePercentageOfLettersMatched = averagePercentageOfLettersMatched;
 		this.numberOfUnmatchedWords = numberOfUnmatchedWords;
+		this.listElement = listElement;
 	}
 
 	public double getAveragePercentageOfLettersMatched() {
@@ -20,6 +25,10 @@ public class FilteredWordMatch implements Comparable {
 
 	public int getNumberOfUnmatchedWords() {
 		return numberOfUnmatchedWords;
+	}
+
+	public String getListElementDisplayedText() {
+		return listElement.getDisplayedText();
 	}
 
 	@Override
@@ -32,8 +41,9 @@ public class FilteredWordMatch implements Comparable {
 		return Comparator.comparing(
 				FilteredWordMatch::getNumberOfUnmatchedWords)
 						 .reversed()
-						 .thenComparing(
-								 FilteredWordMatch::getAveragePercentageOfLettersMatched)
+						 .thenComparing(FilteredWordMatch
+								 ::getAveragePercentageOfLettersMatched)
+						 .thenComparing(FilteredWordMatch::getListElementDisplayedText)
 						 .compare(this, other);
 	}
 }

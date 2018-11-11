@@ -114,9 +114,9 @@ public class WordSearching {
 			}
 			if (filterWordToCheck == filterWords.length) {
 				filteredWordsMatch.put(new FilteredWordMatch(
-								calculateTotalMatch(matchForSeparateWordsInGivenRow),
-								wordsInListProperty.length - filterWords.length),
-						listRow);
+						calculateTotalMatch(matchForSeparateWordsInGivenRow),
+						wordsInListProperty.length - filterWords.length,
+						listRow.getWord()), listRow);
 			}
 
 		}
