@@ -7,7 +7,6 @@ import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.list.ListElement;
-import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListRowData;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadNextWordsHandler;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadPreviousWordsHandler;
@@ -15,21 +14,15 @@ import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListRowCreator;
 import com.guimaker.list.myList.ListWordsController;
-import com.guimaker.list.myList.filtering.ListFilteringController;
-import com.guimaker.list.myList.filtering.ListFilteringPanel;
 import com.guimaker.model.ListRow;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
-import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.utilities.CommonListElements;
-import com.guimaker.utilities.KeyModifiers;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class ListViewManager<Word extends ListElement> {
 
@@ -41,7 +34,6 @@ public class ListViewManager<Word extends ListElement> {
 	private LoadPreviousWordsHandler loadPreviousWordsHandler;
 	private Color labelsColor = Color.WHITE;
 	private InputGoal inputGoal;
-	private ListFilteringPanel<Word> listFilteringPanel;
 	private boolean isInitialized = false;
 	private ListConfiguration listConfiguration;
 	private ListPanel<Word> listPanel;
@@ -50,11 +42,9 @@ public class ListViewManager<Word extends ListElement> {
 	public ListViewManager(ListConfiguration<Word> listConfiguration,
 			ListWordsController<Word> controller) {
 		this.listConfiguration = listConfiguration;
-		listPanel = new ListPanel<>(listConfiguration, this,
-				controller);
+		listPanel = new ListPanel<>(listConfiguration, this, controller);
+		listPanelUpdater = listPanel.getListPanelUpdater();
 
-		listFilteringPanel = new ListFilteringController<>(this,
-				controller).getListFilteringPanel();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
 		loadNextWordsHandler = new LoadNextWordsHandler();
@@ -62,10 +52,7 @@ public class ListViewManager<Word extends ListElement> {
 				listWordsController, listPanel.getRowsPanel());
 		this.listRowCreator = listConfiguration.getListRowCreator();
 		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
-		listPanelUpdater = new ListPanelUpdater(listPanel,
-				listConfiguration);
-		listPanel.createPanel();
-		listPanelUpdater.adjustVisibilityOfShowNextPreviousWordsButtons();
+
 	}
 
 	public void inheritScrollPane() {
@@ -85,7 +72,7 @@ public class ListViewManager<Word extends ListElement> {
 			InputGoal inputGoal) {
 		this.inputGoal = inputGoal;
 		if (!isInitialized) {
-			createElements();
+			initializeListPanel();
 		}
 
 		CommonListElements commonListElements = listPanel.createCommonListElements(
@@ -121,54 +108,26 @@ public class ListViewManager<Word extends ListElement> {
 		return listPanel.createTextForRowNumber(rowNumber);
 	}
 
-	public void createElements() {
+	private void initializeListPanel() {
 
 		listPanelUpdater.removeFirstRowInRowsPanel();
 		isInitialized = true;
-
 		if (listConfiguration.isWordSearchingEnabled()) {
 			ListRowData<Word> listRow = this.listRowCreator.createListRow(
 					listWordsController.getWordInitializer()
 									   .initializeElement(),
 					CommonListElements.forSingleRowOnly(Color.WHITE),
 					InputGoal.SEARCH);
-			if (!listRow.isEmpty()) {
-
-				JPanel panel = listFilteringPanel.createPanel(listRow,
-						listPanel.createButtonClearFilter());
-
-				listPanelUpdater.addPanelToFilterPanel(panel);
-				listPanel.addHotkey(KeyModifiers.CONTROL,
-						KeyEvent.VK_SPACE,
-						listFilteringPanel.createActionSwitchComboboxValue(),
-						listPanel.getPanel(),
-						HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
-				listPanel.addHotkey(KeyModifiers.CONTROL, KeyEvent.VK_F,
-						listFilteringPanel.createActionFocusAndSelectAllInFilterTextField(),
-						listPanel.getPanel(),
-						HotkeysDescriptions.FOCUS_FILTERING_PANEL);
-			}
-			else {
-				listPanelUpdater.removeFilterPanel();
-			}
+			listPanel.setRowForFilteringPanel(listRow);
 		}
-
+		listPanel.createPanel();
 		listPanelUpdater.disablePanelOpacityIfWithoutAddAndSearch();
-
-	}
-
-	public JTextComponent getFilterComponent() {
-		return listFilteringPanel.getFilteringInput();
-	}
-
-	public ListElementPropertyManager getFilterInputPropertyManager() {
-		return listFilteringPanel.getPropertyManagerForInput();
 	}
 
 	public void removeWordsFromRangeInclusive(Range range) {
 		listPanel.getRowsPanel()
 				 .removeRowsInclusive(range.getRangeStart(),
-								range.getRangeEnd());
+						 range.getRangeEnd());
 	}
 
 	public void clearHighlightedRow(JComponent row) {
@@ -264,8 +223,9 @@ public class ListViewManager<Word extends ListElement> {
 	}
 
 	public boolean isFilterInputFocused() {
-		return listFilteringPanel.getFilteringInput()
-								 .hasFocus();
+		return listPanel.getFilteringPanel()
+						.getFilteringInput()
+						.hasFocus();
 	}
 
 	public InputGoal getInputGoal() {

@@ -6,8 +6,12 @@ import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListWordsController;
+import com.guimaker.list.myList.filtering.ListFilteringController;
+import com.guimaker.list.myList.filtering.ListFilteringPanel;
+import com.guimaker.model.ListRow;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
@@ -15,12 +19,15 @@ import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
+import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.strings.Prompts;
 import com.guimaker.utilities.ColorChanger;
 import com.guimaker.utilities.CommonListElements;
+import com.guimaker.utilities.KeyModifiers;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,19 +47,32 @@ public class ListPanel<Word extends ListElement>
 	private MainPanel rowsPanel;
 	private AbstractButton buttonLoadPreviousWords;
 	private AbstractButton buttonLoadNextWords;
+	private ListPanelUpdater listPanelUpdater;
+	private ListFilteringPanel<Word> listFilteringPanel;
+	private ListRowData<Word> rowForFilteringPanel;
 
 	public ListPanel(ListConfiguration listConfiguration,
 			ListViewManager<Word> listViewManager,
 			ListWordsController<Word> controller) {
-		listElementsCreator = new ListElementsCreator<>(controller,
-				this);
+		listFilteringPanel = new ListFilteringController<>(listViewManager,
+				controller).getListFilteringPanel();
+		listElementsCreator = new ListElementsCreator<>(controller, this);
 		this.listConfiguration = listConfiguration;
 		this.title = listConfiguration.getTitle();
 		this.listViewManager = listViewManager;
+		listPanelUpdater = new ListPanelUpdater(this, listConfiguration);
 		setParentDialog(listConfiguration.getDialogWindow());
 		setMainPanelProperties();
 		createRowsPanel();
 		createFilterPanel();
+	}
+
+	public void setRowForFilteringPanel(ListRowData rowForFilteringPanel) {
+		this.rowForFilteringPanel = rowForFilteringPanel;
+	}
+
+	public ListPanelUpdater getListPanelUpdater() {
+		return listPanelUpdater;
 	}
 
 	private void createFilterPanel() {
@@ -66,9 +86,23 @@ public class ListPanel<Word extends ListElement>
 	public void createElements() {
 		createRootPanel();
 		addMainPanelElements();
+		addHotkeys();
+		listPanelUpdater.adjustVisibilityOfShowNextPreviousWordsButtons();
 	}
 
-
+	private void addHotkeys() {
+		if (isFilteringEnabled()){
+			addHotkey(KeyModifiers.CONTROL,
+					KeyEvent.VK_SPACE,
+					listFilteringPanel.createActionSwitchComboboxValue(),
+					getPanel(),
+					HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
+			addHotkey(KeyModifiers.CONTROL, KeyEvent.VK_F,
+					listFilteringPanel.createActionFocusAndSelectAllInFilterTextField(),
+					getPanel(),
+					HotkeysDescriptions.FOCUS_FILTERING_PANEL);
+		}
+	}
 
 	private void setMainPanelProperties() {
 		if (hasParentList()) {
@@ -89,6 +123,12 @@ public class ListPanel<Word extends ListElement>
 					SimpleRowBuilder.createRow(FillType.NONE, Anchor.CENTER,
 							listElementsCreator.createTitleLabel(title)));
 		}
+		if (isFilteringEnabled()){
+			filterPanel
+					.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+							Anchor.WEST, listFilteringPanel.createPanel(rowForFilteringPanel,
+									createButtonClearFilter())));
+		}
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
 				filterPanel.getPanel()));
 		buttonLoadPreviousWords = listElementsCreator.createButtonLoadWords(
@@ -107,6 +147,11 @@ public class ListPanel<Word extends ListElement>
 				SimpleRowBuilder.createRow(FillType.NONE, buttonLoadNextWords));
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				getNavigationButtons()));
+	}
+
+	private boolean isFilteringEnabled() {
+		return listConfiguration.isWordSearchingEnabled() &&
+				!rowForFilteringPanel.isEmpty();
 	}
 
 	private List<AbstractButton> getNavigationButtons() {
@@ -176,8 +221,6 @@ public class ListPanel<Word extends ListElement>
 		return listElementsCreator.createButtonClearFilter();
 	}
 
-
-
 	public JScrollPane getScrollPane() {
 		return scrollPane;
 	}
@@ -219,5 +262,9 @@ public class ListPanel<Word extends ListElement>
 
 	public MainPanel getFilterPanel() {
 		return filterPanel;
+	}
+
+	public ListFilteringPanel getFilteringPanel() {
+		return listFilteringPanel;
 	}
 }

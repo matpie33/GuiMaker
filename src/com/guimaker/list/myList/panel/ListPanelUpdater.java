@@ -1,11 +1,8 @@
 package com.guimaker.list.myList.panel;
 
-import com.guimaker.enums.Anchor;
-import com.guimaker.enums.FillType;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.row.AbstractSimpleRow;
-import com.guimaker.row.SimpleRowBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,12 +27,6 @@ public class ListPanelUpdater {
 		}
 	}
 
-	public void removeFilterPanel() {
-		listPanel.getMainPanel()
-				 .removeRowWithElements(listPanel.getFilterPanel()
-												 .getPanel());
-	}
-
 	public void enableButtonLoadNextWords() {
 		if (!listPanel.getButtonLoadNextWords()
 					  .isEnabled()) {
@@ -52,12 +43,6 @@ public class ListPanelUpdater {
 	public void removeFirstRowInRowsPanel() {
 		listPanel.getRowsPanel()
 				 .removeRow(0);
-	}
-
-	public void addPanelToFilterPanel(JPanel panelToAdd) {
-		listPanel.getFilterPanel()
-				 .addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
-								Anchor.WEST, panelToAdd));
 	}
 
 	public void disablePanelOpacityIfWithoutAddAndSearch() {
@@ -139,23 +124,25 @@ public class ListPanelUpdater {
 
 	public void loadWords(ListWordsLoadingDirection loadingDirection,
 			AbstractSimpleRow abstractSimpleRow) {
-		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)){
-			listPanel.getRowsPanel().addRow(abstractSimpleRow);
+		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)) {
+			listPanel.getRowsPanel()
+					 .addRow(abstractSimpleRow);
 		}
-		else{
-			listPanel.getRowsPanel().insertRow(0, abstractSimpleRow);
+		else {
+			listPanel.getRowsPanel()
+					 .insertRow(0, abstractSimpleRow);
 		}
 
 	}
 
 	public void enableOrDisableLoadWordsButton(boolean shouldDisable,
 			ListWordsLoadingDirection direction) {
-		if (shouldDisable){
+		if (shouldDisable) {
 			getButtonByDirection(direction).setEnabled(false);
 		}
 		else {
 			AbstractButton oppositeButton = getOppositeButton(direction);
-			if (!oppositeButton.isEnabled()){
+			if (!oppositeButton.isEnabled()) {
 				oppositeButton.setEnabled(true);
 			}
 		}
@@ -163,26 +150,28 @@ public class ListPanelUpdater {
 
 	private AbstractButton getOppositeButton(
 			ListWordsLoadingDirection direction) {
-		if (direction.equals(ListWordsLoadingDirection.NEXT)){
+		if (direction.equals(ListWordsLoadingDirection.NEXT)) {
 			return listPanel.getButtonLoadPreviousWords();
 		}
-		else{
+		else {
 			return listPanel.getButtonLoadNextWords();
 		}
 	}
 
 	private AbstractButton getButtonByDirection(
 			ListWordsLoadingDirection direction) {
-		if (direction.equals(ListWordsLoadingDirection.NEXT)){
+		if (direction.equals(ListWordsLoadingDirection.NEXT)) {
 			return listPanel.getButtonLoadNextWords();
 		}
-		else{
+		else {
 			return listPanel.getButtonLoadPreviousWords();
 		}
 	}
 
 	public void updatePanel() {
-		listPanel.getPanel().repaint();
-		listPanel.getPanel().revalidate();
+		listPanel.getPanel()
+				 .repaint();
+		listPanel.getPanel()
+				 .revalidate();
 	}
 }
