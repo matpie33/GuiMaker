@@ -1,6 +1,7 @@
 package com.guimaker.utilities;
 
 import com.guimaker.enums.ButtonType;
+import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.panels.GuiElementsCreator;
 

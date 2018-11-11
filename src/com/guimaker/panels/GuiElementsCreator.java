@@ -4,8 +4,8 @@ import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.ConditionForHotkey;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
-import com.guimaker.utilities.HotkeyWrapper;
-import com.guimaker.utilities.KeyModifiers;
+import com.guimaker.model.HotkeyWrapper;
+import com.guimaker.enums.KeyModifiers;
 import com.guimaker.utilities.LimitDocumentFilter;
 
 import javax.swing.*;

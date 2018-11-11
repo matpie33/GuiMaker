@@ -2,7 +2,7 @@ package com.guimaker.panelSwitching;
 
 import com.guimaker.enums.MoveDirection;
 import com.guimaker.utilities.CommonActionsCreator;
-import com.guimaker.utilities.HotkeyWrapper;
+import com.guimaker.model.HotkeyWrapper;
 
 import javax.swing.*;
 import java.awt.*;

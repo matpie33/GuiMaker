@@ -4,7 +4,7 @@ import com.guimaker.enums.InputGoal;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListRowData;
 import com.guimaker.listeners.InputValidationListener;
-import com.guimaker.utilities.CommonListElements;
+import com.guimaker.model.CommonListElements;
 
 public interface ListRowCreator<Word extends ListElement> {
 

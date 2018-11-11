@@ -18,7 +18,7 @@ import com.guimaker.model.ListRow;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
-import com.guimaker.utilities.CommonListElements;
+import com.guimaker.model.CommonListElements;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;

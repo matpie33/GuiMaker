@@ -6,12 +6,13 @@ import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.enums.MoveDirection;
-import com.guimaker.list.*;
+import com.guimaker.list.ListElement;
+import com.guimaker.list.ListElementInitializer;
+import com.guimaker.list.ListObserver;
+import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.list.loadAdditionalWordsHandling.*;
-import com.guimaker.list.myList.filtering.ListFilteringScheduler;
 import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
-import com.guimaker.model.FilteredWordMatch;
 import com.guimaker.model.ListRow;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.MainPanel;
@@ -20,7 +21,6 @@ import com.guimaker.swingUtilities.ProgressUpdater;
 import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.Range;
 import com.guimaker.utilities.ThreadUtilities;
-import com.guimaker.utilities.WordSearching;
 
 import javax.swing.*;
 import javax.swing.FocusManager;
@@ -343,8 +343,7 @@ public class ListWordsController<Word extends ListElement> {
 			public void actionPerformed(ActionEvent e) {
 				int numberOfListRows = listViewManager.getNumberOfListRows();
 				listViewManager.clearRowsPanel();
-				addNextHalfOfMaximumWords(loadWordsHandler,
-						numberOfListRows);
+				addNextHalfOfMaximumWords(loadWordsHandler, numberOfListRows);
 				boolean shouldDisable = loadWordsHandler.shouldDisableLoadWordsButton(
 						ListWordsController.this);
 				listViewManager.enableOrDisableLoadWordsButton(shouldDisable,
@@ -645,13 +644,9 @@ public class ListWordsController<Word extends ListElement> {
 		};
 	}
 
-	public int getStartOfRangeOfDisplayedWords() {
+	private int getStartOfRangeOfDisplayedWords() {
 		return lastRowVisible - MAXIMUM_WORDS_TO_SHOW + 2;
 	}
-
-
-
-
 
 	public AbstractAction createActionShowInsertWordDialog() {
 		return new AbstractAction() {

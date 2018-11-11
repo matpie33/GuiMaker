@@ -1,4 +1,4 @@
-package com.guimaker.utilities;
+package com.guimaker.enums;
 
 import java.awt.event.InputEvent;
 

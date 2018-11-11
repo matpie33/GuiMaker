@@ -10,7 +10,7 @@ import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.strings.ExceptionsMessages;
-import com.guimaker.utilities.CommonListElements;
+import com.guimaker.model.CommonListElements;
 import com.guimaker.utilities.ThreadUtilities;
 
 import javax.swing.*;

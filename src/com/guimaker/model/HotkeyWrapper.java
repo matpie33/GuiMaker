@@ -1,6 +1,7 @@
-package com.guimaker.utilities;
+package com.guimaker.model;
 
 import com.guimaker.enums.ConditionForHotkey;
+import com.guimaker.enums.KeyModifiers;
 
 import java.util.Objects;
 

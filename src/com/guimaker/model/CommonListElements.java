@@ -1,4 +1,4 @@
-package com.guimaker.utilities;
+package com.guimaker.model;
 
 import javax.swing.*;
 import java.awt.*;

@@ -15,8 +15,8 @@ import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.strings.Titles;
 import com.guimaker.utilities.CommonActionsCreator;
-import com.guimaker.utilities.HotkeyWrapper;
-import com.guimaker.utilities.KeyModifiers;
+import com.guimaker.model.HotkeyWrapper;
+import com.guimaker.enums.KeyModifiers;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

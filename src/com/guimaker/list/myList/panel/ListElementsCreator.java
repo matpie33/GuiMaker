@@ -11,9 +11,9 @@ import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.HotkeysDescriptions;
-import com.guimaker.utilities.CommonListElements;
-import com.guimaker.utilities.HotkeyWrapper;
-import com.guimaker.utilities.KeyModifiers;
+import com.guimaker.model.CommonListElements;
+import com.guimaker.model.HotkeyWrapper;
+import com.guimaker.enums.KeyModifiers;
 
 import javax.swing.*;
 import java.awt.*;

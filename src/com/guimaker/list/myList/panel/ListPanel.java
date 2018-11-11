@@ -11,7 +11,6 @@ import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListWordsController;
 import com.guimaker.list.myList.filtering.ListFilteringController;
 import com.guimaker.list.myList.filtering.ListFilteringPanel;
-import com.guimaker.model.ListRow;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
@@ -22,8 +21,8 @@ import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.strings.Prompts;
 import com.guimaker.utilities.ColorChanger;
-import com.guimaker.utilities.CommonListElements;
-import com.guimaker.utilities.KeyModifiers;
+import com.guimaker.model.CommonListElements;
+import com.guimaker.enums.KeyModifiers;
 
 import javax.swing.*;
 import java.awt.*;
