@@ -1,4 +1,4 @@
-package com.guimaker.list.myList;
+package com.guimaker.list.myList.filtering;
 
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
@@ -17,7 +17,7 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
 
-public class ListSearchPanelCreator<Word extends ListElement> {
+public class ListFilteringPanelCreator<Word extends ListElement> {
 
 	private ListRowData<Word> listRowData;
 	private JComboBox<String> comboBox;
@@ -85,7 +85,7 @@ public class ListSearchPanelCreator<Word extends ListElement> {
 		};
 	}
 
-	public void switchToListProperty(String property) {
+	private void switchToListProperty(String property) {
 		filteringProperty.setText(property + COLON);
 		listElementPropertyManager = listRowData.getRowPropertiesData()
 												.get(property)

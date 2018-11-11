@@ -1,10 +1,9 @@
-package com.guimaker.list.myList;
+package com.guimaker.list.loadAdditionalWordsHandling;
 
 import com.guimaker.enums.ListWordsLoadingDirection;
+import com.guimaker.list.myList.ListWordsController;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.utilities.Range;
-
-import javax.swing.*;
 
 public class LoadPreviousWordsHandler implements LoadWordsHandler {
 

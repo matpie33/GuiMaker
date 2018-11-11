@@ -1,9 +1,6 @@
 package com.guimaker.list.loadAdditionalWordsHandling;
 
 import com.guimaker.list.myList.ListWordsController;
-import com.guimaker.list.myList.LoadNextWordsHandler;
-import com.guimaker.list.myList.LoadPreviousWordsHandler;
-import com.guimaker.list.myList.LoadWordsHandler;
 import com.guimaker.utilities.Range;
 
 public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy

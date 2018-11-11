@@ -1,4 +1,6 @@
-package com.guimaker.list.myList;
+package com.guimaker.list.myList.filtering;
+
+import com.guimaker.list.myList.ListWordsController;
 
 import java.util.Timer;
 import java.util.TimerTask;
