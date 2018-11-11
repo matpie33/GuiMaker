@@ -57,10 +57,6 @@ public class MyList<Word extends ListElement>
 		return listRowCreator;
 	}
 
-	public void inheritScrollPane() {
-		listController.inheritScrollPane();
-	}
-
 	public void scrollToTop() {
 		listController.scrollToTop();
 	}
@@ -110,47 +106,14 @@ public class MyList<Word extends ListElement>
 				clearLastHighlightedWord);
 	}
 
-	public <Property> void findAndHighlightRowBasedOnPropertyStartingFromHighlightedWord(
-			ListElementPropertyManager<Property, Word> propertyChecker,
-			Property searchedPropertyValue, MoveDirection searchDirection) {
-		int rowNumber = findRowNumberBasedOnPropertyStartingFromHighlightedWord(
-				propertyChecker, searchedPropertyValue, searchDirection);
-		if (rowNumber < 0) {
-			return;
-		}
-		listController.highlightRowAndScroll(rowNumber, true);
-		return;
-	}
-
-	public <Property> Word findRowBasedOnPropertyStartingFromHighlightedWord(
-			ListElementPropertyManager<Property, Word> propertyChecker,
-			Property searchedPropertyValue, MoveDirection searchDirection) {
-		int rowNumber = findRowNumberBasedOnPropertyStartingFromHighlightedWord(
-				propertyChecker, searchedPropertyValue, searchDirection);
-		if (rowNumber != -1) {
-			listController.getWordInRow(rowNumber);
-		}
-		return null;
-	}
-
 	private <Property> int findRowNumberBasedOnProperty(
 			ListElementPropertyManager<Property, Word> propertyChecker,
 			Property searchedPropertyValue, MoveDirection searchDirection,
-			boolean checkHighlightedWordToo, boolean displayMessage) {
+			boolean displayMessage) {
 
-		int lastRowToSearch = 0;
 		int incrementValue = searchDirection.getIncrementValue();
-		if (!checkHighlightedWordToo) {
-			lastRowToSearch = listController.getHighlightedRowNumber() >= 0 ?
-					listController.getHighlightedRowNumber() :
-					0;
-		}
 
-		int rowNumber = checkHighlightedWordToo ?
-				0 :
-				listController.getHighlightedRowNumber() >= 0 ?
-						lastRowToSearch + incrementValue :
-						0;
+		int rowNumber = 0;
 		boolean shouldContinueSearching;
 		do {
 			if (isRowNumberOutOfRange(rowNumber)) {
@@ -164,39 +127,17 @@ public class MyList<Word extends ListElement>
 				}
 			}
 			rowNumber += incrementValue;
-			shouldContinueSearching = checkHighlightedWordToo ?
-					rowNumber < listController.getNumberOfWords() :
-					rowNumber != lastRowToSearch;
+			shouldContinueSearching =
+					rowNumber < listController.getNumberOfWords();
 		}
 		while (shouldContinueSearching);
 
-		Word highlightedWord = getHighlightedWord();
-		if (!checkHighlightedWordToo && highlightedWord != null
-				&& propertyChecker.isPropertyFound(searchedPropertyValue,
-				highlightedWord)) {
-			if (displayMessage) {
-				parent.showMessageDialog(
-						ExceptionsMessages.WORD_ALREADY_HIGHLIGHTED_EXCEPTION);
-			}
-
-			//TODO do not hardcode the message here - sometimes I don't want to display it
-			return listController.getHighlightedRowNumber();
+		if (displayMessage) {
+			parent.showMessageDialog(
+					ExceptionsMessages.WORD_NOT_FOUND_EXCEPTION);
 		}
-		else {
-			if (displayMessage) {
-				parent.showMessageDialog(
-						ExceptionsMessages.WORD_NOT_FOUND_EXCEPTION);
-			}
 
-			return -1;
-		}
-	}
-
-	public <Property> int findRowNumberBasedOnPropertyStartingFromHighlightedWord(
-			ListElementPropertyManager<Property, Word> propertyChecker,
-			Property searchedPropertyValue, MoveDirection searchDirection) {
-		return findRowNumberBasedOnProperty(propertyChecker,
-				searchedPropertyValue, searchDirection, false, true);
+		return -1;
 	}
 
 	public <Property> Word findRowBasedOnPropertyStartingFromBeginningOfList(
@@ -204,7 +145,7 @@ public class MyList<Word extends ListElement>
 			Property searchedPropertyValue, MoveDirection searchDirection,
 			boolean displayMessage) {
 		int rowNumber = findRowNumberBasedOnProperty(propertyChecker,
-				searchedPropertyValue, searchDirection, true, displayMessage);
+				searchedPropertyValue, searchDirection, displayMessage);
 		if (rowNumber != -1) {
 			return listController.getWordInRow(rowNumber);
 		}
@@ -286,11 +227,6 @@ public class MyList<Word extends ListElement>
 		return getNumberOfWords() == 0;
 	}
 
-	public boolean areAllWordsHighlighted() {
-		return listController.getWordsByHighlight(true)
-							 .size() == getNumberOfWords();
-	}
-
 	public List<Word> getWords() {
 		return listController.getWords();
 	}
@@ -357,10 +293,6 @@ public class MyList<Word extends ListElement>
 
 	public JTextComponent getSelectedInput() {
 		return getPanelWithSelectedInput().getSelectedInput();
-	}
-
-	public void toggleEnabledState() {
-		listController.toggleEnabledState();
 	}
 
 	public ProgressUpdater getProgressUpdater() {
