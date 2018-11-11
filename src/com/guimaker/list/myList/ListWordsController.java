@@ -342,6 +342,27 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.scrollToTop();
 	}
 
+	public AbstractAction createButtonShowNextOrPreviousWords(
+			LoadWordsHandler loadWordsHandler) {
+
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int numberOfListRows = listViewManager.getNumberOfListRows();
+				listViewManager.clearRowsPanel();
+				addNextHalfOfMaximumWords(loadWordsHandler,
+						numberOfListRows);
+				boolean shouldDisable = loadWordsHandler.shouldDisableLoadWordsButton(
+						ListWordsController.this);
+				listViewManager.enableOrDisableLoadWordsButton(shouldDisable,
+						loadWordsHandler.getDirection());
+
+				listViewManager.updateRowsPanel();
+			}
+		};
+
+	}
+
 	public void addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler,
 			int numberOfListRows) {
 		addSuccessiveWords(loadWordsHandler, MAXIMUM_WORDS_TO_SHOW,

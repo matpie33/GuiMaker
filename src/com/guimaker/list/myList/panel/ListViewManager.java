@@ -106,23 +106,8 @@ public class ListViewManager<Word extends ListElement> {
 
 	public AbstractAction createButtonShowNextOrPreviousWords(
 			LoadWordsHandler loadWordsHandler) {
-
-		return new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int numberOfListRows = getNumberOfListRows();
-				listPanelUpdater.clearRowsPanel();
-				listWordsController.addNextHalfOfMaximumWords(loadWordsHandler,
-						numberOfListRows);
-				boolean shouldDisable = loadWordsHandler.shouldDisableLoadWordsButton(
-						listWordsController);
-				listPanelUpdater.enableOrDisableLoadWordsButton(shouldDisable,
-						loadWordsHandler.getDirection());
-
-				listPanelUpdater.updateRowsPanel();
-			}
-		};
-
+		return listWordsController.createButtonShowNextOrPreviousWords
+				(loadWordsHandler);
 	}
 
 	public String createTextForRowNumber(int rowNumber) {
@@ -297,5 +282,14 @@ public class ListViewManager<Word extends ListElement> {
 
 	public void updateRowsPanel() {
 		listPanelUpdater.updatePanel();
+	}
+
+	public void clearRowsPanel() {
+		listPanelUpdater.clearRowsPanel();
+	}
+
+	public void enableOrDisableLoadWordsButton(boolean shouldDisable,
+			ListWordsLoadingDirection direction) {
+		listPanelUpdater.enableOrDisableLoadWordsButton(shouldDisable, direction);
 	}
 }
