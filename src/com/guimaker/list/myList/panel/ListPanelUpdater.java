@@ -12,65 +12,65 @@ import java.awt.*;
 
 public class ListPanelUpdater {
 
-	private ListPanelCreator listPanelCreator;
+	private ListPanel listPanel;
 	private ListConfiguration listConfiguration;
 
-	public ListPanelUpdater(ListPanelCreator listPanelCreator,
+	public ListPanelUpdater(ListPanel listPanel,
 			ListConfiguration listConfiguration) {
-		this.listPanelCreator = listPanelCreator;
+		this.listPanel = listPanel;
 		this.listConfiguration = listConfiguration;
 	}
 
 	public void adjustVisibilityOfShowNextPreviousWordsButtons() {
 		if (!listConfiguration.isShowButtonsLoadNextPreviousWords()) {
-			listPanelCreator.getButtonLoadPreviousWords()
-							.setVisible(false);
-			listPanelCreator.getButtonLoadNextWords()
-							.setVisible(false);
+			listPanel.getButtonLoadPreviousWords()
+					 .setVisible(false);
+			listPanel.getButtonLoadNextWords()
+					 .setVisible(false);
 		}
 	}
 
 	public void removeFilterPanel() {
-		listPanelCreator.getMainPanel()
-						.removeRowWithElements(listPanelCreator.getFilterPanel()
-															   .getPanel());
+		listPanel.getMainPanel()
+				 .removeRowWithElements(listPanel.getFilterPanel()
+												 .getPanel());
 	}
 
 	public void enableButtonLoadNextWords() {
-		if (!listPanelCreator.getButtonLoadNextWords()
-							 .isEnabled()) {
-			listPanelCreator.getButtonLoadNextWords()
-							.setEnabled(true);
+		if (!listPanel.getButtonLoadNextWords()
+					  .isEnabled()) {
+			listPanel.getButtonLoadNextWords()
+					 .setEnabled(true);
 		}
 	}
 
 	public void updateRowsPanel() {
-		listPanelCreator.getRowsPanel()
-						.updateView();
+		listPanel.getRowsPanel()
+				 .updateView();
 	}
 
 	public void removeFirstRowInRowsPanel() {
-		listPanelCreator.getRowsPanel()
-						.removeRow(0);
+		listPanel.getRowsPanel()
+				 .removeRow(0);
 	}
 
 	public void addPanelToFilterPanel(JPanel panelToAdd) {
-		listPanelCreator.getFilterPanel()
-						.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+		listPanel.getFilterPanel()
+				 .addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
 								Anchor.WEST, panelToAdd));
 	}
 
 	public void disablePanelOpacityIfWithoutAddAndSearch() {
 		if (!listConfiguration.isWordSearchingEnabled()
 				&& !listConfiguration.isWordAddingEnabled()) {
-			listPanelCreator.getPanel()
-							.setOpaque(false);
+			listPanel.getPanel()
+					 .setOpaque(false);
 		}
 	}
 
 	public void clearHighlightedRow(JComponent row) {
-		listPanelCreator.getRowsPanel()
-						.clearPanelColor(row);
+		listPanel.getRowsPanel()
+				 .clearPanelColor(row);
 	}
 
 	public void scrollTo(JComponent panel) {
@@ -80,9 +80,9 @@ public class ListPanelUpdater {
 		}
 		SwingUtilities.invokeLater(() -> {
 			int r = panel.getY();
-			listPanelCreator.getScrollPane()
-							.getViewport()
-							.setViewPosition(new Point(0, r));
+			listPanel.getScrollPane()
+					 .getViewport()
+					 .setViewPosition(new Point(0, r));
 		});
 	}
 
@@ -95,55 +95,55 @@ public class ListPanelUpdater {
 			@Override
 			public void run() {
 				// TODO swing utilities
-				JScrollBar scrollBar = listPanelCreator.getScrollPane()
-													   .getVerticalScrollBar();
+				JScrollBar scrollBar = listPanel.getScrollPane()
+												.getVerticalScrollBar();
 				scrollBar.setValue(scrollBar.getMaximum());
 			}
 		});
 	}
 
 	public void removeRow(JComponent panel) {
-		int rowNumber = listPanelCreator.getRowsPanel()
-										.getIndexOfPanel(panel);
-		listPanelCreator.getRowsPanel()
-						.removeRow(rowNumber);
+		int rowNumber = listPanel.getRowsPanel()
+								 .getIndexOfPanel(panel);
+		listPanel.getRowsPanel()
+				 .removeRow(rowNumber);
 	}
 
 	public void clearRowsPanel() {
-		listPanelCreator.getRowsPanel()
-						.clear();
+		listPanel.getRowsPanel()
+				 .clear();
 	}
 
 	public void scrollToTop() {
-		SwingUtilities.invokeLater(() -> listPanelCreator.getScrollPane()
-														 .getVerticalScrollBar()
-														 .setValue(0));
+		SwingUtilities.invokeLater(() -> listPanel.getScrollPane()
+												  .getVerticalScrollBar()
+												  .setValue(0));
 	}
 
 	public void enableButtonLoadPreviousWords() {
-		listPanelCreator.getButtonLoadPreviousWords()
-						.setEnabled(true);
+		listPanel.getButtonLoadPreviousWords()
+				 .setEnabled(true);
 	}
 
 	public void toggleRowsPanelEnabledState() {
-		listPanelCreator.getRowsPanel()
-						.toggleEnabledState();
+		listPanel.getRowsPanel()
+				 .toggleEnabledState();
 	}
 
 	public void replacePanelsInRowsPanel(JComponent oldPanel, JPanel panel) {
-		listPanelCreator.getRowsPanel()
-						.replacePanel(oldPanel, panel);
-		listPanelCreator.getRowsPanel()
-						.updateView();
+		listPanel.getRowsPanel()
+				 .replacePanel(oldPanel, panel);
+		listPanel.getRowsPanel()
+				 .updateView();
 	}
 
 	public void loadWords(ListWordsLoadingDirection loadingDirection,
 			AbstractSimpleRow abstractSimpleRow) {
 		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)){
-			listPanelCreator.getRowsPanel().addRow(abstractSimpleRow);
+			listPanel.getRowsPanel().addRow(abstractSimpleRow);
 		}
 		else{
-			listPanelCreator.getRowsPanel().insertRow(0, abstractSimpleRow);
+			listPanel.getRowsPanel().insertRow(0, abstractSimpleRow);
 		}
 
 	}
@@ -164,25 +164,25 @@ public class ListPanelUpdater {
 	private AbstractButton getOppositeButton(
 			ListWordsLoadingDirection direction) {
 		if (direction.equals(ListWordsLoadingDirection.NEXT)){
-			return listPanelCreator.getButtonLoadPreviousWords();
+			return listPanel.getButtonLoadPreviousWords();
 		}
 		else{
-			return listPanelCreator.getButtonLoadNextWords();
+			return listPanel.getButtonLoadNextWords();
 		}
 	}
 
 	private AbstractButton getButtonByDirection(
 			ListWordsLoadingDirection direction) {
 		if (direction.equals(ListWordsLoadingDirection.NEXT)){
-			return listPanelCreator.getButtonLoadNextWords();
+			return listPanel.getButtonLoadNextWords();
 		}
 		else{
-			return listPanelCreator.getButtonLoadPreviousWords();
+			return listPanel.getButtonLoadPreviousWords();
 		}
 	}
 
 	public void updatePanel() {
-		listPanelCreator.getPanel().repaint();
-		listPanelCreator.getPanel().revalidate();
+		listPanel.getPanel().repaint();
+		listPanel.getPanel().revalidate();
 	}
 }

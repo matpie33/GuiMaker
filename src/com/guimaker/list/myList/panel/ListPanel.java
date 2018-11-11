@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ListPanelCreator<Word extends ListElement>
+public class ListPanel<Word extends ListElement>
 		extends AbstractPanelWithHotkeysInfo {
 
 	private ListConfiguration listConfiguration;
@@ -41,7 +41,7 @@ public class ListPanelCreator<Word extends ListElement>
 	private AbstractButton buttonLoadPreviousWords;
 	private AbstractButton buttonLoadNextWords;
 
-	public ListPanelCreator(ListConfiguration listConfiguration,
+	public ListPanel(ListConfiguration listConfiguration,
 			ListViewManager<Word> listViewManager,
 			ListWordsController<Word> controller) {
 		listElementsCreator = new ListElementsCreator<>(controller,
