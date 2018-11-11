@@ -409,4 +409,8 @@ public class MyList<Word extends ListElement>
 	public boolean containsWord(Word word) {
 		return getWords().contains(word);
 	}
+
+	public void showWord(Word word) {
+		listController.showWord(word);
+	}
 }

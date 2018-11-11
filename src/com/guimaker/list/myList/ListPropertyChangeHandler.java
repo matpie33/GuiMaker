@@ -120,7 +120,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
 					duplicateRowNumber);
 			dialogWindow.showMessageDialog(exceptionMessage, false);
-			list.highlightRow(duplicateRowNumber - 1, true);
+			list.showWord(wordInMyListExistence.getWord());
 
 			//TODO performance of displaying just 200 words is terrible low, which
 			//forces me to show message dialog before highlighting row (which loads words

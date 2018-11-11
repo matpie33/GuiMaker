@@ -697,4 +697,12 @@ public class ListWordsController<Word extends ListElement> {
 	public boolean isLastRowVisible() {
 		return lastRowVisible == allWordsToRowNumberMap.size() - 1;
 	}
+
+	public void showWord(Word word) {
+		listViewManager.clear();
+		lastRowVisible = get0BasedRowNumberOfWord(word);
+		showNextWord();
+		lastRowVisible--;
+
+	}
 }
