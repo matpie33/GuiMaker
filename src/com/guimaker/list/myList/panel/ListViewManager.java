@@ -12,8 +12,11 @@ import com.guimaker.list.ListRowData;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadNextWordsHandler;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadPreviousWordsHandler;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
-import com.guimaker.list.myList.*;
-import com.guimaker.list.myList.filtering.ListFilteringPanelCreator;
+import com.guimaker.list.myList.ListConfiguration;
+import com.guimaker.list.myList.ListRowCreator;
+import com.guimaker.list.myList.ListWordsController;
+import com.guimaker.list.myList.filtering.ListFilteringController;
+import com.guimaker.list.myList.filtering.ListFilteringPanel;
 import com.guimaker.model.ListRow;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
@@ -38,7 +41,7 @@ public class ListViewManager<Word extends ListElement> {
 	private LoadPreviousWordsHandler loadPreviousWordsHandler;
 	private Color labelsColor = Color.WHITE;
 	private InputGoal inputGoal;
-	private ListFilteringPanelCreator<Word> listFilteringPanelCreator;
+	private ListFilteringPanel<Word> listFilteringPanel;
 	private boolean isInitialized = false;
 	private ListConfiguration listConfiguration;
 	private ListPanelCreator<Word> listPanelCreator;
@@ -50,7 +53,8 @@ public class ListViewManager<Word extends ListElement> {
 		listPanelCreator = new ListPanelCreator<>(listConfiguration, this,
 				controller);
 
-		listFilteringPanelCreator = new ListFilteringPanelCreator<>();
+		listFilteringPanel = new ListFilteringController<>(this,
+				controller).getListFilteringPanel();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
 		loadNextWordsHandler = new LoadNextWordsHandler();
@@ -109,8 +113,8 @@ public class ListViewManager<Word extends ListElement> {
 
 	public AbstractAction createButtonShowNextOrPreviousWords(
 			LoadWordsHandler loadWordsHandler) {
-		return listWordsController.createButtonShowNextOrPreviousWords
-				(loadWordsHandler);
+		return listWordsController.createButtonShowNextOrPreviousWords(
+				loadWordsHandler);
 	}
 
 	public String createTextForRowNumber(int rowNumber) {
@@ -130,24 +134,17 @@ public class ListViewManager<Word extends ListElement> {
 					InputGoal.SEARCH);
 			if (!listRow.isEmpty()) {
 
-				JPanel panel = listFilteringPanelCreator.createPanel(listRow,
+				JPanel panel = listFilteringPanel.createPanel(listRow,
 						listPanelCreator.createButtonClearFilter());
-				listRow.getRowPropertiesData()
-					   .values()
-					   .forEach(listProperty -> {
-						   listProperty.getFilteringTextComponent()
-									   .getDocument()
-									   .addDocumentListener(
-											   listWordsController.createActionFilterImmediately());
-					   });
+
 				listPanelUpdater.addPanelToFilterPanel(panel);
 				listPanelCreator.addHotkey(KeyModifiers.CONTROL,
 						KeyEvent.VK_SPACE,
-						listFilteringPanelCreator.createActionSwitchComboboxValue(),
+						listFilteringPanel.createActionSwitchComboboxValue(),
 						listPanelCreator.getPanel(),
 						HotkeysDescriptions.SWITCH_SEARCH_CRITERIA);
 				listPanelCreator.addHotkey(KeyModifiers.CONTROL, KeyEvent.VK_F,
-						listFilteringPanelCreator.createActionFocusAndSelectAllInFilterTextField(),
+						listFilteringPanel.createActionFocusAndSelectAllInFilterTextField(),
 						listPanelCreator.getPanel(),
 						HotkeysDescriptions.FOCUS_FILTERING_PANEL);
 			}
@@ -161,11 +158,11 @@ public class ListViewManager<Word extends ListElement> {
 	}
 
 	public JTextComponent getFilterComponent() {
-		return listFilteringPanelCreator.getFilteringInput();
+		return listFilteringPanel.getFilteringInput();
 	}
 
 	public ListElementPropertyManager getFilterInputPropertyManager() {
-		return listFilteringPanelCreator.getPropertyManagerForInput();
+		return listFilteringPanel.getPropertyManagerForInput();
 	}
 
 	public void removeWordsFromRangeInclusive(Range range) {
@@ -267,8 +264,8 @@ public class ListViewManager<Word extends ListElement> {
 	}
 
 	public boolean isFilterInputFocused() {
-		return listFilteringPanelCreator.getFilteringInput()
-										.hasFocus();
+		return listFilteringPanel.getFilteringInput()
+								 .hasFocus();
 	}
 
 	public InputGoal getInputGoal() {
@@ -293,6 +290,7 @@ public class ListViewManager<Word extends ListElement> {
 
 	public void enableOrDisableLoadWordsButton(boolean shouldDisable,
 			ListWordsLoadingDirection direction) {
-		listPanelUpdater.enableOrDisableLoadWordsButton(shouldDisable, direction);
+		listPanelUpdater.enableOrDisableLoadWordsButton(shouldDisable,
+				direction);
 	}
 }

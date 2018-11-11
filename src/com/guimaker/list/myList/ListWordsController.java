@@ -8,7 +8,7 @@ import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.enums.MoveDirection;
 import com.guimaker.list.*;
 import com.guimaker.list.loadAdditionalWordsHandling.*;
-import com.guimaker.list.myList.filtering.ListFilterHandler;
+import com.guimaker.list.myList.filtering.ListFilteringScheduler;
 import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.FilteredWordMatch;
@@ -24,8 +24,6 @@ import com.guimaker.utilities.WordSearching;
 
 import javax.swing.*;
 import javax.swing.FocusManager;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -47,9 +45,7 @@ public class ListWordsController<Word extends ListElement> {
 	private Pair<MyList, ListElement> parentListAndWord;
 	private boolean finishEditActionRequested;
 	private boolean isInEditMode;
-	private final int numberOfWordsToDisplayByFilter = 10;
 	private String wordSpecificPrompt;
-	private ListFilterHandler listFilterHandler;
 	private MyList<Word> myList;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
 
@@ -62,7 +58,6 @@ public class ListWordsController<Word extends ListElement> {
 		progressUpdater = new ProgressUpdater();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listViewManager = new ListViewManager<>(listConfiguration, this);
-		listFilterHandler = new ListFilterHandler(this);
 		initializeFoundWordStrategies();
 	}
 
@@ -209,7 +204,7 @@ public class ListWordsController<Word extends ListElement> {
 		return words;
 	}
 
-	private List<ListRow<Word>> getWordsWithDetails() {
+	public List<ListRow<Word>> getWordsWithDetails() {
 		List<ListRow<Word>> listRows = new ArrayList<>();
 		for (ListRow<Word> listRow : allWordsToRowNumberMap) {
 			listRows.add(listRow);
@@ -654,52 +649,9 @@ public class ListWordsController<Word extends ListElement> {
 		return lastRowVisible - MAXIMUM_WORDS_TO_SHOW + 2;
 	}
 
-	public DocumentListener createActionFilterImmediately() {
-		return new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				listFilterHandler.scheduleFiltering();
-			}
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				listFilterHandler.scheduleFiltering();
-			}
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
 
-			}
-		};
-	}
-
-	public void filterWords() {
-		String text = listViewManager.getFilterComponent()
-									 .getText();
-		ListElementPropertyManager filterInputPropertyManager = listViewManager.getFilterInputPropertyManager();
-		SortedMap<FilteredWordMatch, ListRow<Word>> words = WordSearching.filterWords(
-				getWordsWithDetails(), text, filterInputPropertyManager);
-		listViewManager.clear();
-
-		int newRowNumber = 1;
-		for (ListRow<Word> listRow : words.values()) {
-			if (newRowNumber > numberOfWordsToDisplayByFilter) {
-				break;
-			}
-			int rowNumber = listRow.getRowNumber() - 1;
-			listRow.setPanel(listViewManager.addRow(
-					allWordsToRowNumberMap.get(rowNumber)
-										  .getWord(), newRowNumber++, true,
-					ListWordsLoadingDirection.NEXT,
-					listViewManager.getInputGoal())
-											.getWrappingPanel());
-			if (listRow.isHighlighted()) {
-				listViewManager.highlightRow(listRow.getJPanel());
-			}
-		}
-		scrollToTop();
-		listViewManager.updateRowsPanel();
-	}
 
 	public AbstractAction createActionShowInsertWordDialog() {
 		return new AbstractAction() {

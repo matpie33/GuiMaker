@@ -5,14 +5,14 @@ import com.guimaker.list.myList.ListWordsController;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ListFilterHandler {
+public class ListFilteringScheduler {
 
 	private Timer timer;
 	private final int millisecondsAfterWhichFilteringIsTriggered = 500;
-	private ListWordsController listWordsController;
+	private ListFilteringController listFilteringController;
 
-	public ListFilterHandler(ListWordsController listWordsController) {
-		this.listWordsController = listWordsController;
+	public ListFilteringScheduler(ListFilteringController listFilteringController) {
+		this.listFilteringController = listFilteringController;
 	}
 
 	public void scheduleFiltering() {
@@ -24,7 +24,7 @@ public class ListFilterHandler {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				listWordsController.filterWords();
+				listFilteringController.filterWords();
 			}
 		}, millisecondsAfterWhichFilteringIsTriggered);
 	}

@@ -17,7 +17,7 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
 
-public class ListFilteringPanelCreator<Word extends ListElement> {
+public class ListFilteringPanel<Word extends ListElement> {
 
 	private ListRowData<Word> listRowData;
 	private JComboBox<String> comboBox;
@@ -27,11 +27,17 @@ public class ListFilteringPanelCreator<Word extends ListElement> {
 	private MainPanel searchPanel;
 	public static final String COLON = ":";
 	private AbstractButton buttonClearFilter;
+	private ListFilteringController listFilteringController;
+
+	public ListFilteringPanel(ListFilteringController listFilteringController) {
+		this.listFilteringController = listFilteringController;
+	}
 
 	public JPanel createPanel(ListRowData<Word> listRowData,
 			AbstractButton buttonClearFilter) {
 		this.buttonClearFilter = buttonClearFilter;
 		this.listRowData = listRowData;
+		addActionFilterImmediatelyToTextFields(listRowData);
 
 		searchPanel = new MainPanel();
 
@@ -50,6 +56,18 @@ public class ListFilteringPanelCreator<Word extends ListElement> {
 		addFilteringInputAndButton();
 
 		return searchPanel.getPanel();
+	}
+
+	private void addActionFilterImmediatelyToTextFields(
+			ListRowData<Word> listRowData) {
+		listRowData.getRowPropertiesData()
+				   .values()
+				   .forEach(listProperty -> {
+					   listProperty.getFilteringTextComponent()
+								   .getDocument()
+								   .addDocumentListener(
+										   listFilteringController.createActionFilterImmediately());
+				   });
 	}
 
 	private void addFilteringInputAndButton() {
