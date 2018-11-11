@@ -65,10 +65,6 @@ public class ListWordsController<Word extends ListElement> {
 		return wordInitializer;
 	}
 
-	public void inheritScrollPane() {
-		listViewManager.inheritScrollPane();
-	}
-
 	private void initializeFoundWordStrategies() {
 		strategiesForFoundWord.add(new FoundWordInsideVisibleRangeStrategy());
 		strategiesForFoundWord.add(
@@ -98,10 +94,7 @@ public class ListWordsController<Word extends ListElement> {
 		if (valid) {
 			boolean canNewWordBeDisplayed = canNewWordBeDisplayed();
 			if (tryToShowWord) {
-				if (!lastWordIsVisible()) {
-					loadLastWord();
-				}
-				else if (!canNewWordBeDisplayed) {
+				if (!canNewWordBeDisplayed) {
 					removeFirstRow();
 					canNewWordBeDisplayed = true;
 					listViewManager.enableButtonShowPreviousWords();
@@ -127,15 +120,6 @@ public class ListWordsController<Word extends ListElement> {
 				getFirstVisibleRowNumber());
 		listViewManager.removeRow(rowToRemove.getJPanel());
 		rowToRemove.setPanel(null);
-	}
-
-	private void loadLastWord() {
-		showWordsStartingFromRow(
-				allWordsToRowNumberMap.size() - 1 - getMaximumWordsToShow());
-	}
-
-	private boolean lastWordIsVisible() {
-		return lastRowVisible == allWordsToRowNumberMap.size() - 1;
 	}
 
 	private boolean canNewWordBeDisplayed() {
@@ -287,7 +271,7 @@ public class ListWordsController<Word extends ListElement> {
 		lastRowVisible = 0;
 	}
 
-	public WordInMyListExistence<Word> isWordDefined(Word word) {
+	private WordInMyListExistence<Word> isWordDefined(Word word) {
 		if (word.isEmpty()) {
 			return new WordInMyListExistence<>(false, null, 0);
 		}
@@ -355,7 +339,7 @@ public class ListWordsController<Word extends ListElement> {
 
 	}
 
-	public void addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler,
+	private void addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler,
 			int numberOfListRows) {
 		addSuccessiveWords(loadWordsHandler, MAXIMUM_WORDS_TO_SHOW,
 				numberOfListRows);
@@ -389,7 +373,7 @@ public class ListWordsController<Word extends ListElement> {
 		return lastRowVisible - listViewManager.getNumberOfListRows() + 1;
 	}
 
-	public void showNextWord() {
+	private void showNextWord() {
 
 		ListRow<Word> wordListRow = allWordsToRowNumberMap.get(lastRowVisible);
 		ListRow<Word> visibleRow = listViewManager.addRow(wordListRow.getWord(),
@@ -407,7 +391,7 @@ public class ListWordsController<Word extends ListElement> {
 		if (firstRowToLoad > MAXIMUM_WORDS_TO_SHOW) {
 			listViewManager.enableButtonShowPreviousWords();
 		}
-		lastRowVisible = Math.max(firstRowToLoad - 1, -1);
+		lastRowVisible = Math.max(firstRowToLoad - 1, 0);
 		LoadNextWordsHandler loadNextWordsHandler = listViewManager.getLoadNextWordsHandler();
 		for (int i = 0;
 			 i < getMaximumWordsToShow() && loadNextWordsHandler.shouldContinue(
@@ -439,14 +423,14 @@ public class ListWordsController<Word extends ListElement> {
 				}
 
 				listViewManager.updateRowsPanel();
-				requestFirstTextfieldInPanel();
+				focusFirstTextfieldInPanel();
 
 			}
 		};
 
 	}
 
-	private void requestFirstTextfieldInPanel() {
+	private void focusFirstTextfieldInPanel() {
 		JComponent jPanel = allWordsToRowNumberMap.get(
 				allWordsToRowNumberMap.size() - 1)
 												  .getJPanel();
@@ -521,10 +505,6 @@ public class ListWordsController<Word extends ListElement> {
 							selectedRow.getWrappingPanel()
 									   .getSelectedInput(), moveDirection));
 		}
-	}
-
-	public void toggleEnabledState() {
-		listViewManager.toggleEnabledState();
 	}
 
 	public MainPanel findFirstVisiblePanelInScrollPane() {

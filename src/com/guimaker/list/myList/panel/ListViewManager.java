@@ -190,9 +190,6 @@ public class ListViewManager<Word extends ListElement> {
 		listPanelUpdater.enableButtonLoadPreviousWords();
 	}
 
-	public void toggleEnabledState() {
-		listPanelUpdater.toggleRowsPanelEnabledState();
-	}
 
 	public MainPanel repaintWord(Word word, int rowNumber, JComponent oldPanel,
 			InputGoal customInputGoal, boolean highlighted) {
