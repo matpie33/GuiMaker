@@ -10,33 +10,30 @@ import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.MainPanel;
-import com.guimaker.strings.ExceptionsMessages;
 import com.guimaker.swingUtilities.ProgressUpdater;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.util.List;
 
 public class MyList<Word extends ListElement>
 		implements ObservableList<Word>, InputValidationListener<Word> {
 
-	private DialogWindow parent;
 	private ApplicationChangesManager applicationChangesManager;
 	private ListWordsController<Word> listController;
 	private ListElementInitializer<Word> wordInitializer;
 	private Class listElementClass;
 	private String title;
 	private ListRowCreator<Word> listRowCreator;
-	private MyList<Word> sourceList;
+	private ListPropertySearcher<Word> listPropertySearcher;
 
 	public MyList(ListConfiguration<Word> listConfiguration) {
 		this.listRowCreator = listConfiguration.getListRowCreator();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
-		this.parent = listConfiguration.getDialogWindow();
 		this.wordInitializer = listConfiguration.getListElementInitializer();
 		this.title = listConfiguration.getTitle();
 		listController = new ListWordsController<>(listConfiguration, this);
-
+		listPropertySearcher = new ListPropertySearcher<>(listController,
+				listConfiguration);
 	}
 
 	@Override
@@ -80,7 +77,7 @@ public class MyList<Word extends ListElement>
 		return word != null && listController.add(word, inputGoal, true);
 	}
 
-	public boolean addWord(Word word, InputGoal inputGoal,
+	private boolean addWord(Word word, InputGoal inputGoal,
 			boolean tryToShowWord) {
 		return word != null && listController.add(word, inputGoal,
 				tryToShowWord);
@@ -91,7 +88,7 @@ public class MyList<Word extends ListElement>
 		listController.addWords(words, inputGoal, tryToShowWords, validate);
 	}
 
-	public Word createWord() {
+	private Word createWord() {
 		Word word = wordInitializer.initializeElement();
 		listElementClass = word.getClass();
 		return word;
@@ -106,100 +103,13 @@ public class MyList<Word extends ListElement>
 				clearLastHighlightedWord);
 	}
 
-	private <Property> int findRowNumberBasedOnProperty(
-			ListElementPropertyManager<Property, Word> propertyChecker,
-			Property searchedPropertyValue, MoveDirection searchDirection,
-			boolean displayMessage) {
-
-		int incrementValue = searchDirection.getIncrementValue();
-
-		int rowNumber = 0;
-		boolean shouldContinueSearching;
-		do {
-			if (isRowNumberOutOfRange(rowNumber)) {
-				rowNumber = setRowNumberToTheOtherEndOfList(rowNumber);
-			}
-			else {
-				Word word = listController.getWordInRow(rowNumber);
-				if (propertyChecker.isPropertyFound(searchedPropertyValue,
-						word)) {
-					return rowNumber;
-				}
-			}
-			rowNumber += incrementValue;
-			shouldContinueSearching =
-					rowNumber < listController.getNumberOfWords();
-		}
-		while (shouldContinueSearching);
-
-		if (displayMessage) {
-			parent.showMessageDialog(
-					ExceptionsMessages.WORD_NOT_FOUND_EXCEPTION);
-		}
-
-		return -1;
-	}
-
 	public <Property> Word findRowBasedOnPropertyStartingFromBeginningOfList(
 			ListElementPropertyManager<Property, Word> propertyChecker,
 			Property searchedPropertyValue, MoveDirection searchDirection,
 			boolean displayMessage) {
-		int rowNumber = findRowNumberBasedOnProperty(propertyChecker,
-				searchedPropertyValue, searchDirection, displayMessage);
-		if (rowNumber != -1) {
-			return listController.getWordInRow(rowNumber);
-		}
-		else {
-			return null;
-		}
-
-	}
-
-	public <Property> WordInMyListExistence<Word> doesWordWithPropertyExist(
-			Property property,
-			ListElementPropertyManager<Property, Word> propertyManager,
-			Word wordToExclude) {
-		for (int indexOfWord = 0;
-			 indexOfWord < getWords().size(); indexOfWord++) {
-			Word word = getWords().get(indexOfWord);
-			if (word == wordToExclude) {
-				continue;
-			}
-			if (propertyManager.isPropertyFound(property, word)) {
-				return new WordInMyListExistence<>(true, word, indexOfWord + 1);
-			}
-		}
-		if (sourceList != null) {
-			WordInMyListExistence<Word> wordInSourceListExistence = sourceList.doesWordWithPropertyExist(
-					property, propertyManager, wordToExclude);
-			wordInSourceListExistence.clearRowNumber();
-			return wordInSourceListExistence;
-		}
-		return new WordInMyListExistence<>(false, null, -1);
-	}
-
-	private Word getHighlightedWord() {
-		int highlightedRow = listController.getHighlightedRowNumber();
-		if (highlightedRow < 0) {
-			return null;
-		}
-		Word word = listController.getWordInRow(highlightedRow);
-		return word;
-	}
-
-	private boolean isRowNumberOutOfRange(int rowNumber) {
-		return (rowNumber < 0) || (rowNumber
-				> listController.getNumberOfWords() - 1);
-	}
-
-	private int setRowNumberToTheOtherEndOfList(int rowNumber) {
-		if (rowNumber < 0) {
-			return listController.getNumberOfWords();
-		}
-		if (rowNumber >= listController.getNumberOfWords()) {
-			return -1;
-		}
-		return rowNumber;
+		return listPropertySearcher.findRowBasedOnPropertyStartingFromBeginningOfList(
+				propertyChecker, searchedPropertyValue, searchDirection,
+				displayMessage);
 	}
 
 	public void scrollToBottom() {
@@ -215,7 +125,6 @@ public class MyList<Word extends ListElement>
 	}
 
 	public JPanel getPanel() {
-
 		return listController.getPanel();
 	}
 
@@ -291,10 +200,6 @@ public class MyList<Word extends ListElement>
 		listController.selectPanelBelowOrAboveSelected(MoveDirection.ABOVE);
 	}
 
-	public JTextComponent getSelectedInput() {
-		return getPanelWithSelectedInput().getSelectedInput();
-	}
-
 	public ProgressUpdater getProgressUpdater() {
 		return listController.getProgressUpdater();
 	}
@@ -309,7 +214,6 @@ public class MyList<Word extends ListElement>
 
 	public void updateObservers(Word word,
 			ListElementModificationType modificationType) {
-
 		listController.updateObservers(word, modificationType);
 	}
 
@@ -321,7 +225,6 @@ public class MyList<Word extends ListElement>
 		else {
 			listController.remove(word);
 		}
-
 	}
 
 	@Override
@@ -344,5 +247,13 @@ public class MyList<Word extends ListElement>
 
 	public void showWord(Word word) {
 		listController.showWord(word);
+	}
+
+	public <Property> WordInMyListExistence<Word> doesWordWithPropertyExist(
+			Property propertyNewValue,
+			ListElementPropertyManager<Property, Word> listElementPropertyManager,
+			Word propertyHolder) {
+		return listPropertySearcher.doesWordWithPropertyExist(propertyNewValue,
+				listElementPropertyManager, propertyHolder);
 	}
 }
