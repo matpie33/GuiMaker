@@ -87,32 +87,26 @@ public class ListWordsController<Word extends ListElement> {
 	public boolean add(Word r, InputGoal inputGoal, boolean tryToShowWord,
 			boolean validate) {
 
-		if (r == null) {
+		if (r == null || (validate && isWordDefined(r).exists())) {
 			return false;
 		}
-		boolean valid = !validate || !isWordDefined(r).exists();
-		if (valid) {
-			boolean canNewWordBeDisplayed = canNewWordBeDisplayed();
-			if (tryToShowWord) {
-				if (!canNewWordBeDisplayed) {
-					removeFirstRow();
-					canNewWordBeDisplayed = true;
-					listViewManager.enableButtonShowPreviousWords();
-				}
-			}
-
-			ListRow<Word> newWord = listViewManager.addRow(r,
-					allWordsToRowNumberMap.size() + 1,
-					canNewWordBeDisplayed && tryToShowWord,
-					ListWordsLoadingDirection.NEXT, inputGoal);
-			allWordsToRowNumberMap.add(newWord);
-			if (canNewWordBeDisplayed && tryToShowWord) {
-				lastRowVisible = allWordsToRowNumberMap.size() - 1;
-			}
-
-			return true;
+		boolean canNewWordBeDisplayed = canNewWordBeDisplayed();
+		if (tryToShowWord && !canNewWordBeDisplayed) {
+			removeFirstRow();
+			canNewWordBeDisplayed = true;
+			listViewManager.enableButtonShowPreviousWords();
 		}
-		return false;
+
+		ListRow<Word> newWord = listViewManager.addRow(r,
+				allWordsToRowNumberMap.size() + 1,
+				canNewWordBeDisplayed && tryToShowWord,
+				ListWordsLoadingDirection.NEXT, inputGoal);
+		allWordsToRowNumberMap.add(newWord);
+		if (canNewWordBeDisplayed && tryToShowWord) {
+			lastRowVisible = allWordsToRowNumberMap.size() - 1;
+		}
+
+		return true;
 	}
 
 	private void removeFirstRow() {
