@@ -1,7 +1,6 @@
 package com.guimaker.list.myList;
 
 import com.guimaker.application.ApplicationChangesManager;
-import com.guimaker.application.ApplicationWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.ListWordsLoadingDirection;
@@ -16,14 +15,11 @@ import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.ListRow;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.MainPanel;
-import com.guimaker.strings.Prompts;
 import com.guimaker.swingUtilities.ProgressUpdater;
 import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.Range;
-import com.guimaker.utilities.ThreadUtilities;
 
 import javax.swing.*;
-import javax.swing.FocusManager;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,7 +41,7 @@ public class ListWordsController<Word extends ListElement> {
 	private Pair<MyList, ListElement> parentListAndWord;
 	private boolean finishEditActionRequested;
 	private boolean isInEditMode;
-	private String wordSpecificPrompt;
+
 	private MyList<Word> myList;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
 
@@ -53,7 +49,6 @@ public class ListWordsController<Word extends ListElement> {
 			MyList<Word> myList) {
 		this.myList = myList;
 		this.wordInitializer = listConfiguration.getListElementInitializer();
-		wordSpecificPrompt = listConfiguration.getWordSpecificDeletePrompt();
 		parentListAndWord = listConfiguration.getParentListAndWordContainingThisList();
 		progressUpdater = new ProgressUpdater();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
@@ -280,25 +275,6 @@ public class ListWordsController<Word extends ListElement> {
 		return new WordInMyListExistence<>(false, null, -1);
 	}
 
-	public AbstractAction createDeleteRowAction(Word word) {
-		return new AbstractAction() {
-			private static final long serialVersionUID = 5946111397005824819L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				if (!applicationChangesManager.getApplicationWindow()
-											  .showConfirmDialog(String.format(
-													  Prompts.DELETE_ELEMENT,
-													  wordSpecificPrompt))) {
-					return;
-				}
-				remove(word);
-				applicationChangesManager.save();
-			}
-		};
-	}
-
 	public List<Word> getWordsByHighlight(boolean highlighted) {
 		List<Word> highlightedWords = new ArrayList<>();
 		for (ListRow<Word> word : allWordsToRowNumberMap) {
@@ -403,28 +379,7 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.removeWordsFromRangeInclusive(range);
 	}
 
-	public AbstractAction createActionAddNewWord(InputGoal inputGoal) {
-		return new AbstractAction() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				add(wordInitializer.initializeElement(), inputGoal, true);
-				if (parentListAndWord != null) {
-					parentListAndWord.getLeft()
-									 .updateObservers(
-											 parentListAndWord.getRight(),
-											 ListElementModificationType.EDIT);
-				}
-
-				listViewManager.updateRowsPanel();
-				focusFirstTextfieldInPanel();
-
-			}
-		};
-
-	}
-
-	private void focusFirstTextfieldInPanel() {
+	public void focusFirstTextfieldInPanel() {
 		JComponent jPanel = allWordsToRowNumberMap.get(
 				allWordsToRowNumberMap.size() - 1)
 												  .getJPanel();
@@ -524,37 +479,11 @@ public class ListWordsController<Word extends ListElement> {
 		return progressUpdater;
 	}
 
-	public AbstractAction createEditWordAction(Word word) {
-		return new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				isInEditMode = true;
-				repaint(word, InputGoal.EDIT_TEMPORARILY);
-			}
-		};
+	public void setInEditMode(boolean inEditMode) {
+		isInEditMode = inEditMode;
 	}
 
-	public AbstractAction createFinishEditAction(Word word) {
-		return new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				isInEditMode = false;
-				Component focusOwner = FocusManager.getCurrentManager()
-												   .getFocusOwner();
-				if (focusOwner instanceof JTextComponent) {
-					KeyboardFocusManager.getCurrentKeyboardFocusManager()
-										.clearGlobalFocusOwner();
-					finishEditActionRequested = true;
-				}
-				else {
-					repaintWordAndHighlightIfNeeded(word);
-				}
-
-			}
-		};
-	}
-
-	private void repaintWordAndHighlightIfNeeded(Word word) {
+	public void repaintWordAndHighlightIfNeeded(Word word) {
 		repaint(word);
 		if (getWordsByHighlight(true).contains(word)) {
 			highlightRowAndScroll(get0BasedRowNumberOfWord(word), false);
@@ -590,6 +519,11 @@ public class ListWordsController<Word extends ListElement> {
 		listRow.setPanel(panel);
 	}
 
+	public void setFinishEditActionRequested(
+			boolean finishEditActionRequested) {
+		this.finishEditActionRequested = finishEditActionRequested;
+	}
+
 	public <WordProperty> void inputValidated(
 			PropertyPostValidationData<WordProperty, Word> postValidationData) {
 		if (finishEditActionRequested && postValidationData.isValid()) {
@@ -607,31 +541,8 @@ public class ListWordsController<Word extends ListElement> {
 		return listViewManager.isFilterInputFocused();
 	}
 
-	public AbstractAction createActionClearFilter() {
-		return new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ThreadUtilities.callOnOtherThread(
-						() -> showWordsStartingFromRow(
-								getStartOfRangeOfDisplayedWords()));
-			}
-		};
-	}
-
-	private int getStartOfRangeOfDisplayedWords() {
+	public int getStartOfRangeOfDisplayedWords() {
 		return lastRowVisible - MAXIMUM_WORDS_TO_SHOW + 2;
-	}
-
-	public AbstractAction createActionShowInsertWordDialog() {
-		return new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ApplicationWindow applicationWindow = applicationChangesManager.getApplicationWindow();
-				applicationWindow.showInsertWordDialog(myList,
-						applicationWindow.getApplicationConfiguration()
-										 .getInsertWordPanelPositioner());
-			}
-		};
 	}
 
 	public boolean isLastRowVisible() {
@@ -644,5 +555,9 @@ public class ListWordsController<Word extends ListElement> {
 		showNextWord();
 		lastRowVisible--;
 
+	}
+
+	public MyList<Word> getMyList() {
+		return myList;
 	}
 }

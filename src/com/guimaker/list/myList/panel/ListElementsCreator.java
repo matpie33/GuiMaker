@@ -2,8 +2,10 @@ package com.guimaker.list.myList.panel;
 
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.InputGoal;
+import com.guimaker.enums.KeyModifiers;
 import com.guimaker.list.ListElement;
-import com.guimaker.list.myList.ListWordsController;
+import com.guimaker.model.CommonListElements;
+import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.options.ScrollPaneOptions;
@@ -11,9 +13,6 @@ import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.HotkeysDescriptions;
-import com.guimaker.model.CommonListElements;
-import com.guimaker.model.HotkeyWrapper;
-import com.guimaker.enums.KeyModifiers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,13 +20,13 @@ import java.awt.event.KeyEvent;
 
 public class ListElementsCreator<Word extends ListElement> {
 
-	private ListWordsController<Word> listWordsController;
 	private ListPanel<Word> listPanel;
+	private ListActionsCreator<Word> listActionsCreator;
 
-	public ListElementsCreator(ListWordsController<Word> listWordsController,
-			ListPanel<Word> listPanel) {
-		this.listWordsController = listWordsController;
+	public ListElementsCreator(ListPanel<Word> listPanel,
+			ListActionsCreator<Word> listActionsCreator) {
 		this.listPanel = listPanel;
+		this.listActionsCreator = listActionsCreator;
 	}
 
 	public AbstractButton createButtonLoadWords(String buttonName,
@@ -43,26 +42,26 @@ public class ListElementsCreator<Word extends ListElement> {
 		return GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						ButtonsNames.REMOVE_ROW),
-				listWordsController.createDeleteRowAction(word));
+				listActionsCreator.createDeleteRowAction(word));
 	}
 
 	public AbstractButton createButtonAddRow(InputGoal inputGoal) {
 		return GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.ADD_ROW),
-				listWordsController.createActionAddNewWord(inputGoal));
+				listActionsCreator.createActionAddNewWord(inputGoal));
 	}
 
 	private AbstractButton createButtonEditWord(Word word) {
 		return GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.EDIT),
-				listWordsController.createEditWordAction(word));
+				listActionsCreator.createEditWordAction(word));
 	}
 
 	private AbstractButton createButtonFinishEditing(Word word) {
 		return GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						ButtonsNames.FINISH_EDITING),
-				listWordsController.createFinishEditAction(word),
+				listActionsCreator.createFinishEditAction(word),
 				new HotkeyWrapper(KeyEvent.VK_ENTER));
 	}
 
@@ -88,9 +87,8 @@ public class ListElementsCreator<Word extends ListElement> {
 		String hotkeyDescription = HotkeysDescriptions.ADD_WORD;
 		int keyEvent = KeyEvent.VK_I;
 		//TODO add in my list a parameter with hotkeys mapping for add/search panels
-		return listPanel.createButtonWithHotkey(KeyModifiers.CONTROL,
-				keyEvent,
-				listWordsController.createActionShowInsertWordDialog(), name,
+		return listPanel.createButtonWithHotkey(KeyModifiers.CONTROL, keyEvent,
+				listActionsCreator.createActionShowInsertWordDialog(), name,
 				hotkeyDescription);
 
 	}
@@ -99,7 +97,7 @@ public class ListElementsCreator<Word extends ListElement> {
 		return GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						ButtonsNames.CLEAR_FILTER),
-				listWordsController.createActionClearFilter());
+				listActionsCreator.createActionClearFilter());
 	}
 
 	public JScrollPane createWrappingScrollPane(MainPanel rowsPanel) {
