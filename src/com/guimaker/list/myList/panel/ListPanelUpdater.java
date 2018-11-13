@@ -80,6 +80,10 @@ public class ListPanelUpdater {
 			@Override
 			public void run() {
 				// TODO swing utilities
+				listConfiguration.getApplicationChangesManager()
+								 .getApplicationWindow()
+								 .getContainer()
+								 .revalidate();
 				JScrollBar scrollBar = listPanel.getScrollPane()
 												.getVerticalScrollBar();
 				scrollBar.setValue(scrollBar.getMaximum());
