@@ -1,6 +1,5 @@
 package com.guimaker.list.myList;
 
-import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.ListWordsLoadingDirection;
@@ -29,7 +28,6 @@ import java.util.List;
 public class ListWordsController<Word extends ListElement> {
 	private List<ListRow<Word>> allWordsToRowNumberMap = new ArrayList<>();
 	private ListViewManager<Word> listViewManager;
-	private ApplicationChangesManager applicationChangesManager;
 	private final int MAXIMUM_WORDS_TO_SHOW = 201;
 	private int lastRowVisible = -1;
 	private final List<LoadWordsForFoundWord> strategiesForFoundWord = new ArrayList<>();
@@ -51,7 +49,6 @@ public class ListWordsController<Word extends ListElement> {
 		this.wordInitializer = listConfiguration.getListElementInitializer();
 		parentListAndWord = listConfiguration.getParentListAndWordContainingThisList();
 		progressUpdater = new ProgressUpdater();
-		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listViewManager = new ListViewManager<>(listConfiguration, this);
 		initializeFoundWordStrategies();
 	}
@@ -230,19 +227,6 @@ public class ListWordsController<Word extends ListElement> {
 				break;
 			}
 		}
-	}
-
-	public Integer getHighlightedRowNumber() {
-		return currentlyHighlightedWord != null ?
-				allWordsToRowNumberMap.stream()
-									  .filter(e -> e.equals(
-											  currentlyHighlightedWord))
-									  .map(e -> allWordsToRowNumberMap.indexOf(
-											  e))
-									  .findFirst()
-									  .orElseThrow(
-											  IllegalArgumentException::new) :
-				-1;
 	}
 
 	public void scrollToBottom() {

@@ -122,7 +122,7 @@ public class ListPanelUpdater {
 				 .updateView();
 	}
 
-	public void loadWords(ListWordsLoadingDirection loadingDirection,
+	public void addWord(ListWordsLoadingDirection loadingDirection,
 			AbstractSimpleRow abstractSimpleRow) {
 		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)) {
 			listPanel.getRowsPanel()

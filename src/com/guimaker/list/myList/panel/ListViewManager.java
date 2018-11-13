@@ -84,7 +84,7 @@ public class ListViewManager<Word extends ListElement> {
 			rowPanel = listRow.getRowPanel();
 			AbstractSimpleRow abstractSimpleRow = SimpleRowBuilder.createRow(
 					FillType.HORIZONTAL, Anchor.NORTH, rowPanel.getPanel());
-			listPanelUpdater.loadWords(loadingDirection, abstractSimpleRow);
+			listPanelUpdater.addWord(loadingDirection, abstractSimpleRow);
 		}
 		else {
 			listPanelUpdater.enableButtonLoadNextWords();

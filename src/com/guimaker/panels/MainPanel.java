@@ -198,19 +198,18 @@ public class MainPanel {
 			panel.setBorder(
 					borderToUse != null ? borderToUse : row.getBorder());
 		}
-		if (panel instanceof JPanel  && (
-				rowColor != null || row.getColor() != null)) {
+		if (panel instanceof JPanel && (rowColor != null
+				|| row.getColor() != null)) {
 			panel.setBackground(
 					row.getColor() != null ? row.getColor() : rowColor);
 			panel.setOpaque(opaque && row.isOpaque());
 		}
-		if (!opaqueRows){
+		if (!opaqueRows) {
 			panel.setOpaque(false);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
 		return panel;
 	}
-
 
 	private Map<JComponent, Integer> mapComponentToFilling(
 			AbstractSimpleRow row) {
@@ -783,10 +782,6 @@ public class MainPanel {
 												  .equals(columnPanelCreator.getPanel()) ?
 				columnPanelCreator.getPanel() :
 				panel;
-	}
-
-	public JPanel getRootPanel() {
-		return panel;
 	}
 
 	public void removeRowInAColumnWay(int rowNumber) {
