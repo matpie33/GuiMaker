@@ -1,18 +1,22 @@
 package com.guimaker.list.loadAdditionalWordsHandling;
 
 import com.guimaker.list.myList.ListWordsController;
+import com.guimaker.list.myList.ListWordsHolder;
 import com.guimaker.utilities.Range;
 
 public class FoundWordOutsideRangeStrategy implements LoadWordsForFoundWord {
 
+	private ListWordsHolder listWordsHolder;
 	private int maximumWordsDisplayed;
 	private ListWordsController listWordsController;
 	private int foundWordRowNumber;
 
 	public FoundWordOutsideRangeStrategy(int maximumWordsDisplayed,
-			ListWordsController listWordsController) {
+			ListWordsController listWordsController,
+			ListWordsHolder listWordsHolder) {
 		this.maximumWordsDisplayed = maximumWordsDisplayed;
 		this.listWordsController = listWordsController;
+		this.listWordsHolder = listWordsHolder;
 	}
 
 	@Override
@@ -32,7 +36,7 @@ public class FoundWordOutsideRangeStrategy implements LoadWordsForFoundWord {
 	public void execute() {
 		int indexOfFirstWordToLoad;
 		int lastWordMinusMaximumWordsToShow =
-				listWordsController.getNumberOfWords() - maximumWordsDisplayed;
+				listWordsHolder.getNumberOfWords() - maximumWordsDisplayed;
 		if (foundWordRowNumber < lastWordMinusMaximumWordsToShow) {
 			indexOfFirstWordToLoad = foundWordRowNumber;
 		}

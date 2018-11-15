@@ -57,7 +57,8 @@ public class ListFilteringController<Word extends ListElement> {
 										.getText();
 		ListElementPropertyManager<?, Word> filterInputPropertyManager = listFilteringPanel.getPropertyManagerForInput();
 		SortedMap<FilteredWordMatch, ListRow<Word>> words = WordSearching.filterWords(
-				listWordsController.getWordsWithDetails(), text,
+				listWordsController.getListWordsHolder().getWordsWithDetails
+						(), text,
 				filterInputPropertyManager);
 		listViewManager.clear();
 
@@ -68,7 +69,7 @@ public class ListFilteringController<Word extends ListElement> {
 			}
 			int rowNumber = listRow.getRowNumber() - 1;
 			listRow.setPanel(listViewManager.addRow(
-					listWordsController.getWordInRow(rowNumber), newRowNumber++,
+					listWordsController.getListWordsHolder().getWordInRow(rowNumber), newRowNumber++,
 					true, ListWordsLoadingDirection.NEXT,
 					listViewManager.getInputGoal())
 											.getWrappingPanel());

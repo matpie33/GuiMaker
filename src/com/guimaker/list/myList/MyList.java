@@ -1,7 +1,6 @@
 package com.guimaker.list.myList;
 
 import com.guimaker.application.ApplicationChangesManager;
-import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.MoveDirection;
@@ -18,6 +17,7 @@ import java.util.List;
 public class MyList<Word extends ListElement>
 		implements ObservableList<Word>, InputValidationListener<Word> {
 
+	private ListWordsHolder<Word> listWordsHolder;
 	private ApplicationChangesManager applicationChangesManager;
 	private ListWordsController<Word> listController;
 	private ListElementInitializer<Word> wordInitializer;
@@ -31,8 +31,10 @@ public class MyList<Word extends ListElement>
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		this.wordInitializer = listConfiguration.getListElementInitializer();
 		this.title = listConfiguration.getTitle();
-		listController = new ListWordsController<>(listConfiguration, this);
-		listPropertySearcher = new ListPropertySearcher<>(listController,
+		listWordsHolder = new ListWordsHolder<>();
+		listController = new ListWordsController<>(listConfiguration, this,
+				listWordsHolder);
+		listPropertySearcher = new ListPropertySearcher<>(listWordsHolder,
 				listConfiguration);
 	}
 
@@ -129,7 +131,7 @@ public class MyList<Word extends ListElement>
 	}
 
 	public int getNumberOfWords() {
-		return listController.getNumberOfWords();
+		return listWordsHolder.getNumberOfWords();
 	}
 
 	public boolean isEmpty() {
@@ -137,23 +139,23 @@ public class MyList<Word extends ListElement>
 	}
 
 	public List<Word> getWords() {
-		return listController.getWords();
+		return listWordsHolder.getWords();
 	}
 
 	public int get1BasedRowNumberOfWord(Word word) {
-		return listController.get0BasedRowNumberOfWord(word) + 1;
+		return listWordsHolder.get0BasedRowNumberOfWord(word) + 1;
 	}
 
 	public Word getWordInRow(int rowNumber1Based) {
-		return listController.getWordInRow(rowNumber1Based - 1);
+		return listWordsHolder.getWordInRow(rowNumber1Based - 1);
 	}
 
 	public List<Word> getHighlightedWords() {
-		return listController.getWordsByHighlight(true);
+		return listWordsHolder.getWordsByHighlight(true);
 	}
 
 	public List<Word> getNotHighlightedWords() {
-		return listController.getWordsByHighlight(false);
+		return listWordsHolder.getWordsByHighlight(false);
 	}
 
 	public int getMaximumDisplayedWords() {
@@ -169,7 +171,7 @@ public class MyList<Word extends ListElement>
 	}
 
 	public boolean hasSelectedInput() {
-		return listController.getRowWithSelectedInput() != null;
+		return listWordsHolder.getRowWithSelectedInput() != null;
 	}
 
 	public MainPanel getPanelWithSelectedInput() {

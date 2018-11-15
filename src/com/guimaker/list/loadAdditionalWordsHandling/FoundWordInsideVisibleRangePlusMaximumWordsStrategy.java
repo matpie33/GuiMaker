@@ -1,6 +1,7 @@
 package com.guimaker.list.loadAdditionalWordsHandling;
 
 import com.guimaker.list.myList.ListWordsController;
+import com.guimaker.list.myList.ListWordsHolder;
 import com.guimaker.utilities.Range;
 
 public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy
@@ -14,15 +15,18 @@ public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy
 	private ListWordsController listWordsController;
 	private LoadNextWordsHandler loadNextWordsHandler;
 	private LoadPreviousWordsHandler loadPreviousWordsHandler;
+	private ListWordsHolder listWordsHolder;
 
 	public FoundWordInsideVisibleRangePlusMaximumWordsStrategy(
 			int maximumWordsDisplayed, ListWordsController listWordsController,
 			LoadPreviousWordsHandler loadPreviousWordsHandler,
-			LoadNextWordsHandler loadNextWordsHandler) {
+			LoadNextWordsHandler loadNextWordsHandler,
+			ListWordsHolder listWordsHolder) {
 		this.maximumWordsDisplayed = maximumWordsDisplayed;
 		this.listWordsController = listWordsController;
 		this.loadNextWordsHandler = loadNextWordsHandler;
 		this.loadPreviousWordsHandler = loadPreviousWordsHandler;
+		this.listWordsHolder = listWordsHolder;
 	}
 
 	@Override
@@ -56,6 +60,6 @@ public class FoundWordInsideVisibleRangePlusMaximumWordsStrategy
 		listWordsController.removeRowsFromRangeInclusive(
 				loadWordsHandler.getRangeOfWordsToRemove(numberOfWordsToLoad));
 		listWordsController.addSuccessiveWords(loadWordsHandler,
-				numberOfWordsToLoad, listWordsController.getNumberOfWords());
+				numberOfWordsToLoad, listWordsHolder.getNumberOfWords());
 	}
 }

@@ -7,7 +7,6 @@ import com.guimaker.enums.MoveDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementInitializer;
 import com.guimaker.list.ListObserver;
-import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.list.loadAdditionalWordsHandling.*;
 import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
@@ -26,7 +25,7 @@ import java.util.*;
 import java.util.List;
 
 public class ListWordsController<Word extends ListElement> {
-	private List<ListRow<Word>> allWordsToRowNumberMap = new ArrayList<>();
+
 	private ListViewManager<Word> listViewManager;
 	private final int MAXIMUM_WORDS_TO_SHOW = 201;
 	private int lastRowVisible = -1;
@@ -39,18 +38,25 @@ public class ListWordsController<Word extends ListElement> {
 	private Pair<MyList, ListElement> parentListAndWord;
 	private boolean finishEditActionRequested;
 	private boolean isInEditMode;
+	private ListWordsHolder<Word> listWordsHolder;
 
 	private MyList<Word> myList;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
 
 	public ListWordsController(ListConfiguration<Word> listConfiguration,
-			MyList<Word> myList) {
+			MyList<Word> myList, ListWordsHolder<Word> listWordsHolder) {
 		this.myList = myList;
 		this.wordInitializer = listConfiguration.getListElementInitializer();
 		parentListAndWord = listConfiguration.getParentListAndWordContainingThisList();
 		progressUpdater = new ProgressUpdater();
 		listViewManager = new ListViewManager<>(listConfiguration, this);
+		this.listWordsHolder = listWordsHolder;
+
 		initializeFoundWordStrategies();
+	}
+
+	public ListWordsHolder<Word> getListWordsHolder() {
+		return listWordsHolder;
 	}
 
 	public ListElementInitializer<Word> getWordInitializer() {
@@ -63,9 +69,11 @@ public class ListWordsController<Word extends ListElement> {
 				new FoundWordInsideVisibleRangePlusMaximumWordsStrategy(
 						MAXIMUM_WORDS_TO_SHOW, this,
 						listViewManager.getLoadPreviousWordsHandler(),
-						listViewManager.getLoadNextWordsHandler()));
+						listViewManager.getLoadNextWordsHandler(),
+						listWordsHolder));
 		strategiesForFoundWord.add(
-				new FoundWordOutsideRangeStrategy(MAXIMUM_WORDS_TO_SHOW, this));
+				new FoundWordOutsideRangeStrategy(MAXIMUM_WORDS_TO_SHOW, this,
+						listWordsHolder));
 	}
 
 	public int getMaximumWordsToShow() {
@@ -79,7 +87,8 @@ public class ListWordsController<Word extends ListElement> {
 	public boolean add(Word r, InputGoal inputGoal, boolean tryToShowWord,
 			boolean validate) {
 
-		if (r == null || (validate && isWordDefined(r).exists())) {
+		if (r == null || (validate && listWordsHolder.isWordDefined(r)
+													 .exists())) {
 			return false;
 		}
 		boolean canNewWordBeDisplayed = canNewWordBeDisplayed();
@@ -90,19 +99,19 @@ public class ListWordsController<Word extends ListElement> {
 		}
 
 		ListRow<Word> newWord = listViewManager.addRow(r,
-				allWordsToRowNumberMap.size() + 1,
+				listWordsHolder.getNumberOfWords() + 1,
 				canNewWordBeDisplayed && tryToShowWord,
 				ListWordsLoadingDirection.NEXT, inputGoal);
-		allWordsToRowNumberMap.add(newWord);
+		listWordsHolder.add(newWord);
 		if (canNewWordBeDisplayed && tryToShowWord) {
-			lastRowVisible = allWordsToRowNumberMap.size() - 1;
+			lastRowVisible = listWordsHolder.getNumberOfWords() - 1;
 		}
 
 		return true;
 	}
 
 	private void removeFirstRow() {
-		ListRow<Word> rowToRemove = allWordsToRowNumberMap.get(
+		ListRow<Word> rowToRemove = listWordsHolder.getWordInRow0Based(
 				getFirstVisibleRowNumber());
 		listViewManager.removeRow(rowToRemove.getJPanel());
 		rowToRemove.setPanel(null);
@@ -128,68 +137,32 @@ public class ListWordsController<Word extends ListElement> {
 					ListElementModificationType.DELETE));
 		}
 
-		ListRow<Word> listRow = findListRowContainingWord(word);
+		ListRow<Word> listRow = listWordsHolder.findListRowContainingWord(word);
 		if (listRow == null) {
 			return;
 		}
 		listViewManager.removeRow(listRow.getJPanel());
-		int indexOfRemovedWord = allWordsToRowNumberMap.indexOf(listRow);
-		allWordsToRowNumberMap.remove(listRow);
+		int indexOfRemovedWord = listWordsHolder.getIndexOfWord(listRow);
+		listWordsHolder.remove(listRow);
 		updateRowNumbers(indexOfRemovedWord);
 		if (currentlyHighlightedWord == listRow) {
 			currentlyHighlightedWord = null;
 		}
-		if (allWordsToRowNumberMap.isEmpty()) {
+		if (listWordsHolder.hasNoWords()) {
 			listViewManager.addElementsForEmptyList();
 		}
 
 	}
 
 	private void updateRowNumbers(int startingIndex) {
-		for (int i = startingIndex; i < allWordsToRowNumberMap.size(); i++) {
-			ListRow<Word> listRow = allWordsToRowNumberMap.get(i);
+		for (int i = startingIndex;
+			 i < listWordsHolder.getNumberOfWords(); i++) {
+			ListRow<Word> listRow = listWordsHolder.getWordInRow0Based(i);
 			listRow.decrementRowNumber();
 			JLabel label = listRow.getIndexLabel();
 			label.setText(listViewManager.createTextForRowNumber(i + 1));
 		}
 
-	}
-
-	private ListRow<Word> findListRowContainingWord(Word r) {
-		for (int i = 0; i < allWordsToRowNumberMap.size(); i++) {
-			Word word = allWordsToRowNumberMap.get(i)
-											  .getWord();
-			if (word.equals(r)) {
-				return allWordsToRowNumberMap.get(i);
-			}
-		}
-		return null;
-	}
-
-	public List<Word> getWords() {
-		List<Word> words = new ArrayList<>();
-		for (ListRow<Word> listRow : allWordsToRowNumberMap) {
-			words.add(listRow.getWord());
-		}
-		return words;
-	}
-
-	public List<ListRow<Word>> getWordsWithDetails() {
-		List<ListRow<Word>> listRows = new ArrayList<>();
-		for (ListRow<Word> listRow : allWordsToRowNumberMap) {
-			listRows.add(listRow);
-		}
-		return listRows;
-
-	}
-
-	public int getNumberOfWords() {
-		return allWordsToRowNumberMap.size();
-	}
-
-	public Word getWordInRow(int rowNumber1Based) {
-		return allWordsToRowNumberMap.get(rowNumber1Based)
-									 .getWord();
 	}
 
 	public void highlightRowAndScroll(int rowNumber,
@@ -198,7 +171,7 @@ public class ListWordsController<Word extends ListElement> {
 			return;
 		}
 		loadWordsIfNecessary(rowNumber);
-		ListRow<Word> foundWord = allWordsToRowNumberMap.get(rowNumber);
+		ListRow<Word> foundWord = listWordsHolder.getWordInRow0Based(rowNumber);
 		if (!foundWord.isShowing()) {
 			return;
 		}
@@ -212,7 +185,7 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public void clearHighlightedWords() {
-		for (ListRow<Word> listRow : allWordsToRowNumberMap) {
+		for (ListRow<Word> listRow : listWordsHolder.getWordsWithDetails()) {
 			if (listRow.isHighlighted()) {
 				listViewManager.clearHighlightedRow(listRow.getJPanel());
 			}
@@ -230,7 +203,7 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public void scrollToBottom() {
-		loadWordsIfNecessary(allWordsToRowNumberMap.size() - 1);
+		loadWordsIfNecessary(listWordsHolder.getNumberOfWords() - 1);
 		listViewManager.scrollToBottom();
 	}
 
@@ -239,34 +212,9 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public void clear() {
-		allWordsToRowNumberMap.clear();
+		listWordsHolder.clearWords();
 		listViewManager.clear();
 		lastRowVisible = 0;
-	}
-
-	private WordInMyListExistence<Word> isWordDefined(Word word) {
-		if (word.isEmpty()) {
-			return new WordInMyListExistence<>(false, null, 0);
-		}
-		for (int i = 0; i < allWordsToRowNumberMap.size(); i++) {
-			ListRow<Word> listRow = allWordsToRowNumberMap.get(i);
-			if (listRow.getWord()
-					   .equals(word)) {
-				return new WordInMyListExistence<>(true, listRow.getWord(),
-						i + 1);
-			}
-		}
-		return new WordInMyListExistence<>(false, null, -1);
-	}
-
-	public List<Word> getWordsByHighlight(boolean highlighted) {
-		List<Word> highlightedWords = new ArrayList<>();
-		for (ListRow<Word> word : allWordsToRowNumberMap) {
-			if (word.isHighlighted() == highlighted) {
-				highlightedWords.add(word.getWord());
-			}
-		}
-		return highlightedWords;
 	}
 
 	public void scrollToTop() {
@@ -304,7 +252,7 @@ public class ListWordsController<Word extends ListElement> {
 		int i = 0;
 		recalculateLastRowVisible(loadWordsHandler, numberOfListRows);
 		while (i < numberOfElementsToAdd && loadWordsHandler.shouldContinue(
-				lastRowVisible, allWordsToRowNumberMap.size())) {
+				lastRowVisible, listWordsHolder.getNumberOfWords())) {
 			showNextWord();
 			i++;
 		}
@@ -329,14 +277,15 @@ public class ListWordsController<Word extends ListElement> {
 
 	private void showNextWord() {
 
-		ListRow<Word> wordListRow = allWordsToRowNumberMap.get(lastRowVisible);
+		ListRow<Word> wordListRow = listWordsHolder.getWordInRow0Based(
+				lastRowVisible);
 		ListRow<Word> visibleRow = listViewManager.addRow(wordListRow.getWord(),
 				lastRowVisible + 1, true, ListWordsLoadingDirection.NEXT,
 				listViewManager.getInputGoal());
 		if (wordListRow.isHighlighted()) {
 			listViewManager.highlightRow(visibleRow.getJPanel());
 		}
-		allWordsToRowNumberMap.set(lastRowVisible, visibleRow);
+		listWordsHolder.setWordInRow0Based(lastRowVisible, visibleRow);
 		lastRowVisible++;
 	}
 
@@ -349,7 +298,7 @@ public class ListWordsController<Word extends ListElement> {
 		LoadNextWordsHandler loadNextWordsHandler = listViewManager.getLoadNextWordsHandler();
 		for (int i = 0;
 			 i < getMaximumWordsToShow() && loadNextWordsHandler.shouldContinue(
-					 lastRowVisible, allWordsToRowNumberMap.size()); i++) {
+					 lastRowVisible, listWordsHolder.getNumberOfWords()); i++) {
 			showNextWord();
 			//TODO do not pass around load words handler, use some enum: next/previous word
 			progressUpdater.updateProgress();
@@ -364,9 +313,9 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public void focusFirstTextfieldInPanel() {
-		JComponent jPanel = allWordsToRowNumberMap.get(
-				allWordsToRowNumberMap.size() - 1)
-												  .getJPanel();
+		JComponent jPanel = listWordsHolder.getWordInRow0Based(
+				listWordsHolder.getNumberOfWords() - 1)
+										   .getJPanel();
 		if (jPanel.getComponents().length == 1
 				&& jPanel.getComponents()[0] instanceof JPanel) {
 			JPanel panel = (JPanel) jPanel.getComponents()[0];
@@ -380,7 +329,7 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public MainPanel getPanelWithSelectedInput() {
-		ListRow<Word> rowWithSelectedInput = getRowWithSelectedInput();
+		ListRow<Word> rowWithSelectedInput = listWordsHolder.getRowWithSelectedInput();
 		if (rowWithSelectedInput != null) {
 			return rowWithSelectedInput.getWrappingPanel();
 		}
@@ -392,27 +341,17 @@ public class ListWordsController<Word extends ListElement> {
 	public void addSwitchBetweenInputsFailListener(
 			SwitchBetweenInputsFailListener listener) {
 		switchBetweenInputsFailListeners.add(listener);
-		for (ListRow<Word> listRow : allWordsToRowNumberMap) {
+		for (ListRow<Word> listRow : listWordsHolder.getWordsWithDetails()) {
 			listRow.getWrappingPanel()
 				   .addSwitchBetweenInputsFailedListener(listener);
 		}
-	}
-
-	public ListRow<Word> getRowWithSelectedInput() {
-		for (ListRow<Word> listRow : allWordsToRowNumberMap) {
-			if (listRow.getWrappingPanel()
-					   .hasSelectedInput()) {
-				return listRow;
-			}
-		}
-		return null;
 	}
 
 	public void selectPanelBelowOrAboveSelected(MoveDirection moveDirection) {
 		//TODO this should also be handled in main panel in his selection manager
 		// -> in order for this to be possible, all list rows should be contained in one
 		// main panel, currently for each row theres new main panel created
-		ListRow<Word> selectedRow = getRowWithSelectedInput();
+		ListRow<Word> selectedRow = listWordsHolder.getRowWithSelectedInput();
 		if (selectedRow == null) {
 			MainPanel firstVisiblePanel = findFirstVisiblePanelInScrollPane();
 			firstVisiblePanel.selectNextInputInSameRow();
@@ -422,7 +361,7 @@ public class ListWordsController<Word extends ListElement> {
 		int columnNumber = selectedRow.getWrappingPanel()
 									  .getSelectedInputIndex();
 		MainPanel panelBelowOrAbove = null;
-		for (ListRow<Word> listRow : allWordsToRowNumberMap) {
+		for (ListRow<Word> listRow : listWordsHolder.getWordsWithDetails()) {
 			if (listRow.getRowNumber() == rowNumberOfSelectedPanel
 					+ moveDirection.getIncrementValue()) {
 				panelBelowOrAbove = listRow.getWrappingPanel();
@@ -441,7 +380,7 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public MainPanel findFirstVisiblePanelInScrollPane() {
-		for (ListRow<Word> row : allWordsToRowNumberMap) {
+		for (ListRow<Word> row : listWordsHolder.getWordsWithDetails()) {
 			MainPanel wrappingPanel = row.getWrappingPanel();
 			if (!wrappingPanel.getPanel()
 							  .getVisibleRect()
@@ -469,13 +408,11 @@ public class ListWordsController<Word extends ListElement> {
 
 	public void repaintWordAndHighlightIfNeeded(Word word) {
 		repaint(word);
-		if (getWordsByHighlight(true).contains(word)) {
-			highlightRowAndScroll(get0BasedRowNumberOfWord(word), false);
+		if (listWordsHolder.getWordsByHighlight(true)
+						   .contains(word)) {
+			highlightRowAndScroll(
+					listWordsHolder.get0BasedRowNumberOfWord(word), false);
 		}
-	}
-
-	public int get0BasedRowNumberOfWord(Word word) {
-		return getWords().indexOf(word);
 	}
 
 	public void addObserver(ListObserver<Word> listObserver) {
@@ -492,7 +429,7 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public void repaint(Word word, InputGoal inputGoal) {
-		ListRow<Word> listRow = findListRowContainingWord(word);
+		ListRow<Word> listRow = listWordsHolder.findListRowContainingWord(word);
 		if (listRow == null || !listRow.isShowing()) {
 			return;
 		}
@@ -530,12 +467,12 @@ public class ListWordsController<Word extends ListElement> {
 	}
 
 	public boolean isLastRowVisible() {
-		return lastRowVisible == allWordsToRowNumberMap.size() - 1;
+		return lastRowVisible == listWordsHolder.getNumberOfWords() - 1;
 	}
 
 	public void showWord(Word word) {
 		listViewManager.clear();
-		lastRowVisible = get0BasedRowNumberOfWord(word);
+		lastRowVisible = listWordsHolder.get0BasedRowNumberOfWord(word);
 		showNextWord();
 		lastRowVisible--;
 
@@ -544,4 +481,5 @@ public class ListWordsController<Word extends ListElement> {
 	public MyList<Word> getMyList() {
 		return myList;
 	}
+
 }

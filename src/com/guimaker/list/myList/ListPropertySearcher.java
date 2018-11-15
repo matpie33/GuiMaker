@@ -8,12 +8,12 @@ import com.guimaker.strings.ExceptionsMessages;
 
 public class ListPropertySearcher<Word extends ListElement> {
 
-	private ListWordsController<Word> listController;
+	private ListWordsHolder<Word> listWordsHolder;
 	private ListConfiguration<Word> listConfiguration;
 
-	public ListPropertySearcher(ListWordsController<Word> listController,
+	public ListPropertySearcher(ListWordsHolder<Word> listWordsHolder,
 			ListConfiguration<Word> listConfiguration) {
-		this.listController = listController;
+		this.listWordsHolder = listWordsHolder;
 		this.listConfiguration = listConfiguration;
 	}
 
@@ -31,7 +31,7 @@ public class ListPropertySearcher<Word extends ListElement> {
 				rowNumber = setRowNumberToTheOtherEndOfList(rowNumber);
 			}
 			else {
-				Word word = listController.getWordInRow(rowNumber);
+				Word word = listWordsHolder.getWordInRow(rowNumber);
 				if (propertyChecker.isPropertyFound(searchedPropertyValue,
 						word)) {
 					return rowNumber;
@@ -39,7 +39,7 @@ public class ListPropertySearcher<Word extends ListElement> {
 			}
 			rowNumber += incrementValue;
 			shouldContinueSearching =
-					rowNumber < listController.getNumberOfWords();
+					rowNumber < listWordsHolder.getNumberOfWords();
 		}
 		while (shouldContinueSearching);
 
@@ -55,14 +55,14 @@ public class ListPropertySearcher<Word extends ListElement> {
 
 	private boolean isRowNumberOutOfRange(int rowNumber) {
 		return (rowNumber < 0) || (rowNumber
-				> listController.getNumberOfWords() - 1);
+				> listWordsHolder.getNumberOfWords() - 1);
 	}
 
 	private int setRowNumberToTheOtherEndOfList(int rowNumber) {
 		if (rowNumber < 0) {
-			return listController.getNumberOfWords();
+			return listWordsHolder.getNumberOfWords();
 		}
-		if (rowNumber >= listController.getNumberOfWords()) {
+		if (rowNumber >= listWordsHolder.getNumberOfWords()) {
 			return -1;
 		}
 		return rowNumber;
@@ -73,8 +73,8 @@ public class ListPropertySearcher<Word extends ListElement> {
 			ListElementPropertyManager<Property, Word> propertyManager,
 			Word wordToExclude) {
 		for (int indexOfWord = 0;
-			 indexOfWord < listController.getWords().size(); indexOfWord++) {
-			Word word = listController.getWords().get(indexOfWord);
+			 indexOfWord < listWordsHolder.getWords().size(); indexOfWord++) {
+			Word word = listWordsHolder.getWords().get(indexOfWord);
 			if (word == wordToExclude) {
 				continue;
 			}
@@ -93,7 +93,7 @@ public class ListPropertySearcher<Word extends ListElement> {
 				propertyChecker, searchedPropertyValue, searchDirection,
 				displayMessage);
 		if (rowNumber != -1) {
-			return listController.getWordInRow(rowNumber);
+			return listWordsHolder.getWordInRow(rowNumber);
 		}
 		else {
 			return null;
