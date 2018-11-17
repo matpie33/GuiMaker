@@ -8,8 +8,6 @@ import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListRowData;
-import com.guimaker.list.loadAdditionalWordsHandling.LoadNextWordsHandler;
-import com.guimaker.list.loadAdditionalWordsHandling.LoadPreviousWordsHandler;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListRowCreator;
 import com.guimaker.list.myList.ListWordsController;
@@ -29,8 +27,7 @@ public class ListViewManager<Word extends ListElement> {
 	private ListWordsController<Word> listWordsController;
 	private ListRowCreator<Word> listRowCreator;
 	private ApplicationChangesManager applicationChangesManager;
-	private LoadNextWordsHandler loadNextWordsHandler;
-	private LoadPreviousWordsHandler loadPreviousWordsHandler;
+
 	private Color labelsColor = Color.WHITE;
 	private InputGoal inputGoal;
 	private boolean isInitialized = false;
@@ -46,9 +43,7 @@ public class ListViewManager<Word extends ListElement> {
 
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		listWordsController = controller;
-		loadNextWordsHandler = new LoadNextWordsHandler();
-		loadPreviousWordsHandler = new LoadPreviousWordsHandler(
-				listWordsController, listPanel.getRowsPanel());
+
 		this.listRowCreator = listConfiguration.getListRowCreator();
 		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
 
@@ -58,12 +53,8 @@ public class ListViewManager<Word extends ListElement> {
 		listConfiguration.inheritScrollbar(true);
 	}
 
-	public LoadNextWordsHandler getLoadNextWordsHandler() {
-		return loadNextWordsHandler;
-	}
-
-	public LoadPreviousWordsHandler getLoadPreviousWordsHandler() {
-		return loadPreviousWordsHandler;
+	public MainPanel getRowsPanel (){
+		return listPanel.getRowsPanel();
 	}
 
 	public ListRow<Word> addRow(Word word, int rowNumber,

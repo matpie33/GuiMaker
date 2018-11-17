@@ -3,6 +3,7 @@ package com.guimaker.list.myList.panel;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.KeyModifiers;
+import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.model.CommonListElements;
@@ -31,11 +32,11 @@ public class ListElementsCreator<Word extends ListElement> {
 	}
 
 	public AbstractButton createButtonLoadWords(String buttonName,
-			LoadWordsHandler loadWordsHandler) {
+			ListWordsLoadingDirection loadingDirection) {
 		AbstractButton button = GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(buttonName),
 				listActionsCreator.createActionShowNextOrPreviousWords(
-						loadWordsHandler));
+						loadingDirection));
 		button.setEnabled(false);
 		return button;
 	}

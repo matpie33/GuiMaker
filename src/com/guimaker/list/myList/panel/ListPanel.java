@@ -2,10 +2,7 @@ package com.guimaker.list.myList.panel;
 
 import com.guimaker.application.DialogWindow;
 import com.guimaker.colors.BasicColors;
-import com.guimaker.enums.Anchor;
-import com.guimaker.enums.FillType;
-import com.guimaker.enums.InputGoal;
-import com.guimaker.enums.KeyModifiers;
+import com.guimaker.enums.*;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.ListConfiguration;
@@ -38,7 +35,6 @@ public class ListPanel<Word extends ListElement>
 	private ListElementsCreator<Word> listElementsCreator;
 	private String title;
 	private MainPanel filterPanel;
-	private ListViewManager listViewManager;
 	private JScrollPane scrollPane;
 	private JComponent listElementsPanel;
 	private final Dimension scrollPanesSize = new Dimension(550, 100);
@@ -61,7 +57,6 @@ public class ListPanel<Word extends ListElement>
 						listPanelUpdater));
 		this.listConfiguration = listConfiguration;
 		this.title = listConfiguration.getTitle();
-		this.listViewManager = listViewManager;
 
 		setParentDialog(listConfiguration.getDialogWindow());
 		setMainPanelProperties();
@@ -132,14 +127,14 @@ public class ListPanel<Word extends ListElement>
 				filterPanel.getPanel()));
 		buttonLoadPreviousWords = listElementsCreator.createButtonLoadWords(
 				ButtonsNames.SHOW_PREVIOUS_WORDS_ON_LIST,
-				listViewManager.getLoadPreviousWordsHandler());
+				ListWordsLoadingDirection.PREVIOUS);
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				buttonLoadPreviousWords));
 		mainPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.BOTH, listElementsPanel));
 		buttonLoadNextWords = listElementsCreator.createButtonLoadWords(
 				ButtonsNames.SHOW_NEXT_WORDS_ON_LIST,
-				listViewManager.getLoadNextWordsHandler());
+				ListWordsLoadingDirection.NEXT);
 		mainPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.NONE, buttonLoadNextWords));
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,

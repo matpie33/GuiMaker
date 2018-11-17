@@ -4,6 +4,7 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.ApplicationWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
+import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.list.myList.ListConfiguration;
@@ -130,13 +131,13 @@ public class ListActionsCreator<Word extends ListElement> {
 	}
 
 	public AbstractAction createActionShowNextOrPreviousWords(
-			LoadWordsHandler loadWordsHandler) {
+			ListWordsLoadingDirection loadingDirection) {
 
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listWordsController.showNextOrPreviousWords(
-						loadWordsHandler);
+						loadingDirection);
 			}
 		};
 

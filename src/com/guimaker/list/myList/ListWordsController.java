@@ -18,8 +18,10 @@ import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ListWordsController<Word extends ListElement> {
 
@@ -36,6 +38,8 @@ public class ListWordsController<Word extends ListElement> {
 	private boolean finishEditActionRequested;
 	private boolean isInEditMode;
 	private ListWordsHolder<Word> listWordsHolder;
+	private LoadNextWordsHandler loadNextWordsHandler;
+	private LoadPreviousWordsHandler loadPreviousWordsHandler;
 
 	private MyList<Word> myList;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
@@ -48,7 +52,9 @@ public class ListWordsController<Word extends ListElement> {
 		progressUpdater = new ProgressUpdater();
 		listViewManager = new ListViewManager<>(listConfiguration, this);
 		this.listWordsHolder = listWordsHolder;
-
+		loadNextWordsHandler = new LoadNextWordsHandler();
+		loadPreviousWordsHandler = new LoadPreviousWordsHandler(this,
+				listViewManager.getRowsPanel());
 		initializeFoundWordStrategies();
 	}
 
@@ -64,10 +70,8 @@ public class ListWordsController<Word extends ListElement> {
 		strategiesForFoundWord.add(new FoundWordInsideVisibleRangeStrategy());
 		strategiesForFoundWord.add(
 				new FoundWordInsideVisibleRangePlusMaximumWordsStrategy(
-						MAXIMUM_WORDS_TO_SHOW, this,
-						listViewManager.getLoadPreviousWordsHandler(),
-						listViewManager.getLoadNextWordsHandler(),
-						listWordsHolder));
+						MAXIMUM_WORDS_TO_SHOW, this, loadPreviousWordsHandler,
+						loadNextWordsHandler, listWordsHolder));
 		strategiesForFoundWord.add(
 				new FoundWordOutsideRangeStrategy(MAXIMUM_WORDS_TO_SHOW, this,
 						listWordsHolder));
@@ -218,9 +222,11 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.scrollToTop();
 	}
 
-	public void showNextOrPreviousWords(LoadWordsHandler loadWordsHandler) {
+	public void showNextOrPreviousWords(ListWordsLoadingDirection loadingDirection) {
 		int numberOfListRows = listViewManager.getNumberOfListRows();
 		listViewManager.clearRowsPanel();
+		LoadWordsHandler loadWordsHandler = getLoadWordsHandler(
+				loadingDirection);
 		addNextHalfOfMaximumWords(loadWordsHandler, numberOfListRows);
 		boolean shouldDisable = loadWordsHandler.shouldDisableLoadWordsButton(
 				ListWordsController.this);
@@ -228,6 +234,16 @@ public class ListWordsController<Word extends ListElement> {
 				loadWordsHandler.getDirection());
 
 		listViewManager.updateRowsPanel();
+	}
+
+	private LoadWordsHandler getLoadWordsHandler(
+			ListWordsLoadingDirection loadingDirection) {
+		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)){
+			return loadNextWordsHandler;
+		}
+		else{
+			return loadPreviousWordsHandler;
+		}
 	}
 
 	private void addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler,
@@ -284,12 +300,10 @@ public class ListWordsController<Word extends ListElement> {
 			listViewManager.enableButtonShowPreviousWords();
 		}
 		lastRowVisible = Math.max(firstRowToLoad - 1, 0);
-		LoadNextWordsHandler loadNextWordsHandler = listViewManager.getLoadNextWordsHandler();
 		for (int i = 0;
 			 i < getMaximumWordsToShow() && loadNextWordsHandler.shouldContinue(
 					 lastRowVisible, listWordsHolder.getNumberOfWords()); i++) {
 			showNextWord();
-			//TODO do not pass around load words handler, use some enum: next/previous word
 			progressUpdater.updateProgress();
 		}
 		lastRowVisible--;
