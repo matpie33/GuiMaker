@@ -5,7 +5,10 @@ import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.row.AbstractSimpleRow;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class ListPanelUpdater {
 
@@ -178,4 +181,18 @@ public class ListPanelUpdater {
 		listPanel.getPanel()
 				 .revalidate();
 	}
+
+	public void focusFirstTextFieldInPanel (JComponent jPanel){
+		if (jPanel.getComponents().length == 1
+				&& jPanel.getComponents()[0] instanceof JPanel) {
+			JPanel panel = (JPanel) jPanel.getComponents()[0];
+			Optional<Component> firstTextField = Arrays.stream(
+					panel.getComponents())
+													   .filter(JTextComponent.class::isInstance)
+													   .findFirst();
+			SwingUtilities.invokeLater(() -> firstTextField.ifPresent(
+					Component::requestFocusInWindow));
+		}
+	}
+
 }

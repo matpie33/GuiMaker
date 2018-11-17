@@ -18,9 +18,6 @@ import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
@@ -221,24 +218,16 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.scrollToTop();
 	}
 
-	public AbstractAction createButtonShowNextOrPreviousWords(
-			LoadWordsHandler loadWordsHandler) {
+	public void showNextOrPreviousWords(LoadWordsHandler loadWordsHandler) {
+		int numberOfListRows = listViewManager.getNumberOfListRows();
+		listViewManager.clearRowsPanel();
+		addNextHalfOfMaximumWords(loadWordsHandler, numberOfListRows);
+		boolean shouldDisable = loadWordsHandler.shouldDisableLoadWordsButton(
+				ListWordsController.this);
+		listViewManager.enableOrDisableLoadWordsButton(shouldDisable,
+				loadWordsHandler.getDirection());
 
-		return new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int numberOfListRows = listViewManager.getNumberOfListRows();
-				listViewManager.clearRowsPanel();
-				addNextHalfOfMaximumWords(loadWordsHandler, numberOfListRows);
-				boolean shouldDisable = loadWordsHandler.shouldDisableLoadWordsButton(
-						ListWordsController.this);
-				listViewManager.enableOrDisableLoadWordsButton(shouldDisable,
-						loadWordsHandler.getDirection());
-
-				listViewManager.updateRowsPanel();
-			}
-		};
-
+		listViewManager.updateRowsPanel();
 	}
 
 	private void addNextHalfOfMaximumWords(LoadWordsHandler loadWordsHandler,
@@ -316,16 +305,8 @@ public class ListWordsController<Word extends ListElement> {
 		JComponent jPanel = listWordsHolder.getWordInRow0Based(
 				listWordsHolder.getNumberOfWords() - 1)
 										   .getJPanel();
-		if (jPanel.getComponents().length == 1
-				&& jPanel.getComponents()[0] instanceof JPanel) {
-			JPanel panel = (JPanel) jPanel.getComponents()[0];
-			Optional<Component> firstTextField = Arrays.stream(
-					panel.getComponents())
-													   .filter(JTextComponent.class::isInstance)
-													   .findFirst();
-			SwingUtilities.invokeLater(() -> firstTextField.ifPresent(
-					Component::requestFocusInWindow));
-		}
+		listViewManager.focusFirstTextfieldInPanel(jPanel);
+
 	}
 
 	public MainPanel getPanelWithSelectedInput() {

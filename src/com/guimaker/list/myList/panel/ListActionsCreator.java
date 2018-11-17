@@ -5,6 +5,7 @@ import com.guimaker.application.ApplicationWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListWordsController;
 import com.guimaker.list.myList.MyList;
@@ -126,6 +127,19 @@ public class ListActionsCreator<Word extends ListElement> {
 								listWordsController.getStartOfRangeOfDisplayedWords()));
 			}
 		};
+	}
+
+	public AbstractAction createActionShowNextOrPreviousWords(
+			LoadWordsHandler loadWordsHandler) {
+
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listWordsController.showNextOrPreviousWords(
+						loadWordsHandler);
+			}
+		};
+
 	}
 
 }

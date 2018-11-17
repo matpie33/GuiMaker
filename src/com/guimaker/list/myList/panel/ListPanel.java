@@ -132,16 +132,14 @@ public class ListPanel<Word extends ListElement>
 				filterPanel.getPanel()));
 		buttonLoadPreviousWords = listElementsCreator.createButtonLoadWords(
 				ButtonsNames.SHOW_PREVIOUS_WORDS_ON_LIST,
-				listViewManager.createButtonShowNextOrPreviousWords(
-						listViewManager.getLoadPreviousWordsHandler()));
+				listViewManager.getLoadPreviousWordsHandler());
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				buttonLoadPreviousWords));
 		mainPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.BOTH, listElementsPanel));
 		buttonLoadNextWords = listElementsCreator.createButtonLoadWords(
 				ButtonsNames.SHOW_NEXT_WORDS_ON_LIST,
-				listViewManager.createButtonShowNextOrPreviousWords(
-						listViewManager.getLoadNextWordsHandler()));
+				listViewManager.getLoadNextWordsHandler());
 		mainPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.NONE, buttonLoadNextWords));
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,

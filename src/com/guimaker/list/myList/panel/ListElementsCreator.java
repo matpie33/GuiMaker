@@ -4,6 +4,7 @@ import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.KeyModifiers;
 import com.guimaker.list.ListElement;
+import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.model.CommonListElements;
 import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.ButtonOptions;
@@ -30,10 +31,11 @@ public class ListElementsCreator<Word extends ListElement> {
 	}
 
 	public AbstractButton createButtonLoadWords(String buttonName,
-			AbstractAction abstractAction) {
+			LoadWordsHandler loadWordsHandler) {
 		AbstractButton button = GuiElementsCreator.createButtonlikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(buttonName),
-				abstractAction);
+				listActionsCreator.createActionShowNextOrPreviousWords(
+						loadWordsHandler));
 		button.setEnabled(false);
 		return button;
 	}

@@ -10,7 +10,6 @@ import com.guimaker.list.ListElement;
 import com.guimaker.list.ListRowData;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadNextWordsHandler;
 import com.guimaker.list.loadAdditionalWordsHandling.LoadPreviousWordsHandler;
-import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListRowCreator;
 import com.guimaker.list.myList.ListWordsController;
@@ -96,12 +95,6 @@ public class ListViewManager<Word extends ListElement> {
 
 		return new ListRow<>(word, rowPanel,
 				commonListElements.getRowNumberLabel(), rowNumber);
-	}
-
-	public AbstractAction createButtonShowNextOrPreviousWords(
-			LoadWordsHandler loadWordsHandler) {
-		return listWordsController.createButtonShowNextOrPreviousWords(
-				loadWordsHandler);
 	}
 
 	public String createTextForRowNumber(int rowNumber) {
@@ -249,5 +242,9 @@ public class ListViewManager<Word extends ListElement> {
 			ListWordsLoadingDirection direction) {
 		listPanelUpdater.enableOrDisableLoadWordsButton(shouldDisable,
 				direction);
+	}
+
+	public void focusFirstTextfieldInPanel(JComponent panel) {
+		listPanelUpdater.focusFirstTextFieldInPanel(panel);
 	}
 }
