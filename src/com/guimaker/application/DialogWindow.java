@@ -142,8 +142,16 @@ public class DialogWindow {
 			CustomPositioner customPositioner) {
 		AbstractPanelWithHotkeysInfo panel = new InsertWordPanel<>(myList,
 				applicationChangesManager);
-		setCustomPositioner(customPositioner);
-		createDialog(panel, Titles.INSERT_WORD_DIALOG, false, Position.CUSTOM);
+		Position position;
+		if (customPositioner != null) {
+			setCustomPositioner(customPositioner);
+			position = Position.CUSTOM;
+		}
+		else {
+			position = Position.CENTER;
+		}
+
+		createDialog(panel, Titles.INSERT_WORD_DIALOG, false, position);
 	}
 
 	public boolean showConfirmDialog(String message) {
