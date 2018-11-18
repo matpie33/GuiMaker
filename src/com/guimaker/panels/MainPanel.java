@@ -180,6 +180,10 @@ public class MainPanel {
 	}
 
 	public JComponent addRow(AbstractSimpleRow abstractSimpleRows) {
+		if (abstractSimpleRows instanceof ComplexRow){
+			throw new IllegalArgumentException("Incorrect method used: trying"
+					+ " to add multiple rows using 'add single row' method");
+		}
 		return addRow(abstractSimpleRows, rows.size());
 	}
 
