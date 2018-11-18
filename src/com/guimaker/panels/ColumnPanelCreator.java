@@ -111,11 +111,8 @@ public class ColumnPanelCreator {
 	}
 
 	public void clear() {
-		if (wrappingPanel != null) {
-			wrappingPanel.removeAll();
-			wrappingPanel = null;
-		}
-
+		numberOfRows = 0;
+		numberOfColumns = 0;
 	}
 
 	public void setGapsBetweenColumns(int gapsBetweenColumns) {

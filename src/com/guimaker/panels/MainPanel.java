@@ -179,6 +179,9 @@ public class MainPanel {
 		return panel;
 	}
 
+	//TODO there is problem when we first use addElementsInCOlumn, then clear
+	// the panel, then use the method add row - > they use different panel,
+	// and the changes would not be visible
 	public JComponent addRow(AbstractSimpleRow abstractSimpleRows) {
 		if (abstractSimpleRows instanceof ComplexRow){
 			throw new IllegalArgumentException("Incorrect method used: trying"
@@ -836,10 +839,16 @@ public class MainPanel {
 	}
 
 	public void clear() {
+		getPanel().removeAll();
+		if (getPanel().equals(panel)){
+			rows.clear();
+		}
+		else{
+			columnPanelCreator.clear();
+		}
 
-		columnPanelCreator.clear();
-		panel.removeAll();
-		rows.clear();
+
+
 	}
 
 	public void setBackgroundColor(Color c) {
