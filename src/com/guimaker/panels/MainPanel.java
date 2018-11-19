@@ -183,7 +183,7 @@ public class MainPanel {
 	// the panel, then use the method add row - > they use different panel,
 	// and the changes would not be visible
 	public JComponent addRow(AbstractSimpleRow abstractSimpleRows) {
-		if (abstractSimpleRows instanceof ComplexRow){
+		if (abstractSimpleRows instanceof ComplexRow) {
 			throw new IllegalArgumentException("Incorrect method used: trying"
 					+ " to add multiple rows using 'add single row' method");
 		}
@@ -785,10 +785,7 @@ public class MainPanel {
 	}
 
 	public JPanel getPanel() {
-		return getNumberOfRows() == 1 && getRows().get(0)
-												  .equals(columnPanelCreator.getPanel()) ?
-				columnPanelCreator.getPanel() :
-				panel;
+		return panel;
 	}
 
 	public void removeRowInAColumnWay(int rowNumber) {
@@ -839,15 +836,11 @@ public class MainPanel {
 	}
 
 	public void clear() {
-		getPanel().removeAll();
-		if (getPanel().equals(panel)){
-			rows.clear();
-		}
-		else{
+		panel.removeAll();
+		if (columnPanelCreator.isInitialized()) {
 			columnPanelCreator.clear();
 		}
-
-
+		rows.clear();
 
 	}
 

@@ -23,6 +23,8 @@ public class ColumnPanelCreator {
 			int gapBetweenRows) {
 		this.panelDisplayMode = panelDisplayMode;
 		this.gapBetweenRows = gapBetweenRows;
+		wrappingPanel = new JPanel(new GridBagLayout());
+		wrappingPanel.setOpaque(false);
 	}
 
 	public void setPadding(int top, int right, int bottom, int left) {
@@ -33,12 +35,11 @@ public class ColumnPanelCreator {
 	}
 
 	public boolean isInitialized() {
-		return wrappingPanel != null;
+		return wrappingPanel != null && wrappingPanel.getComponentCount() > 0;
 	}
 
 	public void initializePanel() {
-		wrappingPanel = new JPanel(new GridBagLayout());
-		wrappingPanel.setOpaque(false);
+
 	}
 
 	public JPanel getPanel() {
@@ -113,6 +114,7 @@ public class ColumnPanelCreator {
 	public void clear() {
 		numberOfRows = 0;
 		numberOfColumns = 0;
+		wrappingPanel.removeAll();
 	}
 
 	public void setGapsBetweenColumns(int gapsBetweenColumns) {
