@@ -8,6 +8,7 @@ import com.guimaker.list.*;
 import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.PropertyPostValidationData;
+import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.swingUtilities.ProgressUpdater;
 
@@ -25,17 +26,24 @@ public class MyList<Word extends ListElement>
 	private String title;
 	private ListRowCreator<Word> listRowCreator;
 	private ListPropertySearcher<Word> listPropertySearcher;
+	private InsertWordPanel<Word> insertWordPanel;
 
 	public MyList(ListConfiguration<Word> listConfiguration) {
 		this.listRowCreator = listConfiguration.getListRowCreator();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		this.wordInitializer = listConfiguration.getListElementInitializer();
 		this.title = listConfiguration.getTitle();
+		this.insertWordPanel = new InsertWordPanel<>(this,
+				applicationChangesManager);
 		listWordsHolder = new ListWordsHolder<>();
-		listController = new ListWordsController<>(listConfiguration, this,
-				listWordsHolder);
+		listController = new ListWordsController<>(insertWordPanel,
+				listConfiguration, this, listWordsHolder);
 		listPropertySearcher = new ListPropertySearcher<>(listWordsHolder,
 				listConfiguration);
+	}
+
+	public InsertWordPanel<Word> getInsertWordPanel() {
+		return insertWordPanel;
 	}
 
 	@Override

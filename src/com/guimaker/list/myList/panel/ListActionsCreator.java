@@ -2,15 +2,17 @@ package com.guimaker.list.myList.panel;
 
 import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.ApplicationWindow;
+import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.ListElement;
-import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListWordsController;
 import com.guimaker.list.myList.MyList;
+import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.strings.Prompts;
+import com.guimaker.strings.Titles;
 import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.ThreadUtilities;
 
@@ -22,16 +24,19 @@ import java.awt.event.ActionEvent;
 
 public class ListActionsCreator<Word extends ListElement> {
 
+	private InsertWordPanel<Word> insertWordPanel;
 	private ListWordsController<Word> listWordsController;
 	private ListConfiguration<Word> listConfiguration;
 	private ListPanelUpdater listPanelUpdater;
 
-	public ListActionsCreator(ListWordsController<Word> listWordsController,
+	public ListActionsCreator(InsertWordPanel<Word> insertWordPanel,
+			ListWordsController<Word> listWordsController,
 			ListConfiguration<Word> listConfiguration,
 			ListPanelUpdater listPanelUpdater) {
 		this.listWordsController = listWordsController;
 		this.listConfiguration = listConfiguration;
 		this.listPanelUpdater = listPanelUpdater;
+		this.insertWordPanel = insertWordPanel;
 	}
 
 	public AbstractAction createDeleteRowAction(Word word) {
@@ -111,10 +116,9 @@ public class ListActionsCreator<Word extends ListElement> {
 			public void actionPerformed(ActionEvent e) {
 				ApplicationWindow applicationWindow = listConfiguration.getApplicationChangesManager()
 																	   .getApplicationWindow();
-				applicationWindow.showInsertWordDialog(
-						listWordsController.getMyList(),
-						applicationWindow.getApplicationConfiguration()
-										 .getInsertWordPanelPositioner());
+				applicationWindow.createDialog(insertWordPanel, Titles
+								.INSERT_WORD_DIALOG,
+						false, DialogWindow.Position.CENTER);
 			}
 		};
 	}
@@ -136,8 +140,7 @@ public class ListActionsCreator<Word extends ListElement> {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				listWordsController.showNextOrPreviousWords(
-						loadingDirection);
+				listWordsController.showNextOrPreviousWords(loadingDirection);
 			}
 		};
 

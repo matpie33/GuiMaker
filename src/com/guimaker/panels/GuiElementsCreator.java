@@ -2,10 +2,10 @@ package com.guimaker.panels;
 
 import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.ConditionForHotkey;
+import com.guimaker.enums.KeyModifiers;
+import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
-import com.guimaker.model.HotkeyWrapper;
-import com.guimaker.enums.KeyModifiers;
 import com.guimaker.utilities.LimitDocumentFilter;
 
 import javax.swing.*;
@@ -18,7 +18,8 @@ import java.util.List;
 public class GuiElementsCreator {
 
 	static {
-		UIManager.put("ComboBox.disabledBackground", BasicColors.BLACK_NORMAL_1);
+		UIManager.put("ComboBox.disabledBackground",
+				BasicColors.BLACK_NORMAL_1);
 		UIManager.put("Label.disabledForeground", Color.WHITE);
 	}
 

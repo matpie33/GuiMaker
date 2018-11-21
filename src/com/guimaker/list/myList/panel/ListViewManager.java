@@ -11,11 +11,12 @@ import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListRowCreator;
 import com.guimaker.list.myList.ListWordsController;
+import com.guimaker.model.CommonListElements;
 import com.guimaker.model.ListRow;
+import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
-import com.guimaker.model.CommonListElements;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;
@@ -35,10 +36,12 @@ public class ListViewManager<Word extends ListElement> {
 	private ListPanel<Word> listPanel;
 	private ListPanelUpdater listPanelUpdater;
 
-	public ListViewManager(ListConfiguration<Word> listConfiguration,
+	public ListViewManager(InsertWordPanel<Word> insertWordPanel,
+			ListConfiguration<Word> listConfiguration,
 			ListWordsController<Word> controller) {
 		this.listConfiguration = listConfiguration;
-		listPanel = new ListPanel<>(listConfiguration, this, controller);
+		listPanel = new ListPanel<>(insertWordPanel,listConfiguration, this,
+				controller);
 		listPanelUpdater = listPanel.getListPanelUpdater();
 
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
@@ -53,7 +56,7 @@ public class ListViewManager<Word extends ListElement> {
 		listConfiguration.inheritScrollbar(true);
 	}
 
-	public MainPanel getRowsPanel (){
+	public MainPanel getRowsPanel() {
 		return listPanel.getRowsPanel();
 	}
 
@@ -173,7 +176,6 @@ public class ListViewManager<Word extends ListElement> {
 	public void enableButtonShowPreviousWords() {
 		listPanelUpdater.enableButtonLoadPreviousWords();
 	}
-
 
 	public MainPanel repaintWord(Word word, int rowNumber, JComponent oldPanel,
 			InputGoal customInputGoal, boolean highlighted) {

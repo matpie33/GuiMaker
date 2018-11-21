@@ -14,6 +14,7 @@ import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
 import com.guimaker.panels.GuiElementsCreator;
+import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
@@ -46,14 +47,16 @@ public class ListPanel<Word extends ListElement>
 	private ListFilteringPanel<Word> listFilteringPanel;
 	private ListRowData<Word> rowForFilteringPanel;
 
-	public ListPanel(ListConfiguration listConfiguration,
+	public ListPanel(InsertWordPanel<Word> insertWordPanel,
+			ListConfiguration listConfiguration,
 			ListViewManager<Word> listViewManager,
 			ListWordsController<Word> controller) {
 		listFilteringPanel = new ListFilteringController<>(listViewManager,
 				controller).getListFilteringPanel();
 		listPanelUpdater = new ListPanelUpdater(this, listConfiguration);
 		listElementsCreator = new ListElementsCreator<>(this,
-				new ListActionsCreator<>(controller, listConfiguration,
+				new ListActionsCreator<>(insertWordPanel,controller,
+						listConfiguration,
 						listPanelUpdater));
 		this.listConfiguration = listConfiguration;
 		this.title = listConfiguration.getTitle();

@@ -34,8 +34,6 @@ public class InsertWordController<Word extends ListElement>
 		this.panel = panel;
 		this.list = list;
 		this.applicationChangesManager = applicationChangesManager;
-		list.getListRowCreator()
-			.addValidationListener(this);
 	}
 
 	private void checkIfWordExistsOrIsEmptyAndAdd(Word word) {

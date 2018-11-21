@@ -11,6 +11,4 @@ public interface ListRowCreator<Word extends ListElement> {
 	public ListRowData<Word> createListRow(Word word,
 			CommonListElements commonListElements, InputGoal inputGoal);
 
-	public void addValidationListener(
-			InputValidationListener<Word> inputValidationListener);
 }

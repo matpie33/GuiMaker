@@ -40,6 +40,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		this.listElementPropertyManager = listElementPropertyManager;
 		this.propertyHolder = propertyHolder;
 		this.inputGoal = inputGoal;
+		if (!inputGoal.equals(InputGoal.NO_INPUT)){
+			addValidationListener(list.getInsertWordPanel().getController());
+		}
 	}
 
 	public ListPropertyChangeHandler(PropertyHolder propertyHolder,

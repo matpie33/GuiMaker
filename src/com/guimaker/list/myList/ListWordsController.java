@@ -12,6 +12,7 @@ import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.ListRow;
 import com.guimaker.model.PropertyPostValidationData;
+import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.swingUtilities.ProgressUpdater;
 import com.guimaker.utilities.Pair;
@@ -44,13 +45,15 @@ public class ListWordsController<Word extends ListElement> {
 	private MyList<Word> myList;
 	//TODO switchBetweenInputsFailListeners should be deleted from here
 
-	public ListWordsController(ListConfiguration<Word> listConfiguration,
-			MyList<Word> myList, ListWordsHolder<Word> listWordsHolder) {
+	public ListWordsController(InsertWordPanel<Word> insertWordPanel,
+			ListConfiguration<Word> listConfiguration, MyList<Word> myList,
+			ListWordsHolder<Word> listWordsHolder) {
 		this.myList = myList;
 		this.wordInitializer = listConfiguration.getListElementInitializer();
 		parentListAndWord = listConfiguration.getParentListAndWordContainingThisList();
 		progressUpdater = new ProgressUpdater();
-		listViewManager = new ListViewManager<>(listConfiguration, this);
+		listViewManager = new ListViewManager<>(insertWordPanel,
+				listConfiguration, this);
 		this.listWordsHolder = listWordsHolder;
 		loadNextWordsHandler = new LoadNextWordsHandler();
 		loadPreviousWordsHandler = new LoadPreviousWordsHandler(this,
@@ -222,7 +225,8 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.scrollToTop();
 	}
 
-	public void showNextOrPreviousWords(ListWordsLoadingDirection loadingDirection) {
+	public void showNextOrPreviousWords(
+			ListWordsLoadingDirection loadingDirection) {
 		int numberOfListRows = listViewManager.getNumberOfListRows();
 		listViewManager.clearRowsPanel();
 		LoadWordsHandler loadWordsHandler = getLoadWordsHandler(
@@ -238,10 +242,10 @@ public class ListWordsController<Word extends ListElement> {
 
 	private LoadWordsHandler getLoadWordsHandler(
 			ListWordsLoadingDirection loadingDirection) {
-		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)){
+		if (loadingDirection.equals(ListWordsLoadingDirection.NEXT)) {
 			return loadNextWordsHandler;
 		}
-		else{
+		else {
 			return loadPreviousWordsHandler;
 		}
 	}

@@ -10,7 +10,9 @@ import com.guimaker.strings.Titles;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class DialogWindow {
 
@@ -136,22 +138,6 @@ public class DialogWindow {
 	private boolean childWindowIsClosed() {
 		return childWindow == null || !childWindow.getContainer()
 												  .isVisible();
-	}
-
-	public void showInsertWordDialog(MyList myList,
-			CustomPositioner customPositioner) {
-		AbstractPanelWithHotkeysInfo panel = new InsertWordPanel<>(myList,
-				applicationChangesManager);
-		Position position;
-		if (customPositioner != null) {
-			setCustomPositioner(customPositioner);
-			position = Position.CUSTOM;
-		}
-		else {
-			position = Position.CENTER;
-		}
-
-		createDialog(panel, Titles.INSERT_WORD_DIALOG, false, position);
 	}
 
 	public boolean showConfirmDialog(String message) {

@@ -27,6 +27,10 @@ public class InsertWordPanel<Word extends ListElement>
 		initializeOneTimeOnlyElements();
 	}
 
+	public InsertWordController<Word> getController() {
+		return controller;
+	}
+
 	public Color getLabelsColor() {
 		return labelsColor;
 	}

@@ -1,6 +1,5 @@
 package com.guimaker.application;
 
-import com.guimaker.colors.BasicColors;
 import com.guimaker.customPositioning.CustomPositioner;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
 import com.guimaker.strings.Prompts;
@@ -48,7 +47,6 @@ public class ApplicationWindow extends DialogWindow {
 	}
 
 	public void initiate(AbstractPanelWithHotkeysInfo... panels) {
-
 
 		mainApplicationPanel.add(startingPanel.createPanel(),
 				startingPanel.getUniqueName());
