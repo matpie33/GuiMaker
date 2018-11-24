@@ -6,6 +6,5 @@ public interface ListElement {
 
 	public String getDisplayedText();
 
-	public String getMeaningfulName();
 
 }
