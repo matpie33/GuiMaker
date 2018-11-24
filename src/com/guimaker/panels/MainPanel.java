@@ -822,6 +822,9 @@ public class MainPanel {
 
 	public int getIndexOfRowContainingElements(Component... elements) {
 
+		if (columnPanelCreator.isInitialized()) {
+			return columnPanelCreator.getIndexOfRowContainingElements(elements);
+		}
 		for (int i = 0; i < rows.size(); i++) {
 			JComponent panel = rows.get(i);
 			List<Component> e = Arrays.asList(panel.getComponents());

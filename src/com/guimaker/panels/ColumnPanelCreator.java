@@ -124,4 +124,14 @@ public class ColumnPanelCreator {
 	public void setGapBetweenRows(int gapBetweenRows) {
 		this.gapBetweenRows = gapBetweenRows;
 	}
+
+	public int getIndexOfRowContainingElements(Component... elements) {
+		return getConstraintsForComponent(elements[0]).gridy;
+	}
+
+	public GridBagConstraints getConstraintsForComponent(Component component) {
+		GridBagLayout layout = (GridBagLayout) getPanel().getLayout();
+		return layout.getConstraints(component);
+	}
+
 }
