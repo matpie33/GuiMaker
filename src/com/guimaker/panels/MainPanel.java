@@ -1,7 +1,9 @@
 package com.guimaker.panels;
 
+import com.guimaker.enums.Direction;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
+import com.guimaker.enums.RowType;
 import com.guimaker.inputSelection.InputSelectionManager;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
@@ -26,6 +28,7 @@ public class MainPanel {
 	private final int paddingDefaultValue = 4;
 
 	private List<JComponent> rows;
+	private TreeMap<Integer, RowType> rowNumberToTypeMap = new TreeMap<>();
 	private JPanel panel;
 	private int gapBetweenRows = 4;
 
@@ -47,6 +50,7 @@ public class MainPanel {
 	private static Color defaultColor;
 	private boolean opaque = true;
 	private boolean opaqueRows = true;
+	private ElementsShifter elementsShifter;
 
 	public static void setDefaultColor(Color defaultColor) {
 		MainPanel.defaultColor = defaultColor;
@@ -99,7 +103,7 @@ public class MainPanel {
 				panelConfiguration.getPanelDisplayMode(), gapBetweenRows);
 		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
 				paddingLeft);
-		//TODO move all the params to panel configuration class
+
 		numberOfRows = 0;
 		originalBackgroundColor = panelConfiguration.getColorToUse();
 		shouldPutRowsHighestAsPossible = panelConfiguration.shouldPutRowsAsHighestAsPossible();
@@ -109,6 +113,8 @@ public class MainPanel {
 		else {
 			panel = new HorizontallyNonscrollablePanel();
 		}
+		elementsShifter = new ElementsShifter(panel,
+				shouldPutRowsHighestAsPossible);
 
 		if (panelConfiguration.getColorToUse() == null
 				&& panelConfiguration.isOpaque()) {
@@ -159,7 +165,19 @@ public class MainPanel {
 					abstractSimpleRow.getAnchor(),
 					columnPanelCreator.getPanel()));
 		}
+		addRowAsColumn(abstractSimpleRow);
+	}
+
+	private void addRowAsColumn(AbstractSimpleRow abstractSimpleRow) {
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow);
+		rowNumberToTypeMap.put(rowNumberToTypeMap.lastKey() + 1,
+				RowType.COLUMN_BELOW_COLUMN);
+	}
+
+	private void addRowAsColumn(AbstractSimpleRow abstractSimpleRow, int number) {
+		columnPanelCreator.addElementsInColumn(abstractSimpleRow, number);
+		rowNumberToTypeMap.put(rowNumberToTypeMap.lastKey() + 1,
+				RowType.COLUMN_BELOW_COLUMN);
 	}
 
 	private void addElement(int row, int column, Container container,
@@ -418,6 +436,7 @@ public class MainPanel {
 
 		panel.add(p, c);
 		rows.add(rowNumber, p);
+		rowNumberToTypeMap.put(rowNumber, RowType.ROW_BELOW_ROW);
 	}
 
 	private void removeFillingFromOtherPanels(int rowNumber) {
@@ -575,7 +594,8 @@ public class MainPanel {
 		}
 		int lastRow = rows.size() - 1;
 		GridBagLayout g = (GridBagLayout) panel.getLayout();
-		GridBagConstraints cd = getConstraintsForRow(lastRow);
+		GridBagConstraints cd = elementsShifter.getConstraintsForRow(
+				rows.get(lastRow));
 		cd.weighty = 1;
 		g.setConstraints(rows.get(lastRow), cd);
 	}
@@ -673,40 +693,26 @@ public class MainPanel {
 		opaqueRows = opaque;
 	}
 
-	private enum Direction {
-		FORWARD, BACKWARD;
-	}
-
-	private void movePanels(Direction direction, int startIndex,
+	private RowType movePanels(Direction direction, int startIndex,
 			int absoluteIncrementDecrementValue) {
 		if (absoluteIncrementDecrementValue < 0) {
 			throw new IllegalArgumentException(
 					"Increment/decrement value should be positive");
 		}
-		for (int i = rows.size() - 1; i >= startIndex; i--) {
-			JComponent row = rows.get(i);
-			GridBagConstraints c = getConstraintsForRow(i);
-			if (direction.equals(Direction.FORWARD)) {
-				c.gridy += absoluteIncrementDecrementValue;
-			}
-			else if (direction.equals(Direction.BACKWARD)) {
-				c.gridy -= absoluteIncrementDecrementValue;
-			}
-			if (!shouldPutRowsHighestAsPossible
-					&& c.fill != GridBagConstraints.BOTH) {
-				c.weighty = 0;
-			}
-			GridBagLayout g = (GridBagLayout) panel.getLayout();
-			g.setConstraints(row, c);
-
+		RowType rowType = rowNumberToTypeMap.get(startIndex);
+		if (rowType == null){
+			return rowType;
 		}
+		if (rowType.equals(RowType.COLUMN_BELOW_COLUMN)) {
+			columnPanelCreator.shiftElements(direction, startIndex,
+					absoluteIncrementDecrementValue);
+		}
+		else if (rowType.equals(RowType.ROW_BELOW_ROW)){
+			elementsShifter.shiftElements(direction, startIndex,
+					absoluteIncrementDecrementValue);
+		}
+		return rowType;
 
-	}
-
-	private GridBagConstraints getConstraintsForRow(int rowNumber) {
-		GridBagLayout g = (GridBagLayout) panel.getLayout();
-		JComponent row = rows.get(rowNumber);
-		return g.getConstraints(row);
 	}
 
 	public SubPanel divideRow(int number) {
@@ -765,9 +771,16 @@ public class MainPanel {
 		updateView();
 	}
 
-	public JComponent insertRow(int number, AbstractSimpleRow row) {
-		movePanels(Direction.FORWARD, number, 1);
-		return addRow(row, number);
+	public void insertRow(int number, AbstractSimpleRow row) {
+
+		RowType rowType = movePanels(Direction.FORWARD, number, 1);
+		if (rowType == null || rowType == RowType.ROW_BELOW_ROW){
+			addRow(row, number);
+		}
+		else{
+			addRowAsColumn(row, number);
+		}
+
 	}
 
 	public int getNumberOfRows() {

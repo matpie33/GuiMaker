@@ -1,5 +1,6 @@
 package com.guimaker.panels;
 
+import com.guimaker.enums.Direction;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.row.AbstractSimpleRow;
@@ -18,6 +19,7 @@ public class ColumnPanelCreator {
 	private int gapBetweenRows;
 	private int gapsBetweenColumns = 0;
 	private int paddingLeft, paddingRight, paddingTop, paddingBottom;
+	private ElementsShifter elementsShifter;
 
 	public ColumnPanelCreator(PanelDisplayMode panelDisplayMode,
 			int gapBetweenRows) {
@@ -25,6 +27,7 @@ public class ColumnPanelCreator {
 		this.gapBetweenRows = gapBetweenRows;
 		wrappingPanel = new JPanel(new GridBagLayout());
 		wrappingPanel.setOpaque(false);
+		elementsShifter = new ElementsShifter(wrappingPanel, false);
 	}
 
 	public void setPadding(int top, int right, int bottom, int left) {
@@ -46,7 +49,8 @@ public class ColumnPanelCreator {
 		return wrappingPanel != null ? wrappingPanel : new JPanel();
 	}
 
-	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
+	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow, int
+			rowNumber) {
 		if (!abstractSimpleRow.shouldAddRow()) {
 			return;
 		}
@@ -68,7 +72,7 @@ public class ColumnPanelCreator {
 			}
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = startingColumn++;
-			c.gridy = numberOfRows;
+			c.gridy = rowNumber;
 			c.anchor = GridBagConstraints.WEST;
 			c.insets = new Insets(paddingTop, paddingLeft, paddingBottom,
 					paddingRight);
@@ -111,6 +115,10 @@ public class ColumnPanelCreator {
 		numberOfRows++;
 	}
 
+	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow) {
+		addElementsInColumn(abstractSimpleRow, numberOfRows);
+	}
+
 	public void clear() {
 		numberOfRows = 0;
 		numberOfColumns = 0;
@@ -134,4 +142,9 @@ public class ColumnPanelCreator {
 		return layout.getConstraints(component);
 	}
 
+	public void shiftElements(Direction direction, int startIndex,
+			int absoluteIncrementDecrementValue) {
+		elementsShifter.shiftElements(direction, startIndex,
+				absoluteIncrementDecrementValue);
+	}
 }
