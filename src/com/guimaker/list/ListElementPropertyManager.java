@@ -12,10 +12,10 @@ public interface ListElementPropertyManager<PropertyType, PropertyHolder extends
 	public String getPropertyValue(PropertyHolder propertyHolder);
 
 	public PropertyType validateInputAndConvertToProperty(
-			JTextComponent textInput);
+			JTextComponent textInput, PropertyHolder propertyHolder);
 
 	public void setProperty(PropertyHolder propertyHolder,
-			PropertyType propertyValue);
+			PropertyType newValue, PropertyType previousValue);
 
 	public String getPropertyDefinedException(PropertyType property);
 

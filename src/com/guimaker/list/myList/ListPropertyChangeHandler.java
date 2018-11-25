@@ -27,6 +27,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private String previousValueOfTextInput;
 	private ListElementPropertyManager<Property, PropertyHolder> listElementPropertyManager;
 	private PropertyHolder propertyHolder;
+	private Property previousPropertyValue;
 	private String defaultValue = "";
 	private InputGoal inputGoal;
 	private Set<InputValidationListener<PropertyHolder>> validationListeners = new HashSet<>();
@@ -40,8 +41,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		this.listElementPropertyManager = listElementPropertyManager;
 		this.propertyHolder = propertyHolder;
 		this.inputGoal = inputGoal;
-		if (!inputGoal.equals(InputGoal.NO_INPUT)){
-			addValidationListener(list.getInsertWordPanel().getController());
+		if (!inputGoal.equals(InputGoal.NO_INPUT)) {
+			addValidationListener(list.getInsertWordPanel()
+									  .getController());
 		}
 	}
 
@@ -95,6 +97,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			boolean addedWord = false;
 			if (inputValid && !inputGoal.equals(InputGoal.SEARCH)) {
 				addedWord = addWordToList(input, propertyNewValue);
+				previousPropertyValue = propertyNewValue;
 			}
 			notifyValidationListeners(
 					inputValid && (addedWord || inputGoal.equals(
@@ -113,13 +116,13 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 
 	private boolean addWordToList(JTextComponent input,
 			Property propertyNewValue) {
-		listElementPropertyManager.setProperty(propertyHolder,
-				propertyNewValue);
+		listElementPropertyManager.setProperty(propertyHolder, propertyNewValue,
+				previousPropertyValue);
 		WordInMyListExistence<PropertyHolder> wordInMyListExistence = list.doesWordWithPropertyExist(
 				propertyNewValue, listElementPropertyManager, propertyHolder);
 		if (wordInMyListExistence.exists()) {
 			setTextInputToPreviousValue(input);
-			setWordToPreviousValue(input);
+			setWordToPreviousValue(input, previousPropertyValue);
 			int duplicateRowNumber = wordInMyListExistence.getOneBasedRowNumber();
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
 					duplicateRowNumber);
@@ -143,10 +146,11 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		}
 	}
 
-	private void setWordToPreviousValue(JTextComponent input) {
+	private void setWordToPreviousValue(JTextComponent input,
+			Property previousValue) {
 		listElementPropertyManager.setProperty(propertyHolder,
 				listElementPropertyManager.validateInputAndConvertToProperty(
-						input));
+						input, propertyHolder), previousValue);
 	}
 
 	private void setTextInputToPreviousValue(JTextComponent input) {
@@ -167,7 +171,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 
 	private Property validateAndConvertToProperty(JTextComponent input) {
 		Property propertyNewValue = listElementPropertyManager.validateInputAndConvertToProperty(
-				input);
+				input, propertyHolder);
 		if (propertyNewValue == null && !input.getText()
 											  .isEmpty()) {
 			input.setForeground(Color.RED);
