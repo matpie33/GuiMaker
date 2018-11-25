@@ -48,13 +48,6 @@ public class ListPanelUpdater {
 				 .removeRow(0);
 	}
 
-	public void disablePanelOpacityIfWithoutAddAndSearch() {
-		if (!listConfiguration.isWordSearchingEnabled()
-				&& !listConfiguration.isWordAddingEnabled()) {
-			listPanel.getPanel()
-					 .setOpaque(false);
-		}
-	}
 
 	public void clearHighlightedRow(JComponent row) {
 		listPanel.getRowsPanel()

@@ -108,7 +108,6 @@ public class ListViewManager<Word extends ListElement> {
 			listPanel.setRowForFilteringPanel(listRow);
 		}
 		listPanel.createPanel();
-		listPanelUpdater.disablePanelOpacityIfWithoutAddAndSearch();
 	}
 
 	public void removeWordsFromRangeInclusive(Range range) {

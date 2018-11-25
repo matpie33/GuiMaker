@@ -55,9 +55,8 @@ public class ListPanel<Word extends ListElement>
 				controller).getListFilteringPanel();
 		listPanelUpdater = new ListPanelUpdater(this, listConfiguration);
 		listElementsCreator = new ListElementsCreator<>(this,
-				new ListActionsCreator<>(insertWordPanel,controller,
-						listConfiguration,
-						listPanelUpdater));
+				new ListActionsCreator<>(insertWordPanel, controller,
+						listConfiguration, listPanelUpdater));
 		this.listConfiguration = listConfiguration;
 		this.title = listConfiguration.getTitle();
 
@@ -102,8 +101,9 @@ public class ListPanel<Word extends ListElement>
 	}
 
 	private void setMainPanelProperties() {
+		mainPanel.setRowColor(null);
 		if (hasParentList()) {
-			mainPanel.setRowColor(ColorChanger.makeLighter(contentColor));
+			contentColor = ColorChanger.makeLighter(contentColor);
 			mainPanel.setBackgroundColor(null);
 		}
 		mainPanel.setRowsBorder(null);
@@ -234,21 +234,9 @@ public class ListPanel<Word extends ListElement>
 	@Override
 	public void setParentDialog(DialogWindow dialog) {
 		super.setParentDialog(dialog);
-		if (hasMoreThan1Panel()) {
-			mainPanel.setBackgroundColor(dialog.getParentConfiguration()
-											   .getContentPanelColor());
-		}
-		else {
-			mainPanel.getPanel()
-					 .setOpaque(false);
-		}
+		mainPanel.setBackgroundColor(dialog.getParentConfiguration()
+										   .getContentPanelColor());
 
-	}
-
-	private boolean hasMoreThan1Panel() {
-		return listConfiguration.isShowButtonsLoadNextPreviousWords()
-				|| listConfiguration.isWordSearchingEnabled()
-				|| listConfiguration.isWordAddingEnabled();
 	}
 
 	public MainPanel getMainPanel() {
