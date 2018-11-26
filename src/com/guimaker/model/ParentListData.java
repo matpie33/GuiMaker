@@ -5,7 +5,6 @@ import com.guimaker.list.ListElement;
 import com.guimaker.list.myList.MyList;
 
 import java.util.Collection;
-import java.util.List;
 
 public class ParentListData<ParentWordType extends ListElement, ChildWordType extends ListElement> {
 
@@ -21,18 +20,6 @@ public class ParentListData<ParentWordType extends ListElement, ChildWordType ex
 		this.childListRepresentationAsCollection = childListRepresentationAsCollection;
 	}
 
-	public MyList<ParentWordType> getParentList() {
-		return parentList;
-	}
-
-	public ParentWordType getParentWord() {
-		return parentWord;
-	}
-
-	public Collection<ChildWordType> getChildListRepresentationAsCollection() {
-		return childListRepresentationAsCollection;
-	}
-
 	public void updateObservers(ListElementModificationType modificationType) {
 		parentList.updateObservers(parentWord, modificationType);
 	}
@@ -41,7 +28,7 @@ public class ParentListData<ParentWordType extends ListElement, ChildWordType ex
 		childListRepresentationAsCollection.add(word);
 	}
 
-	public void removeElement(ChildWordType word){
+	public void removeElement(ChildWordType word) {
 		childListRepresentationAsCollection.remove(word);
 	}
 
