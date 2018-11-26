@@ -102,7 +102,8 @@ public class InsertWordController<Word extends ListElement>
 		ListRowData<Word> listRowData = list.getListRowCreator()
 											.createListRow(word,
 													CommonListElements.forSingleRowOnly(
-															panel.getLabelsColor()),
+															panel.getLabelsColor(),
+															list),
 													InputGoal.ADD);
 		return listRowData.getRowPanel();
 	}

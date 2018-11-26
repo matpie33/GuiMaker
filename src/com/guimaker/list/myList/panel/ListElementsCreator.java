@@ -5,7 +5,6 @@ import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.KeyModifiers;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.ListElement;
-import com.guimaker.list.loadAdditionalWordsHandling.LoadWordsHandler;
 import com.guimaker.model.CommonListElements;
 import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.ButtonOptions;
@@ -76,8 +75,9 @@ public class ListElementsCreator<Word extends ListElement> {
 		AbstractButton addNewWord = createButtonAddRow(inputGoal);
 		AbstractButton editWord = createButtonEditWord(word);
 		AbstractButton finishEditing = createButtonFinishEditing(word);
-		return new CommonListElements(remove, rowNumberLabel, addNewWord,
-				labelsColor, editWord, finishEditing, false);
+		return new CommonListElements<>(remove, rowNumberLabel, addNewWord,
+				labelsColor, editWord, finishEditing, false,
+				listActionsCreator.getList());
 
 	}
 

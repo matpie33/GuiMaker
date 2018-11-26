@@ -11,6 +11,7 @@ import com.guimaker.list.loadAdditionalWordsHandling.*;
 import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.ListRow;
+import com.guimaker.model.ParentListData;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
@@ -35,7 +36,7 @@ public class ListWordsController<Word extends ListElement> {
 	private List<SwitchBetweenInputsFailListener> switchBetweenInputsFailListeners = new ArrayList<>();
 	private ProgressUpdater progressUpdater;
 	private Set<ListObserver<Word>> observers = new HashSet<>();
-	private Pair<MyList, ListElement> parentListAndWord;
+	private ParentListData<?, Word> parentListAndWord;
 	private boolean finishEditActionRequested;
 	private boolean isInEditMode;
 	private ListWordsHolder<Word> listWordsHolder;
@@ -60,6 +61,8 @@ public class ListWordsController<Word extends ListElement> {
 				listViewManager.getRowsPanel());
 		initializeFoundWordStrategies();
 	}
+
+
 
 	public ListWordsHolder<Word> getListWordsHolder() {
 		return listWordsHolder;
@@ -102,6 +105,11 @@ public class ListWordsController<Word extends ListElement> {
 			listViewManager.enableButtonShowPreviousWords();
 		}
 
+		if (parentListAndWord != null) {
+			parentListAndWord.updateObservers(
+					ListElementModificationType.EDIT);
+			parentListAndWord.addElement(r);
+		}
 		ListRow<Word> newWord = listViewManager.addRow(r,
 				listWordsHolder.getNumberOfWords() + 1,
 				canNewWordBeDisplayed && tryToShowWord,
@@ -132,9 +140,9 @@ public class ListWordsController<Word extends ListElement> {
 							+ "only parent list is allowed to have them");
 		}
 		if (parentListAndWord != null) {
-			parentListAndWord.getLeft()
-							 .updateObservers(parentListAndWord.getRight(),
-									 ListElementModificationType.EDIT);
+			parentListAndWord.updateObservers(ListElementModificationType
+					.DELETE);
+			parentListAndWord.removeElement(word);
 		}
 		else {
 			observers.forEach(list -> list.update(word,

@@ -103,7 +103,8 @@ public class ListViewManager<Word extends ListElement> {
 			ListRowData<Word> listRow = this.listRowCreator.createListRow(
 					listWordsController.getWordInitializer()
 									   .initializeElement(),
-					CommonListElements.forSingleRowOnly(Color.WHITE),
+					CommonListElements.forSingleRowOnly(Color.WHITE,
+							listWordsController.getMyList()),
 					InputGoal.SEARCH);
 			listPanel.setRowForFilteringPanel(listRow);
 		}

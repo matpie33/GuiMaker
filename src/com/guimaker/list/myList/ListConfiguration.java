@@ -6,9 +6,10 @@ import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementInitializer;
-import com.guimaker.utilities.Pair;
+import com.guimaker.model.ParentListData;
 
 import javax.swing.*;
+import java.util.Collection;
 
 public class ListConfiguration<Word extends ListElement> {
 
@@ -21,14 +22,13 @@ public class ListConfiguration<Word extends ListElement> {
 	private PanelDisplayMode displayMode = PanelDisplayMode.EDIT;
 	private AbstractButton[] additionalNavigationButtons = new AbstractButton[] {};
 	private ListInputsSelectionManager allInputsSelectionManager;
-	private Pair<MyList, ListElement> parentListAndWordContainingThisList;
+	private ParentListData<?, Word> parentListAndWordContainingThisList;
 	private String wordSpecificDeletePrompt;
 	private ListRowCreator<Word> listRowCreator;
 	private ListElementInitializer<Word> listElementInitializer;
 	private String title;
 	private DialogWindow dialogWindow;
 	private ApplicationChangesManager applicationChangesManager;
-
 
 	public ListConfiguration(String wordSpecificDeletePrompt,
 			ListRowCreator<Word> listRowCreator,
@@ -78,14 +78,15 @@ public class ListConfiguration<Word extends ListElement> {
 		return this;
 	}
 
-	public Pair<MyList, ListElement> getParentListAndWordContainingThisList() {
+	public ParentListData<?, Word> getParentListAndWordContainingThisList() {
 		return parentListAndWordContainingThisList;
 	}
 
-	public ListConfiguration<Word> parentListAndWordContainingThisList(
-			MyList parentList, ListElement parentWordContainingThisList) {
-		parentListAndWordContainingThisList = new Pair<>(parentList,
-				parentWordContainingThisList);
+	public <ParentWordType extends ListElement> ListConfiguration<Word> parentListAndWordContainingThisList(
+			MyList<ParentWordType> parentList, ParentWordType parentWord,
+			Collection<Word> childListRepresentationAsCollection) {
+		parentListAndWordContainingThisList = new ParentListData<>(parentList,
+				parentWord, childListRepresentationAsCollection);
 		return this;
 	}
 
@@ -112,8 +113,8 @@ public class ListConfiguration<Word extends ListElement> {
 		return enableWordSearching;
 	}
 
-	public ListConfiguration<Word> enableWordSearching(boolean
-			enableWordSearching) {
+	public ListConfiguration<Word> enableWordSearching(
+			boolean enableWordSearching) {
 		this.enableWordSearching = enableWordSearching;
 		return this;
 	}

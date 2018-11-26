@@ -9,6 +9,6 @@ import com.guimaker.model.CommonListElements;
 public interface ListRowCreator<Word extends ListElement> {
 
 	public ListRowData<Word> createListRow(Word word,
-			CommonListElements commonListElements, InputGoal inputGoal);
+			CommonListElements<Word> commonListElements, InputGoal inputGoal);
 
 }

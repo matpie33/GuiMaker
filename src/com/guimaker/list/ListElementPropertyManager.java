@@ -14,9 +14,9 @@ public interface ListElementPropertyManager<PropertyType, PropertyHolder extends
 	public PropertyType validateInputAndConvertToProperty(
 			JTextComponent textInput, PropertyHolder propertyHolder);
 
+	public String getPropertyDefinedException(PropertyType property);
+
 	public void setProperty(PropertyHolder propertyHolder,
 			PropertyType newValue, PropertyType previousValue);
-
-	public String getPropertyDefinedException(PropertyType property);
 
 }

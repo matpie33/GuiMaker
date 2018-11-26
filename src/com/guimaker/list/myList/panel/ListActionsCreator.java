@@ -4,7 +4,6 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.ApplicationWindow;
 import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.InputGoal;
-import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.myList.ListConfiguration;
@@ -13,7 +12,6 @@ import com.guimaker.list.myList.MyList;
 import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.strings.Prompts;
 import com.guimaker.strings.Titles;
-import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.ThreadUtilities;
 
 import javax.swing.*;
@@ -37,6 +35,10 @@ public class ListActionsCreator<Word extends ListElement> {
 		this.listConfiguration = listConfiguration;
 		this.listPanelUpdater = listPanelUpdater;
 		this.insertWordPanel = insertWordPanel;
+	}
+
+	public MyList<Word> getList() {
+		return listWordsController.getMyList();
 	}
 
 	public AbstractAction createDeleteRowAction(Word word) {
@@ -63,16 +65,9 @@ public class ListActionsCreator<Word extends ListElement> {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Pair<MyList, ListElement> parentListAndWord = listConfiguration.getParentListAndWordContainingThisList();
 				listWordsController.add(
 						listConfiguration.getListElementInitializer()
 										 .initializeElement(), inputGoal, true);
-				if (parentListAndWord != null) {
-					parentListAndWord.getLeft()
-									 .updateObservers(
-											 parentListAndWord.getRight(),
-											 ListElementModificationType.EDIT);
-				}
 				listPanelUpdater.updateRowsPanel();
 				listWordsController.focusFirstTextfieldInPanel();
 			}
@@ -116,9 +111,9 @@ public class ListActionsCreator<Word extends ListElement> {
 			public void actionPerformed(ActionEvent e) {
 				ApplicationWindow applicationWindow = listConfiguration.getApplicationChangesManager()
 																	   .getApplicationWindow();
-				applicationWindow.createDialog(insertWordPanel, Titles
-								.INSERT_WORD_DIALOG,
-						false, DialogWindow.Position.CENTER);
+				applicationWindow.createDialog(insertWordPanel,
+						Titles.INSERT_WORD_DIALOG, false,
+						DialogWindow.Position.CENTER);
 			}
 		};
 	}
