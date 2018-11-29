@@ -1,6 +1,7 @@
 package com.guimaker.list.myList;
 
 import com.guimaker.enums.MoveDirection;
+import com.guimaker.enums.WordDuplicationType;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.WordInMyListExistence;
@@ -32,8 +33,8 @@ public class ListPropertySearcher<Word extends ListElement> {
 			}
 			else {
 				Word word = listWordsHolder.getWordInRow(rowNumber);
-				if (propertyChecker.isPropertyFound(searchedPropertyValue,
-						word)) {
+				if (propertyChecker.isPropertyFound(searchedPropertyValue, word,
+						null)) {
 					return rowNumber;
 				}
 			}
@@ -72,26 +73,32 @@ public class ListPropertySearcher<Word extends ListElement> {
 			Property property,
 			ListElementPropertyManager<Property, Word> propertyManager,
 			Word wordToExclude) {
-		for (int indexOfWord = 0;
-			 indexOfWord < listWordsHolder.getWords().size(); indexOfWord++) {
-			Word word = listWordsHolder.getWords().get(indexOfWord);
+		for (int indexOfWord = 0; indexOfWord < listWordsHolder.getWords()
+															   .size(); indexOfWord++) {
+			Word word = listWordsHolder.getWords()
+									   .get(indexOfWord);
 			if (word == wordToExclude) {
 				continue;
 			}
-			if (propertyManager.isPropertyFound(property, word)) {
-				return new WordInMyListExistence<>(true, word, indexOfWord + 1);
+			if (word.equals(wordToExclude)) {
+				return new WordInMyListExistence<>(true, word, indexOfWord + 1,
+						WordDuplicationType.WORD);
+			}
+			else if (propertyManager.isPropertyFound(property, word,
+					wordToExclude)) {
+				return new WordInMyListExistence<>(true, word, indexOfWord + 1,
+						WordDuplicationType.PROPERTY);
 			}
 		}
-		return new WordInMyListExistence<>(false, null, -1);
+		return new WordInMyListExistence<>(false, null, -1, null);
 	}
 
 	public <Property> Word findRowBasedOnPropertyStartingFromBeginningOfList(
 			ListElementPropertyManager<Property, Word> propertyChecker,
 			Property searchedPropertyValue, MoveDirection searchDirection,
 			boolean displayMessage) {
-		int rowNumber = findRowNumberBasedOnProperty(
-				propertyChecker, searchedPropertyValue, searchDirection,
-				displayMessage);
+		int rowNumber = findRowNumberBasedOnProperty(propertyChecker,
+				searchedPropertyValue, searchDirection, displayMessage);
 		if (rowNumber != -1) {
 			return listWordsHolder.getWordInRow(rowNumber);
 		}

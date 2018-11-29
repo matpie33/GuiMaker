@@ -3,11 +3,13 @@ package com.guimaker.list.myList;
 import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
+import com.guimaker.enums.WordDuplicationType;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.model.PropertyPostValidationData;
+import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.strings.ExceptionsMessages;
 import com.guimaker.utilities.StringUtilities;
 import com.guimaker.utilities.ThreadUtilities;
@@ -42,9 +44,21 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		this.propertyHolder = propertyHolder;
 		this.inputGoal = inputGoal;
 		if (!inputGoal.equals(InputGoal.NO_INPUT)) {
-			addValidationListener(list.getInsertWordPanel()
-									  .getController());
+			addInsertWordPanelAsValidationListener(list);
 		}
+	}
+
+	private void addInsertWordPanelAsValidationListener(
+			MyList<PropertyHolder> list) {
+		InsertWordPanel insertWordPanel;
+		MyList rootList = list.getRootList();
+		if (rootList != null) {
+			insertWordPanel = rootList.getInsertWordPanel();
+		}
+		else {
+			insertWordPanel = list.getInsertWordPanel();
+		}
+		addValidationListener(insertWordPanel.getController());
 	}
 
 	public ListPropertyChangeHandler(PropertyHolder propertyHolder,
@@ -125,9 +139,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			setWordToPreviousValue(input, previousPropertyValue);
 			int duplicateRowNumber = wordInMyListExistence.getOneBasedRowNumber();
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
-					duplicateRowNumber);
+					duplicateRowNumber,
+					wordInMyListExistence.getDuplicationType());
 			dialogWindow.showMessageDialog(exceptionMessage, false);
-			list.showWord(wordInMyListExistence.getWord());
 
 			//TODO performance of displaying just 200 words is terrible low, which
 			//forces me to show message dialog before highlighting row (which loads words
@@ -160,9 +174,16 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	}
 
 	private String getExceptionForDuplicate(Property propertyNewValue,
-			int duplicateRowNumber) {
-		String propertyDefinedMessage = listElementPropertyManager.getPropertyDefinedException(
-				propertyNewValue);
+			int duplicateRowNumber, WordDuplicationType duplicationType) {
+		String propertyDefinedMessage;
+		if (duplicationType.equals(WordDuplicationType.PROPERTY)) {
+			propertyDefinedMessage = listElementPropertyManager.getPropertyDefinedException(
+					propertyNewValue);
+		}
+		else {
+			propertyDefinedMessage = "Juz istnieje";
+		}
+
 		String duplicatedRowMessage = StringUtilities.putInNewLine(
 				String.format(ExceptionsMessages.ROW_FOR_DUPLICATED_PROPERTY,
 						duplicateRowNumber));

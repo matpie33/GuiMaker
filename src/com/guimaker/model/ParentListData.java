@@ -32,4 +32,7 @@ public class ParentListData<ParentWordType extends ListElement, ChildWordType ex
 		childListRepresentationAsCollection.remove(word);
 	}
 
+	public MyList<ParentWordType> getList() {
+		return parentList;
+	}
 }

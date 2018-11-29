@@ -7,7 +7,7 @@ public interface ListElementPropertyManager<PropertyType, PropertyHolder extends
 	public String getInvalidPropertyReason();
 
 	public boolean isPropertyFound(PropertyType property,
-			PropertyHolder propertyHolder);
+			PropertyHolder wordToCheck, PropertyHolder propertyHolder);
 
 	public String getPropertyValue(PropertyHolder propertyHolder);
 

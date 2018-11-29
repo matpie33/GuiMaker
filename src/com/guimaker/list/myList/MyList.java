@@ -7,6 +7,7 @@ import com.guimaker.enums.MoveDirection;
 import com.guimaker.list.*;
 import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
+import com.guimaker.model.ParentListData;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
@@ -18,6 +19,7 @@ import java.util.List;
 public class MyList<Word extends ListElement>
 		implements ObservableList<Word>, InputValidationListener<Word> {
 
+	private final ParentListData<?, Word> parentListAndWordContainingThisList;
 	private ListWordsHolder<Word> listWordsHolder;
 	private ApplicationChangesManager applicationChangesManager;
 	private ListWordsController<Word> listController;
@@ -27,8 +29,10 @@ public class MyList<Word extends ListElement>
 	private ListRowCreator<Word> listRowCreator;
 	private ListPropertySearcher<Word> listPropertySearcher;
 	private InsertWordPanel<Word> insertWordPanel;
+	private Object rootList;
 
 	public MyList(ListConfiguration<Word> listConfiguration) {
+		parentListAndWordContainingThisList = listConfiguration.getParentListAndWordContainingThisList();
 		this.listRowCreator = listConfiguration.getListRowCreator();
 		this.applicationChangesManager = listConfiguration.getApplicationChangesManager();
 		this.wordInitializer = listConfiguration.getListElementInitializer();
@@ -266,4 +270,19 @@ public class MyList<Word extends ListElement>
 		return listPropertySearcher.doesWordWithPropertyExist(propertyNewValue,
 				listElementPropertyManager, propertyHolder);
 	}
+
+	public MyList getRootList() {
+		MyList parentList = getParentList();
+		while (parentList != null && parentList.getParentList() != null) {
+			parentList = parentList.getParentList();
+		}
+		return parentList;
+	}
+
+	private MyList getParentList() {
+		return parentListAndWordContainingThisList != null ?
+				parentListAndWordContainingThisList.getList() :
+				null;
+	}
+
 }

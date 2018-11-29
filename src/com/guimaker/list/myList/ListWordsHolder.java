@@ -1,5 +1,6 @@
 package com.guimaker.list.myList;
 
+import com.guimaker.enums.WordDuplicationType;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.model.ListRow;
@@ -74,17 +75,17 @@ public class ListWordsHolder<Word extends ListElement> {
 
 	public WordInMyListExistence<Word> isWordDefined(Word word) {
 		if (word.isEmpty()) {
-			return new WordInMyListExistence<>(false, null, 0);
+			return new WordInMyListExistence<>(false, null, 0, null);
 		}
 		for (int i = 0; i < allWordsToRowNumberMap.size(); i++) {
 			ListRow<Word> listRow = allWordsToRowNumberMap.get(i);
 			if (listRow.getWord()
 					   .equals(word)) {
 				return new WordInMyListExistence<>(true, listRow.getWord(),
-						i + 1);
+						i + 1, WordDuplicationType.WORD);
 			}
 		}
-		return new WordInMyListExistence<>(false, null, -1);
+		return new WordInMyListExistence<>(false, null, -1, null);
 	}
 
 	public List<Word> getWordsByHighlight(boolean highlighted) {

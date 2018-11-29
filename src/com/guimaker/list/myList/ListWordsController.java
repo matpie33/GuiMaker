@@ -7,6 +7,7 @@ import com.guimaker.enums.MoveDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementInitializer;
 import com.guimaker.list.ListObserver;
+import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.list.loadAdditionalWordsHandling.*;
 import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
@@ -16,7 +17,6 @@ import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.swingUtilities.ProgressUpdater;
-import com.guimaker.utilities.Pair;
 import com.guimaker.utilities.Range;
 
 import javax.swing.*;
@@ -62,8 +62,6 @@ public class ListWordsController<Word extends ListElement> {
 		initializeFoundWordStrategies();
 	}
 
-
-
 	public ListWordsHolder<Word> getListWordsHolder() {
 		return listWordsHolder;
 	}
@@ -106,8 +104,7 @@ public class ListWordsController<Word extends ListElement> {
 		}
 
 		if (parentListAndWord != null) {
-			parentListAndWord.updateObservers(
-					ListElementModificationType.EDIT);
+			parentListAndWord.updateObservers(ListElementModificationType.EDIT);
 			parentListAndWord.addElement(r);
 		}
 		ListRow<Word> newWord = listViewManager.addRow(r,
@@ -140,8 +137,8 @@ public class ListWordsController<Word extends ListElement> {
 							+ "only parent list is allowed to have them");
 		}
 		if (parentListAndWord != null) {
-			parentListAndWord.updateObservers(ListElementModificationType
-					.DELETE);
+			parentListAndWord.updateObservers(
+					ListElementModificationType.DELETE);
 			parentListAndWord.removeElement(word);
 		}
 		else {

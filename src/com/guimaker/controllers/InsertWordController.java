@@ -66,8 +66,8 @@ public class InsertWordController<Word extends ListElement>
 				Component focusOwner = FocusManager.getCurrentManager()
 												   .getFocusOwner();
 				if (focusOwner instanceof JTextComponent) {
-					validateFocusedTextInput();
 					addingWordWasRequested = true;
+					validateFocusedTextInput();
 				}
 				else {
 					checkWordAndAddAndReinitializePanel();
