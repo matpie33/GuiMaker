@@ -147,7 +147,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 					childWordExistence :
 					rootWordExistence;
 			setTextInputToPreviousValue(input);
-			setWordToPreviousValue(input, previousPropertyValue);
+			setWordToPreviousValue(input, propertyNewValue);
 			int duplicateRowNumber = duplication.getOneBasedRowNumber();
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
 					duplicateRowNumber, duplication);
