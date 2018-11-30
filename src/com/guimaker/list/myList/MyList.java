@@ -4,6 +4,7 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.MoveDirection;
+import com.guimaker.enums.WordDuplicationType;
 import com.guimaker.list.*;
 import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
@@ -255,8 +256,8 @@ public class MyList<Word extends ListElement>
 		return listController.isFilterInputFocused();
 	}
 
-	public boolean containsWord(Word word) {
-		return getWords().contains(word);
+	public WordInMyListExistence<Word> containsWord(Word word) {
+		return listWordsHolder.containsWord(word);
 	}
 
 	public void showWord(Word word) {
@@ -277,6 +278,12 @@ public class MyList<Word extends ListElement>
 			parentList = parentList.getParentList();
 		}
 		return parentList;
+	}
+
+	public ListElement getRootWord() {
+		return parentListAndWordContainingThisList != null ?
+				parentListAndWordContainingThisList.getParentWord() :
+				null;
 	}
 
 	private MyList getParentList() {

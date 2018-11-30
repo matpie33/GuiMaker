@@ -132,15 +132,25 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			Property propertyNewValue) {
 		listElementPropertyManager.setProperty(propertyHolder, propertyNewValue,
 				previousPropertyValue);
-		WordInMyListExistence<PropertyHolder> wordInMyListExistence = list.doesWordWithPropertyExist(
+		WordInMyListExistence<PropertyHolder> childWordExistence = list.doesWordWithPropertyExist(
 				propertyNewValue, listElementPropertyManager, propertyHolder);
-		if (wordInMyListExistence.exists()) {
+		WordInMyListExistence rootWordExistence = null;
+		if (list.getRootList() != null) {
+			rootWordExistence = list.getRootList()
+									.containsWord(list.getRootWord());
+			//TODO make it generic safe
+		}
+
+		if (childWordExistence.exists()
+				|| rootWordExistence != null && rootWordExistence.exists()) {
+			WordInMyListExistence duplication = childWordExistence.exists() ?
+					childWordExistence :
+					rootWordExistence;
 			setTextInputToPreviousValue(input);
 			setWordToPreviousValue(input, previousPropertyValue);
-			int duplicateRowNumber = wordInMyListExistence.getOneBasedRowNumber();
+			int duplicateRowNumber = duplication.getOneBasedRowNumber();
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
-					duplicateRowNumber,
-					wordInMyListExistence.getDuplicationType());
+					duplicateRowNumber, duplication);
 			dialogWindow.showMessageDialog(exceptionMessage, false);
 
 			//TODO performance of displaying just 200 words is terrible low, which
@@ -174,20 +184,25 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	}
 
 	private String getExceptionForDuplicate(Property propertyNewValue,
-			int duplicateRowNumber, WordDuplicationType duplicationType) {
+			int duplicateRowNumber,
+			WordInMyListExistence wordDuplicateInformation) {
 		String propertyDefinedMessage;
-		if (duplicationType.equals(WordDuplicationType.PROPERTY)) {
+		if (wordDuplicateInformation.getDuplicationType()
+									.equals(WordDuplicationType.PROPERTY)) {
 			propertyDefinedMessage = listElementPropertyManager.getPropertyDefinedException(
 					propertyNewValue);
+			propertyDefinedMessage += StringUtilities.putInNewLine(
+					String.format(
+							ExceptionsMessages.ROW_FOR_DUPLICATED_PROPERTY,
+							duplicateRowNumber));
 		}
 		else {
-			propertyDefinedMessage = "Juz istnieje";
+			propertyDefinedMessage = String.format(
+					ExceptionsMessages.WORD_ALREADY_EXISTS,
+					wordDuplicateInformation.getOneBasedRowNumber());
 		}
 
-		String duplicatedRowMessage = StringUtilities.putInNewLine(
-				String.format(ExceptionsMessages.ROW_FOR_DUPLICATED_PROPERTY,
-						duplicateRowNumber));
-		return propertyDefinedMessage + duplicatedRowMessage;
+		return propertyDefinedMessage;
 	}
 
 	private Property validateAndConvertToProperty(JTextComponent input) {

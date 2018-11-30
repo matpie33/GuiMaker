@@ -113,4 +113,15 @@ public class ListWordsHolder<Word extends ListElement> {
 		return null;
 	}
 
+	public WordInMyListExistence<Word> containsWord(Word word) {
+		for (int i = 0; i < allWordsToRowNumberMap.size(); i++) {
+			Word wordInList = allWordsToRowNumberMap.get(i)
+													.getWord();
+			if (wordInList.equals(word) && wordInList != word) {
+				return new WordInMyListExistence<>(true, wordInList, (i + 1),
+						WordDuplicationType.WORD);
+			}
+		}
+		return new WordInMyListExistence<>(false, null, -1, null);
+	}
 }

@@ -35,4 +35,8 @@ public class ParentListData<ParentWordType extends ListElement, ChildWordType ex
 	public MyList<ParentWordType> getList() {
 		return parentList;
 	}
+
+	public ParentWordType getParentWord() {
+		return parentWord;
+	}
 }
