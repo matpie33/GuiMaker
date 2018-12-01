@@ -152,13 +152,6 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
 					duplicateRowNumber, duplication);
 			dialogWindow.showMessageDialog(exceptionMessage, false);
-
-			//TODO performance of displaying just 200 words is terrible low, which
-			//forces me to show message dialog before highlighting row (which loads words
-			// if necessary)
-			//TODO also think of a way how to display modal dialog while painting the
-			//loaded words
-
 			return false;
 		}
 		else {
