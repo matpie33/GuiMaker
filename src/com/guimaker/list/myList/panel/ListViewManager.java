@@ -49,6 +49,7 @@ public class ListViewManager<Word extends ListElement> {
 
 		this.listRowCreator = listConfiguration.getListRowCreator();
 		listInputsSelectionManager = listConfiguration.getAllInputsSelectionManager();
+		initializeListPanel();
 
 	}
 
@@ -65,7 +66,8 @@ public class ListViewManager<Word extends ListElement> {
 			InputGoal inputGoal) {
 		this.inputGoal = inputGoal;
 		if (!isInitialized) {
-			initializeListPanel();
+			listPanelUpdater.removeFirstRowInRowsPanel();
+			isInitialized = true;
 		}
 
 		CommonListElements commonListElements = listPanel.createCommonListElements(
@@ -97,8 +99,8 @@ public class ListViewManager<Word extends ListElement> {
 
 	private void initializeListPanel() {
 
-		listPanelUpdater.removeFirstRowInRowsPanel();
-		isInitialized = true;
+
+
 		if (listConfiguration.isWordSearchingEnabled()) {
 			ListRowData<Word> listRow = this.listRowCreator.createListRow(
 					listWordsController.getWordInitializer()
