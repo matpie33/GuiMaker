@@ -103,6 +103,7 @@ public class ListPanel<Word extends ListElement>
 	private void setMainPanelProperties() {
 		mainPanel.setRowColor(null);
 		if (hasParentList()) {
+			mainPanel.setGapsBetweenRowsTo0();
 			contentColor = ColorChanger.makeLighter(contentColor);
 			mainPanel.setBackgroundColor(null);
 		}
