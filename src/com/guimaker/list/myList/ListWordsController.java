@@ -104,7 +104,6 @@ public class ListWordsController<Word extends ListElement> {
 		}
 
 		if (parentListAndWord != null) {
-			parentListAndWord.updateObservers(ListElementModificationType.EDIT);
 			parentListAndWord.addElement(r);
 		}
 		ListRow<Word> newWord = listViewManager.addRow(r,

@@ -25,7 +25,9 @@ public class ParentListData<ParentWordType extends ListElement, ChildWordType ex
 	}
 
 	public void addElement(ChildWordType word) {
-		childListRepresentationAsCollection.add(word);
+		if (!childListRepresentationAsCollection.contains(word)){
+			childListRepresentationAsCollection.add(word);
+		}
 	}
 
 	public void removeElement(ChildWordType word) {

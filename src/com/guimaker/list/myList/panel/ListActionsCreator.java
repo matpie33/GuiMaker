@@ -4,6 +4,7 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.application.ApplicationWindow;
 import com.guimaker.application.DialogWindow;
 import com.guimaker.enums.InputGoal;
+import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.myList.ListConfiguration;

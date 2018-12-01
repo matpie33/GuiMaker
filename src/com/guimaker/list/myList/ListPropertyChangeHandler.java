@@ -14,6 +14,7 @@ import com.guimaker.strings.ExceptionsMessages;
 import com.guimaker.utilities.StringUtilities;
 import com.guimaker.utilities.ThreadUtilities;
 
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -29,7 +30,6 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private String previousValueOfTextInput;
 	private ListElementPropertyManager<Property, PropertyHolder> listElementPropertyManager;
 	private PropertyHolder propertyHolder;
-	private Property previousPropertyValue;
 	private String defaultValue = "";
 	private InputGoal inputGoal;
 	private Set<InputValidationListener<PropertyHolder>> validationListeners = new HashSet<>();
@@ -105,13 +105,17 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			return;
 		}
 		Property propertyNewValue = validateAndConvertToProperty(input);
+		Property previousValue = listElementPropertyManager.convertToProperty(
+				new JTextField(previousValueOfTextInput.equals(defaultValue) ?
+						"" :
+						previousValueOfTextInput));
 
 		ThreadUtilities.callOnOtherThread(() -> {
 			boolean inputValid = propertyNewValue != null;
 			boolean addedWord = false;
 			if (inputValid && !inputGoal.equals(InputGoal.SEARCH)) {
-				addedWord = addWordToList(input, propertyNewValue);
-				previousPropertyValue = propertyNewValue;
+				addedWord = addWordToList(input, propertyNewValue,
+						previousValue);
 			}
 			notifyValidationListeners(
 					inputValid && (addedWord || inputGoal.equals(
@@ -129,9 +133,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	}
 
 	private boolean addWordToList(JTextComponent input,
-			Property propertyNewValue) {
+			Property propertyNewValue, Property previousValue) {
 		listElementPropertyManager.setProperty(propertyHolder, propertyNewValue,
-				previousPropertyValue);
+				previousValue);
 		WordInMyListExistence<PropertyHolder> childWordExistence = list.doesWordWithPropertyExist(
 				propertyNewValue, listElementPropertyManager, propertyHolder);
 		WordInMyListExistence rootWordExistence = null;
@@ -158,6 +162,11 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			previousValueOfTextInput = null;
 			list.updateObservers(propertyHolder,
 					ListElementModificationType.EDIT);
+			if (list.getRootList() != null) {
+				list.getRootList()
+					.updateObservers(list.getRootWord(),
+							ListElementModificationType.EDIT);
+			}
 			list.save();
 			return true;
 		}
@@ -166,8 +175,8 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private void setWordToPreviousValue(JTextComponent input,
 			Property previousValue) {
 		listElementPropertyManager.setProperty(propertyHolder,
-				listElementPropertyManager.validateInputAndConvertToProperty(
-						input, propertyHolder), previousValue);
+				listElementPropertyManager.convertToProperty(input),
+				previousValue);
 	}
 
 	private void setTextInputToPreviousValue(JTextComponent input) {
@@ -199,17 +208,17 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	}
 
 	private Property validateAndConvertToProperty(JTextComponent input) {
-		Property propertyNewValue = listElementPropertyManager.validateInputAndConvertToProperty(
-				input, propertyHolder);
-		if (propertyNewValue == null && !input.getText()
-											  .isEmpty()) {
+		boolean isValid = listElementPropertyManager.validateInput(input,
+				propertyHolder);
+		if (!isValid && !input.getText()
+							  .isEmpty()) {
 			input.setForeground(Color.RED);
 			dialogWindow.showMessageDialog(
 					listElementPropertyManager.getInvalidPropertyReason());
 			setTextInputToPreviousValue(input);
 			return null;
 		}
-		return propertyNewValue;
+		return listElementPropertyManager.convertToProperty(input);
 
 	}
 

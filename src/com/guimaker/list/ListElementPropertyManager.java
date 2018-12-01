@@ -1,5 +1,7 @@
 package com.guimaker.list;
 
+import javafx.beans.property.Property;
+
 import javax.swing.text.JTextComponent;
 
 public interface ListElementPropertyManager<PropertyType, PropertyHolder extends ListElement> {
@@ -11,8 +13,14 @@ public interface ListElementPropertyManager<PropertyType, PropertyHolder extends
 
 	public String getPropertyValue(PropertyHolder propertyHolder);
 
-	public PropertyType validateInputAndConvertToProperty(
-			JTextComponent textInput, PropertyHolder propertyHolder);
+	public default boolean validateInput(
+			JTextComponent textInput, PropertyHolder propertyHolder){
+		return true;
+	}
+
+	public default PropertyType convertToProperty(JTextComponent input){
+		return (PropertyType) input.getText();
+	}
 
 	public String getPropertyDefinedException(PropertyType property);
 
