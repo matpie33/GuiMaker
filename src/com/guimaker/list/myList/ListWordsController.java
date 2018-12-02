@@ -7,7 +7,6 @@ import com.guimaker.enums.MoveDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementInitializer;
 import com.guimaker.list.ListObserver;
-import com.guimaker.list.WordInMyListExistence;
 import com.guimaker.list.loadAdditionalWordsHandling.*;
 import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
@@ -437,6 +436,9 @@ public class ListWordsController<Word extends ListElement> {
 			return;
 		}
 		MainPanel panel = listViewManager.repaintWord(word, listRow, inputGoal);
+		SwingUtilities.invokeLater(() -> panel.getPanel()
+											  .getParent()
+											  .requestFocusInWindow());
 
 		listRow.setPanel(panel);
 	}
