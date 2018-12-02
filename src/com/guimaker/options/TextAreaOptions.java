@@ -4,7 +4,7 @@ public class TextAreaOptions
 		extends AbstractTextComponentOptions<TextAreaOptions> {
 
 	private boolean wrapStyleWord = true;
-	private boolean lineWrap = true;
+	private boolean lineWrap = false;
 	private boolean moveToNextComponentWhenTabbed = true;
 
 	public boolean isMoveToNextComponentWhenTabbed() {

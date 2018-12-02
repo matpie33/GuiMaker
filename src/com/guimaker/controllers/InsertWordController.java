@@ -6,11 +6,11 @@ import com.guimaker.list.ListElement;
 import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.MyList;
 import com.guimaker.listeners.InputValidationListener;
+import com.guimaker.model.CommonListElements;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.InsertWordPanel;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.strings.ExceptionsMessages;
-import com.guimaker.model.CommonListElements;
 import com.guimaker.utilities.ThreadUtilities;
 
 import javax.swing.*;
@@ -105,6 +105,14 @@ public class InsertWordController<Word extends ListElement>
 															panel.getLabelsColor(),
 															list),
 													InputGoal.ADD);
+		SwingUtilities.invokeLater(() -> {
+			listRowData.getRowPropertiesData()
+					   .values()
+					   .iterator()
+					   .next()
+					   .getFilteringTextComponent()
+					   .requestFocusInWindow();
+		});
 		return listRowData.getRowPanel();
 	}
 

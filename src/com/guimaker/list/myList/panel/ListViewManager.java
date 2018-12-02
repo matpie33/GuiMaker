@@ -40,7 +40,7 @@ public class ListViewManager<Word extends ListElement> {
 			ListConfiguration<Word> listConfiguration,
 			ListWordsController<Word> controller) {
 		this.listConfiguration = listConfiguration;
-		listPanel = new ListPanel<>(insertWordPanel,listConfiguration, this,
+		listPanel = new ListPanel<>(insertWordPanel, listConfiguration, this,
 				controller);
 		listPanelUpdater = listPanel.getListPanelUpdater();
 
@@ -99,15 +99,12 @@ public class ListViewManager<Word extends ListElement> {
 
 	private void initializeListPanel() {
 
-
-
 		if (listConfiguration.isWordSearchingEnabled()) {
 			ListRowData<Word> listRow = this.listRowCreator.createListRow(
 					listWordsController.getWordInitializer()
 									   .initializeElement(),
 					CommonListElements.forSingleRowOnly(Color.WHITE,
-							listWordsController.getMyList()),
-					InputGoal.SEARCH);
+							listWordsController.getMyList()), InputGoal.SEARCH);
 			listPanel.setRowForFilteringPanel(listRow);
 		}
 		listPanel.createPanel();
@@ -179,19 +176,23 @@ public class ListViewManager<Word extends ListElement> {
 		listPanelUpdater.enableButtonLoadPreviousWords();
 	}
 
-	public MainPanel repaintWord(Word word, int rowNumber, JComponent oldPanel,
-			InputGoal customInputGoal, boolean highlighted) {
+	public MainPanel repaintWord(Word word, ListRow<Word> listRow,
+			InputGoal customInputGoal) {
 		CommonListElements commonListElements = listPanel.createCommonListElements(
-				word, this.inputGoal, rowNumber, labelsColor);
+				word, this.inputGoal, listRow.getRowNumber(), labelsColor);
 		MainPanel newPanel = listRowCreator.createListRow(word,
 				commonListElements,
 				customInputGoal == null ? this.inputGoal : customInputGoal)
 										   .getRowPanel();
-		if (highlighted) {
+
+		if (listRow.isHighlighted()) {
 			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
 											 .getApplicationConfiguration()
 											 .getListRowHighlightColor());
+		}
+		else{
+			newPanel.getPanel().setOpaque(false);
 		}
 		if (customInputGoal != null && customInputGoal.equals(
 				InputGoal.EDIT_TEMPORARILY)) {
@@ -201,7 +202,7 @@ public class ListViewManager<Word extends ListElement> {
 											 .getListRowEditTemporarilyColor());
 			newPanel.updateView();
 		}
-		listPanelUpdater.replacePanelsInRowsPanel(oldPanel,
+		listPanelUpdater.replacePanelsInRowsPanel(listRow.getJPanel(),
 				newPanel.getPanel());
 
 		return newPanel;

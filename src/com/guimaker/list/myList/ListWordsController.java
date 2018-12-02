@@ -436,9 +436,7 @@ public class ListWordsController<Word extends ListElement> {
 		if (listRow == null || !listRow.isShowing()) {
 			return;
 		}
-		MainPanel panel = listViewManager.repaintWord(word,
-				listRow.getRowNumber(), listRow.getJPanel(), inputGoal,
-				listRow.isHighlighted());
+		MainPanel panel = listViewManager.repaintWord(word, listRow, inputGoal);
 
 		listRow.setPanel(panel);
 	}
