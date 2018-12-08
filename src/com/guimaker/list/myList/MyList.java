@@ -292,4 +292,7 @@ public class MyList<Word extends ListElement>
 				null;
 	}
 
+	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
+		listController.addAdditionalNavigationButtons(buttons);
+	}
 }

@@ -46,6 +46,7 @@ public class ListPanel<Word extends ListElement>
 	private ListPanelUpdater listPanelUpdater;
 	private ListFilteringPanel<Word> listFilteringPanel;
 	private ListRowData<Word> rowForFilteringPanel;
+	private List<AbstractButton> navigationButtons;
 
 	public ListPanel(InsertWordPanel<Word> insertWordPanel,
 			ListConfiguration listConfiguration,
@@ -156,6 +157,7 @@ public class ListPanel<Word extends ListElement>
 		if (listConfiguration.isWordAddingEnabled()) {
 			navigationButtons.add(listElementsCreator.createButtonAddWord());
 		}
+		this.navigationButtons = navigationButtons;
 		return navigationButtons;
 	}
 
@@ -250,5 +252,10 @@ public class ListPanel<Word extends ListElement>
 
 	public ListFilteringPanel getFilteringPanel() {
 		return listFilteringPanel;
+	}
+
+	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
+		mainPanel.addElementsToRow(mainPanel.getIndexOfRowContainingElements
+				(navigationButtons), buttons);
 	}
 }

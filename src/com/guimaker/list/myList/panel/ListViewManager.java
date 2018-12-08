@@ -243,4 +243,8 @@ public class ListViewManager<Word extends ListElement> {
 	public void focusFirstTextfieldInPanel(JComponent panel) {
 		listPanelUpdater.focusFirstTextFieldInPanel(panel);
 	}
+
+	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
+		listPanel.addAdditionalNavigationButtons(buttons);
+	}
 }

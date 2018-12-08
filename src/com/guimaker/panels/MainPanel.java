@@ -174,7 +174,8 @@ public class MainPanel {
 				RowType.COLUMN_BELOW_COLUMN);
 	}
 
-	private void addRowAsColumn(AbstractSimpleRow abstractSimpleRow, int number) {
+	private void addRowAsColumn(AbstractSimpleRow abstractSimpleRow,
+			int number) {
 		columnPanelCreator.addElementsInColumn(abstractSimpleRow, number);
 		rowNumberToTypeMap.put(rowNumberToTypeMap.lastKey() + 1,
 				RowType.COLUMN_BELOW_COLUMN);
@@ -215,6 +216,8 @@ public class MainPanel {
 		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
 				mapComponentToFilling(row), row.isWrapWithPanel(),
 				row.isUseAllExtraVerticalSpace());
+		//TODO its better to always create a panel even if there is just 1
+		// component, because it's easier to add elements to this row later
 		if (panel == null) {
 			return null;
 		}
@@ -516,12 +519,24 @@ public class MainPanel {
 
 	public void addElementsToRow(JComponent row, JComponent... elements) {
 
-		addOrRemoveFillingFromLastElementInRow(false, row);
-		GridBagConstraints c = ((GridBagLayout) row.getLayout()).getConstraints(
-				row.getComponent(row.getComponentCount() - 1));
-		c.weightx = 1;
-		for (JComponent element : elements) {
-			row.add(element, c); // TODO why it works?
+		GridBagConstraints c;
+		if (row instanceof JPanel) {
+			addOrRemoveFillingFromLastElementInRow(false, row);
+			c = ((GridBagLayout) row.getLayout()).getConstraints(
+					row.getComponent(row.getComponentCount() - 1));
+			c.weightx = 1;
+			for (JComponent element : elements) {
+				row.add(element, c);
+			}
+		}
+		else {
+			JPanel panel = new JPanel ();
+			panel.setBackground(null);
+			replacePanel(row, panel);
+			panel.add(row);
+			for (JComponent element : elements) {
+				panel.add(element);
+			}
 		}
 		updateView();
 	}
@@ -700,14 +715,14 @@ public class MainPanel {
 					"Increment/decrement value should be positive");
 		}
 		RowType rowType = rowNumberToTypeMap.get(startIndex);
-		if (rowType == null){
+		if (rowType == null) {
 			return rowType;
 		}
 		if (rowType.equals(RowType.COLUMN_BELOW_COLUMN)) {
 			columnPanelCreator.shiftElements(direction, startIndex,
 					absoluteIncrementDecrementValue);
 		}
-		else if (rowType.equals(RowType.ROW_BELOW_ROW)){
+		else if (rowType.equals(RowType.ROW_BELOW_ROW)) {
 			elementsShifter.shiftElements(direction, startIndex,
 					absoluteIncrementDecrementValue);
 		}
@@ -774,10 +789,10 @@ public class MainPanel {
 	public void insertRow(int number, AbstractSimpleRow row) {
 
 		RowType rowType = movePanels(Direction.FORWARD, number, 1);
-		if (rowType == null || rowType == RowType.ROW_BELOW_ROW){
+		if (rowType == null || rowType == RowType.ROW_BELOW_ROW) {
 			addRow(row, number);
 		}
-		else{
+		else {
 			addRowAsColumn(row, number);
 		}
 
@@ -831,6 +846,12 @@ public class MainPanel {
 		JComponent row = rows.get(rowNumber);
 		removeElementsFromRow(rowNumber,
 				row.getComponent(row.getComponentCount() - 1));
+	}
+
+	public int getIndexOfRowContainingElements(
+			List<? extends Component> elements) {
+		return getIndexOfRowContainingElements(elements.toArray(new Component
+				[] {}));
 	}
 
 	public int getIndexOfRowContainingElements(Component... elements) {

@@ -485,4 +485,7 @@ public class ListWordsController<Word extends ListElement> {
 		return myList;
 	}
 
+	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
+		listViewManager.addAdditionalNavigationButtons(buttons);
+	}
 }
