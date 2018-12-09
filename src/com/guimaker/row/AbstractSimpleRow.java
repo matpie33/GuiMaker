@@ -6,6 +6,9 @@ import com.guimaker.enums.FillType;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	private JComponent[] componentsInRow;
@@ -23,6 +26,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	private Double[] weightsX;
 	private double weightY;
 	private boolean wrapWithPanel = true;
+	private List<List<JComponent>> componentsSharingColumn = new ArrayList<>();
 
 	public Border getBorder() {
 		return border;
@@ -157,6 +161,15 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 
 	public Double[] getWeightsX() {
 		return weightsX;
+	}
+
+	public Row inSameColumn(JComponent... components) {
+		componentsSharingColumn.add(Arrays.asList(components));
+		return getThis();
+	}
+
+	public List<List<JComponent>> getComponentsSharingColumn() {
+		return componentsSharingColumn;
 	}
 
 	public Row setAnchor(Anchor anchor) {

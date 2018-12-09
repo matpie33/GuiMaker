@@ -7,6 +7,7 @@ import com.guimaker.row.AbstractSimpleRow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,14 +50,31 @@ public class ColumnPanelCreator {
 		return wrappingPanel != null ? wrappingPanel : new JPanel();
 	}
 
-	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow, int
-			rowNumber) {
+	public void addElementsInColumn(AbstractSimpleRow abstractSimpleRow,
+			int rowNumber) {
 		if (!abstractSimpleRow.shouldAddRow()) {
 			return;
 		}
-		JComponent[] elements = abstractSimpleRow.getComponents();
-		if (numberOfColumns < elements.length) {
-			numberOfColumns = elements.length;
+		List<JComponent> elementsInRow = new ArrayList<>(
+				Arrays.asList(abstractSimpleRow.getComponents()));
+		if (numberOfColumns < elementsInRow.size()) {
+			numberOfColumns = elementsInRow.size();
+		}
+		List<List<JComponent>> groupsOfComponentsThatShareColumn = abstractSimpleRow.getComponentsSharingColumn();
+		for (List<JComponent> componentsSharingColumn : groupsOfComponentsThatShareColumn) {
+			JPanel panel = new JPanel();
+			panel.setOpaque(false);
+			boolean first = true;
+			for (JComponent component : componentsSharingColumn) {
+				panel.add(component);
+				if (first) {
+					elementsInRow.set(elementsInRow.indexOf(component), panel);
+				}
+				else {
+					elementsInRow.remove(component);
+				}
+				first = false;
+			}
 		}
 		int indexOfElement = 0;
 		List<JComponent> verticallyFilledElements = Arrays.asList(
@@ -64,7 +82,7 @@ public class ColumnPanelCreator {
 		List<JComponent> horizontallyFilledElements = Arrays.asList(
 				abstractSimpleRow.getHorizontallyFilledElements());
 		int startingColumn = abstractSimpleRow.getColumnToPutRowInto();
-		for (JComponent element : elements) {
+		for (JComponent element : elementsInRow) {
 
 			if (element == null) {
 				startingColumn++;
@@ -98,7 +116,7 @@ public class ColumnPanelCreator {
 
 				c.weighty = 1;
 			}
-			if (indexOfElement == elements.length - 1
+			if (indexOfElement == elementsInRow.size() - 1
 					&& indexOfElement == numberOfColumns - 1) {
 				c.weightx = 1;
 			}
