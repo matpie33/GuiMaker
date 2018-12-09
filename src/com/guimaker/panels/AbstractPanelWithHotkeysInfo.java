@@ -275,6 +275,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		if (!isReady) {
 			createElements();
 			addHotkeysPanel();
+			mainPanel.updateView();
 			isReady = true;
 		}
 		return mainPanel.getPanel();

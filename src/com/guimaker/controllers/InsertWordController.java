@@ -27,6 +27,7 @@ public class InsertWordController<Word extends ListElement>
 	private InsertWordPanel<Word> panel;
 	private boolean addingWordWasRequested = false;
 	private Word word;
+	private ListRowData<Word> listRow;
 
 	public InsertWordController(MyList<Word> list,
 			ApplicationChangesManager applicationChangesManager,
@@ -99,21 +100,22 @@ public class InsertWordController<Word extends ListElement>
 	public MainPanel createListRowPanel() {
 		word = list.getWordInitializer()
 				   .initializeElement();
-		ListRowData<Word> listRowData = list.getListRowCreator()
-											.createListRow(word,
-													CommonListElements.forSingleRowOnly(
-															panel.getLabelsColor(),
-															list),
-													InputGoal.ADD);
+		listRow = list.getListRowCreator()
+			.createListRow(word,
+					CommonListElements.forSingleRowOnly(panel.getLabelsColor(),
+							list), InputGoal.ADD);
+		return listRow.getRowPanel();
+	}
+
+	public void focusFirstInput() {
 		SwingUtilities.invokeLater(() -> {
-			listRowData.getRowPropertiesData()
+			listRow.getRowPropertiesData()
 					   .values()
 					   .iterator()
 					   .next()
 					   .getFilteringTextComponent()
 					   .requestFocusInWindow();
 		});
-		return listRowData.getRowPanel();
 	}
 
 }

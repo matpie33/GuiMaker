@@ -48,6 +48,7 @@ public class InsertWordPanel<Word extends ListElement>
 						  .getPanel())
 										 .fillAllVertically()
 										 .fillHorizontallyEqually());
+		controller.focusFirstInput();
 	}
 
 	@Override
@@ -58,7 +59,6 @@ public class InsertWordPanel<Word extends ListElement>
 	public void reinitializePanel() {
 		clear();
 		createPanel();
-		mainPanel.updateView();
 	}
 
 	private AbstractButton createButtonValidateAndAddWord() {
