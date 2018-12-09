@@ -163,8 +163,7 @@ public class GuiElementsCreator {
 
 		textComponent.setEditable(options.isEditable());
 		if (options.isEditable()) {
-			textComponent.setBorder(
-					BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
+			textComponent.setBorder(options.getBorder());
 		}
 		else {
 			textComponent.setBorder(null);
@@ -173,7 +172,11 @@ public class GuiElementsCreator {
 			changeCursorOnMouseEnter(textComponent);
 			textComponent.setBackground(Color.GRAY);
 		}
-		textComponent.setCaretColor(Color.WHITE);
+		if (!options.isOpaque()) {
+			textComponent.setCaretColor(Color.WHITE);
+			textComponent.setForeground(options.getForegroundColor());
+		}
+
 		textComponent.setFocusable(options.isFocusable());
 
 		if (!options.isEditable())
@@ -193,7 +196,7 @@ public class GuiElementsCreator {
 		if (options.getText() != null && !options.getText()
 												 .isEmpty()) {
 			textComponent.setText(options.getText());
-			textComponent.setForeground(options.getForegroundColor());
+
 		}
 		textComponent.setDisabledTextColor(Color.WHITE);
 		if (options.getMaximumCharacters() > 0) {

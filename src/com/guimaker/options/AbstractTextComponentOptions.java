@@ -1,7 +1,7 @@
 package com.guimaker.options;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
+import java.awt.*;
 
 public abstract class AbstractTextComponentOptions<TextOptions extends AbstractTextComponentOptions<TextOptions>>
 		extends AbstractComponentOptions<TextOptions> {
@@ -16,7 +16,7 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	private boolean selectable = false;
 
 	AbstractTextComponentOptions() {
-		border(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		border(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
 		opaque(false);
 	}
 
