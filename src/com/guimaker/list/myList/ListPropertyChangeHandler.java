@@ -33,11 +33,20 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private String defaultValue = "";
 	private InputGoal inputGoal;
 	private Set<InputValidationListener<PropertyHolder>> validationListeners = new HashSet<>();
+	private boolean isRequired;
 
 	public ListPropertyChangeHandler(PropertyHolder propertyHolder,
 			MyList<PropertyHolder> list, DialogWindow dialogWindow,
 			ListElementPropertyManager<Property, PropertyHolder> listElementPropertyManager,
-			InputGoal inputGoal) {
+			InputGoal inputGoal, String defaultValue) {
+		this(propertyHolder, list, dialogWindow, listElementPropertyManager,
+				inputGoal, defaultValue, false);
+	}
+
+	public ListPropertyChangeHandler(PropertyHolder propertyHolder,
+			MyList<PropertyHolder> list, DialogWindow dialogWindow,
+			ListElementPropertyManager<Property, PropertyHolder> listElementPropertyManager,
+			InputGoal inputGoal, String defaultValue, boolean isRequired) {
 		this.list = list;
 		this.dialogWindow = dialogWindow;
 		this.listElementPropertyManager = listElementPropertyManager;
@@ -46,6 +55,8 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		if (!inputGoal.equals(InputGoal.NO_INPUT)) {
 			addInsertWordPanelAsValidationListener(list);
 		}
+		this.isRequired = isRequired;
+		this.defaultValue = defaultValue;
 	}
 
 	private void addInsertWordPanelAsValidationListener(
@@ -59,15 +70,6 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			insertWordPanel = list.getInsertWordPanel();
 		}
 		addValidationListener(insertWordPanel.getController());
-	}
-
-	public ListPropertyChangeHandler(PropertyHolder propertyHolder,
-			MyList<PropertyHolder> list, DialogWindow dialogWindow,
-			ListElementPropertyManager<Property, PropertyHolder> listElementPropertyManager,
-			String defaultValue, boolean isRequiredField, InputGoal inputGoal) {
-		this(propertyHolder, list, dialogWindow, listElementPropertyManager,
-				inputGoal);
-		this.defaultValue = defaultValue;
 	}
 
 	public void addValidationListener(
@@ -100,13 +102,13 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		JTextComponent input = (JTextComponent) e.getSource();
 		boolean somethingHasChanged = !input.getText()
 											.equals(previousValueOfTextInput);
-		if (isTextFieldEmpty(input) || (!inputGoal.equals(InputGoal.ADD)
-				&& !somethingHasChanged)) {
+		if (!somethingHasChanged && !inputGoal.equals(InputGoal.ADD)) {
 			return;
 		}
-		Property propertyNewValue = validateAndConvertToProperty(input);
-		Property previousValue = listElementPropertyManager.convertToProperty(
-				new JTextField(previousValueOfTextInput.equals(defaultValue) ?
+		Property propertyNewValue = validateAndConvertToProperty(input,
+				somethingHasChanged);
+		Property previousValue = convertTextInputToProperty(new JTextField(
+				previousValueOfTextInput.equals(defaultValue) ?
 						"" :
 						previousValueOfTextInput));
 
@@ -175,8 +177,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private void setWordToPreviousValue(JTextComponent input,
 			Property previousValue) {
 		listElementPropertyManager.setProperty(propertyHolder,
-				listElementPropertyManager.convertToProperty(input),
-				previousValue);
+				convertTextInputToProperty(input), previousValue);
 	}
 
 	private void setTextInputToPreviousValue(JTextComponent input) {
@@ -207,19 +208,57 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		return propertyDefinedMessage;
 	}
 
-	private Property validateAndConvertToProperty(JTextComponent input) {
-		boolean isValid = listElementPropertyManager.validateInput(input,
-				propertyHolder);
-		if (!isValid && !input.getText()
-							  .isEmpty()) {
-			input.setForeground(Color.RED);
-			dialogWindow.showMessageDialog(
-					listElementPropertyManager.getInvalidPropertyReason());
-			setTextInputToPreviousValue(input);
+	private Property validateAndConvertToProperty(JTextComponent input,
+			boolean somethingHasChanged) {
+		StringBuilder error = new StringBuilder();
+		boolean isValid = isInputValid(error, input, somethingHasChanged);
+
+		if (!isValid) {
+			displayMessageAboutFailedValidation(input, error.toString());
 			return null;
 		}
-		return listElementPropertyManager.convertToProperty(input);
+		else {
+			return convertTextInputToProperty(input);
+		}
 
+	}
+
+	private boolean isInputValid(StringBuilder error, JTextComponent input,
+			boolean somethingHasChanged) {
+		boolean isValid;
+		if (isTextFieldEmpty(input) && SwingUtilities.getWindowAncestor(input)
+													 .isShowing()) {
+			isValid = !isRequired;
+			if (!isValid) {
+				error.append(ExceptionsMessages.REQUIRED_FIELD_IS_EMPTY);
+			}
+		}
+		else {
+			isValid = !somethingHasChanged
+					|| listElementPropertyManager.validateInput(input,
+					propertyHolder);
+			if (!isValid) {
+				error.append(
+						listElementPropertyManager.getInvalidPropertyReason());
+			}
+		}
+		return isValid;
+	}
+
+	private void displayMessageAboutFailedValidation(JTextComponent input,
+			String error) {
+		input.setForeground(Color.RED);
+		dialogWindow.showMessageDialog(error);
+		setTextInputToPreviousValue(input);
+	}
+
+	private Property convertTextInputToProperty(JTextComponent input) {
+		Property property = listElementPropertyManager.convertToProperty(input);
+		if (property.getClass()
+					.equals(String.class) && isTextFieldEmpty(input)) {
+			property = (Property) "";
+		}
+		return property;
 	}
 
 }

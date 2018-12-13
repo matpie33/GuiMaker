@@ -14,4 +14,6 @@ public class ExceptionsMessages {
 	public static final String WORD_NOT_FOUND_EXCEPTION =
 			"Nie znaleziono podanego słowa. Być może zaznaczono złą opcję, "
 					+ "a może jest błąd we wpisanym słowie.";
+	public static final String REQUIRED_FIELD_IS_EMPTY =
+			"Pole obowiązkowe nie zostało wypełnione.";
 }
