@@ -4,7 +4,6 @@ import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.enums.InputGoal;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.MoveDirection;
-import com.guimaker.enums.WordDuplicationType;
 import com.guimaker.list.*;
 import com.guimaker.listeners.InputValidationListener;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
@@ -246,6 +245,13 @@ public class MyList<Word extends ListElement>
 	public <WordProperty> void inputValidated(
 			PropertyPostValidationData<WordProperty, Word> postValidationData) {
 		listController.inputValidated(postValidationData);
+		if (parentListAndWordContainingThisList != null) {
+			parentListAndWordContainingThisList.getList()
+											   .inputValidated(
+													   new PropertyPostValidationData(
+															   parentListAndWordContainingThisList.getParentWord(),
+															   postValidationData.isValid()));
+		}
 	}
 
 	public boolean isInEditMode() {

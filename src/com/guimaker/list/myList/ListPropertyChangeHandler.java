@@ -54,6 +54,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		this.inputGoal = inputGoal;
 		if (!inputGoal.equals(InputGoal.NO_INPUT)) {
 			addInsertWordPanelAsValidationListener(list);
+			addValidationListener(list);
 		}
 		this.isRequired = isRequired;
 		this.defaultValue = defaultValue;
@@ -128,8 +129,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private void notifyValidationListeners(boolean inputValid,
 			Property propertyNewValue) {
 		PropertyPostValidationData<Property, PropertyHolder> postValidationData = new PropertyPostValidationData<>(
-				propertyHolder, propertyNewValue, listElementPropertyManager,
-				inputValid);
+				propertyHolder, inputValid);
 		validationListeners.forEach(
 				listener -> listener.inputValidated(postValidationData));
 	}

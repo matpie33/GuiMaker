@@ -94,9 +94,9 @@ public class ListActionsCreator<Word extends ListElement> {
 				Component focusOwner = FocusManager.getCurrentManager()
 												   .getFocusOwner();
 				if (focusOwner instanceof JTextComponent) {
+					listWordsController.setFinishEditActionRequested(true);
 					KeyboardFocusManager.getCurrentKeyboardFocusManager()
 										.clearGlobalFocusOwner();
-					listWordsController.setFinishEditActionRequested(true);
 				}
 				else {
 					listWordsController.repaintWordAndHighlightIfNeeded(word);

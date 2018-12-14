@@ -61,6 +61,7 @@ public class ListWordsController<Word extends ListElement> {
 		initializeFoundWordStrategies();
 	}
 
+
 	public ListWordsHolder<Word> getListWordsHolder() {
 		return listWordsHolder;
 	}
@@ -454,7 +455,8 @@ public class ListWordsController<Word extends ListElement> {
 			repaintWordAndHighlightIfNeeded(
 					postValidationData.getValidatedWord());
 		}
-		finishEditActionRequested = false;
+
+		this.finishEditActionRequested = false;
 	}
 
 	public boolean isInEditMode() {
