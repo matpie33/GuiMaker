@@ -122,12 +122,11 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			}
 			notifyValidationListeners(
 					inputValid && (addedWord || inputGoal.equals(
-							InputGoal.SEARCH)), propertyNewValue);
+							InputGoal.SEARCH)));
 		});
 	}
 
-	private void notifyValidationListeners(boolean inputValid,
-			Property propertyNewValue) {
+	private void notifyValidationListeners(boolean inputValid) {
 		PropertyPostValidationData<Property, PropertyHolder> postValidationData = new PropertyPostValidationData<>(
 				propertyHolder, inputValid);
 		validationListeners.forEach(
