@@ -38,4 +38,9 @@ public class Range {
 		return rangeStart == 0 && rangeEnd == 0;
 	}
 
+	@Override
+	public String toString() {
+		return rangeStart + " - " + rangeEnd;
+	}
+
 }
