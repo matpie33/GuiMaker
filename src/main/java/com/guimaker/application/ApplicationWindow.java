@@ -28,6 +28,7 @@ public class ApplicationWindow extends DialogWindow {
 			AbstractPanelWithHotkeysInfo startingPanel,
 			ApplicationConfiguration applicationConfiguration) {
 		super(null, applicationChangesManager);
+		container = new JFrame();
 		this.applicationConfiguration = applicationConfiguration;
 		this.startingPanel = startingPanel;
 		startingPanel.setParentDialog(this);
@@ -62,7 +63,7 @@ public class ApplicationWindow extends DialogWindow {
 	}
 
 	private void setWindowProperties() {
-		container = new JFrame();
+
 		container.setJMenuBar(menuBar);
 		container.setContentPane(mainApplicationPanel);
 		container.pack();

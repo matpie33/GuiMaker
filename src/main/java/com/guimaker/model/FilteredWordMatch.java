@@ -19,15 +19,15 @@ public class FilteredWordMatch implements Comparable {
 		this.listElement = listElement;
 	}
 
-	public double getAveragePercentageOfLettersMatched() {
+	private double getAveragePercentageOfLettersMatched() {
 		return averagePercentageOfLettersMatched;
 	}
 
-	public int getNumberOfUnmatchedWords() {
+	private int getNumberOfUnmatchedWords() {
 		return numberOfUnmatchedWords;
 	}
 
-	public String getListElementDisplayedText() {
+	private String getListElementDisplayedText() {
 		return listElement.getDisplayedText();
 	}
 
