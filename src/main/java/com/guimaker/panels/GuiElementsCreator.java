@@ -199,9 +199,12 @@ public class GuiElementsCreator {
 
 		}
 		textComponent.setDisabledTextColor(Color.WHITE);
-		if (options.getMaximumCharacters() > 0) {
+		if (options.isDigitsOnly()) {
 			limitCharactersInTextComponent(textComponent,
-					options.getMaximumCharacters(), options.isDigitsOnly());
+					options.getMaximumCharacters() > 0 ?
+							options.getMaximumCharacters() :
+							options.getNumberOfColumns(),
+					options.isDigitsOnly());
 		}
 
 	}
