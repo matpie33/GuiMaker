@@ -9,6 +9,9 @@ public class BasicColors {
 	public static final Color BLUE_BRIGHT_2 = new Color(95, 155, 225);
 	public static final Color GREEN_NORMAL_1 = new Color(0, 200, 50);
 	public static final Color GREEN_BRIGHT_1 = new Color(50, 150, 100);
+	public static final Color GREEN_DARK_1 = new Color(0, 110, 95);
+	public static final Color BLUE_BRIGHT_4 = new Color(0, 110, 165);
+	public static final Color BLUE_NORMAL_8 = new Color(45, 50, 255);
 	public static final Color PURPLE_NORMAL_1 = new Color(140, 80, 230);
 	public static final Color PURPLE_DARK_1 = new Color(97, 0, 145);
 	public static final Color PURPLE_DARK_2 = new Color(110, 15, 215);
