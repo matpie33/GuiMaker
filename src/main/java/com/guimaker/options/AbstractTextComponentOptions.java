@@ -14,10 +14,20 @@ public abstract class AbstractTextComponentOptions<TextOptions extends AbstractT
 	private int maximumCharacters = 0;
 	private String promptWhenEmpty = "";
 	private boolean selectable = false;
+	private boolean selectAllOnFocus = false;
 
 	AbstractTextComponentOptions() {
 		border(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
 		opaque(false);
+	}
+
+	public boolean isSelectAllOnFocus() {
+		return selectAllOnFocus;
+	}
+
+	public TextOptions selectAllOnFocus() {
+		this.selectAllOnFocus = true;
+		return getThis();
 	}
 
 	public String getPromptWhenEmpty() {

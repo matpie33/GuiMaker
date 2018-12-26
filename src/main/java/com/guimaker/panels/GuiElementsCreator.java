@@ -162,6 +162,14 @@ public class GuiElementsCreator {
 		addUndoRedoActions(textComponent);
 
 		textComponent.setEditable(options.isEditable());
+		if (options.isSelectAllOnFocus()){
+			textComponent.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					textComponent.selectAll();
+				}
+			});
+		}
 		if (options.isEditable()) {
 			textComponent.setBorder(options.getBorder());
 		}
