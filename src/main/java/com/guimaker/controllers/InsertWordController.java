@@ -37,10 +37,10 @@ public class InsertWordController<Word extends ListElement>
 		this.applicationChangesManager = applicationChangesManager;
 	}
 
-	private void checkIfWordExistsOrIsEmptyAndAdd(Word word) {
+	private void checkIfWordDoesntExistAndIsNotEmptyThenAddIt(Word word) {
 		if (word.isEmpty()) {
 			panel.getDialog()
-				 .showMessageDialog(ExceptionsMessages.NO_INPUT_SUPPLIED);
+				 .showMessageDialog(ExceptionsMessages.REQUIRED_FIELD_IS_EMPTY);
 			return;
 		}
 		ThreadUtilities.callOnOtherThread(() -> {
@@ -48,6 +48,7 @@ public class InsertWordController<Word extends ListElement>
 			if (addedWord) {
 				list.scrollToBottom();
 				applicationChangesManager.save();
+				panel.reinitializePanel();
 			}
 			else {
 				list.highlightRow(list.get1BasedRowNumberOfWord(word) - 1,
@@ -71,7 +72,7 @@ public class InsertWordController<Word extends ListElement>
 					validateFocusedTextInput();
 				}
 				else {
-					checkWordAndAddAndReinitializePanel();
+					checkIfWordDoesntExistAndIsNotEmptyThenAddIt(word);
 				}
 			}
 		};
@@ -87,34 +88,28 @@ public class InsertWordController<Word extends ListElement>
 	public <WordProperty> void inputValidated(
 			PropertyPostValidationData<WordProperty, Word> postValidationData) {
 		if (addingWordWasRequested && postValidationData.isValid()) {
-			checkWordAndAddAndReinitializePanel();
+			checkIfWordDoesntExistAndIsNotEmptyThenAddIt(word);
 		}
 		addingWordWasRequested = false;
-	}
-
-	private void checkWordAndAddAndReinitializePanel() {
-		checkIfWordExistsOrIsEmptyAndAdd(word);
-		panel.reinitializePanel();
 	}
 
 	public MainPanel createListRowPanel() {
 		word = list.getWordInitializer()
 				   .initializeElement();
 		listRow = list.getListRowCreator()
-			.createListRow(word,
-					CommonListElements.forSingleRowOnly(panel.getLabelsColor(),
-							list), InputGoal.ADD);
+					  .createListRow(word, CommonListElements.forSingleRowOnly(
+							  panel.getLabelsColor(), list), InputGoal.ADD);
 		return listRow.getRowPanel();
 	}
 
 	public void focusFirstInput() {
 		SwingUtilities.invokeLater(() -> {
 			listRow.getRowPropertiesData()
-					   .values()
-					   .iterator()
-					   .next()
-					   .getFilteringTextComponent()
-					   .requestFocusInWindow();
+				   .values()
+				   .iterator()
+				   .next()
+				   .getFilteringTextComponent()
+				   .requestFocusInWindow();
 		});
 	}
 

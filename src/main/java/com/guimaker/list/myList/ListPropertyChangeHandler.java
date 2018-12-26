@@ -224,22 +224,11 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 
 	private boolean isInputValid(StringBuilder error, JTextComponent input,
 			boolean somethingHasChanged) {
-		boolean isValid;
-		if (isTextFieldEmpty(input) && SwingUtilities.getWindowAncestor(input)
-													 .isShowing()) {
-			isValid = !isRequired;
-			if (!isValid) {
-				error.append(ExceptionsMessages.REQUIRED_FIELD_IS_EMPTY);
-			}
-		}
-		else {
-			isValid = !somethingHasChanged
-					|| listElementPropertyManager.validateInput(input,
-					propertyHolder);
-			if (!isValid) {
-				error.append(
-						listElementPropertyManager.getInvalidPropertyReason());
-			}
+		boolean isValid = !somethingHasChanged
+				|| listElementPropertyManager.validateInput(input,
+				propertyHolder);
+		if (!isValid) {
+			error.append(listElementPropertyManager.getInvalidPropertyReason());
 		}
 		return isValid;
 	}
