@@ -5,15 +5,20 @@ import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
 import com.guimaker.strings.Prompts;
 import com.guimaker.timer.TimeSpentHandler;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Optional;
 
 public class ApplicationWindow extends DialogWindow {
 
+	public static final String RESOURCES_PATH = "resources/";
 	private JPanel mainApplicationPanel;
 	private AbstractPanelWithHotkeysInfo startingPanel;
 	private JFrame container;
@@ -22,6 +27,8 @@ public class ApplicationWindow extends DialogWindow {
 	private static Font kanjiFont = new Font("MS Mincho", Font.PLAIN, 100);
 	private JMenuBar menuBar;
 	private final ApplicationConfiguration applicationConfiguration;
+	private BufferedImage icon;
+	private String iconName = "";
 
 	public ApplicationWindow(
 			ApplicationChangesManager applicationChangesManager,
@@ -45,6 +52,23 @@ public class ApplicationWindow extends DialogWindow {
 
 	public void setMenuBar(JMenuBar menuBar) {
 		this.menuBar = menuBar;
+	}
+
+	public void setIconName(String path) {
+		this.iconName = RESOURCES_PATH + path;
+	}
+
+	private BufferedImage loadIcon() {
+		InputStream resourceAsStream = getClass().getClassLoader()
+												 .getResourceAsStream(iconName);
+		try {
+			return ImageIO.read(resourceAsStream);
+		}
+		catch (IOException e) {
+			showMessageDialog("Nie udało się wczytać ikony");
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public void initiate(AbstractPanelWithHotkeysInfo... panels) {
@@ -77,6 +101,7 @@ public class ApplicationWindow extends DialogWindow {
 				container.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		container.addWindowListener(
 				createListenerSwitchToSubdialogWhenFocusGain());
+		container.setIconImage(loadIcon());
 	}
 
 	private WindowAdapter createListenerSwitchToSubdialogWhenFocusGain() {
