@@ -151,6 +151,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			WordInMyListExistence duplication = childWordExistence.exists() ?
 					childWordExistence :
 					rootWordExistence;
+			if (inputGoal.equals(InputGoal.ADD)){
+				list.showWord(propertyHolder);
+			}
 			setTextInputToPreviousValue(input);
 			setWordToPreviousValue(input, propertyNewValue);
 			int duplicateRowNumber = duplication.getOneBasedRowNumber();
