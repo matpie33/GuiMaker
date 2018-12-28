@@ -1,6 +1,7 @@
 package com.guimaker.panels;
 
 import com.guimaker.application.ApplicationChangesManager;
+import com.guimaker.application.DialogWindow;
 import com.guimaker.controllers.InsertWordController;
 import com.guimaker.enums.FillType;
 import com.guimaker.list.ListElement;
@@ -49,6 +50,14 @@ public class InsertWordPanel<Word extends ListElement>
 										 .fillAllVertically()
 										 .fillHorizontallyEqually());
 		controller.focusFirstInput();
+	}
+
+	@Override
+	public void setParentDialog(DialogWindow dialog) {
+		super.setParentDialog(dialog);
+		dialog.getContainer()
+			  .addWindowListener(
+					  controller.createActionReinitializeOnWindowClose());
 	}
 
 	@Override

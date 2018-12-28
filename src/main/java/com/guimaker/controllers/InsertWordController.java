@@ -18,6 +18,9 @@ import javax.swing.FocusManager;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class InsertWordController<Word extends ListElement>
 		implements InputValidationListener<Word> {
@@ -113,4 +116,12 @@ public class InsertWordController<Word extends ListElement>
 		});
 	}
 
+	public WindowListener createActionReinitializeOnWindowClose() {
+		return new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				panel.reinitializePanel();
+			}
+		};
+	}
 }
