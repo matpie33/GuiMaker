@@ -2,11 +2,9 @@ package com.guimaker.panels;
 
 import com.guimaker.application.ApplicationConfiguration;
 import com.guimaker.application.DialogWindow;
-import com.guimaker.enums.Anchor;
-import com.guimaker.enums.ButtonType;
-import com.guimaker.enums.FillType;
-import com.guimaker.enums.MoveDirection;
+import com.guimaker.enums.*;
 import com.guimaker.list.myList.MyList;
+import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.row.AbstractSimpleRow;
@@ -15,8 +13,6 @@ import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.strings.Titles;
 import com.guimaker.utilities.CommonActionsCreator;
-import com.guimaker.model.HotkeyWrapper;
-import com.guimaker.enums.KeyModifiers;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -157,8 +153,8 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		}
 		AbstractSimpleRow row = SimpleRowBuilder.createRow(FillType.HORIZONTAL,
 				Anchor.SOUTH, hotkeysPanel.getPanel())
-												.setBorder(getDefaultBorder()
-														).setColor(hotkeysPanelColor);
+												.setBorder(getDefaultBorder())
+												.setColor(hotkeysPanelColor);
 		MainPanel panelForHotkeys = parentPanelForHotkeys();
 
 		if (hotkeysPanelIndex == -1) {
@@ -329,7 +325,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 
 	private MyList findFirstVisibleList() {
 		for (MyList navigableList : navigableByKeyboardLists) {
-			if (navigableList.getPanel()
+			if (navigableList.getPanel().isShowing() && navigableList.getPanel()
 							 .getVisibleRect()
 							 .getSize()
 							 .getHeight() == navigableList.getPanel()

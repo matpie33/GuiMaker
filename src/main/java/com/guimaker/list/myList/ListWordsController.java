@@ -61,7 +61,6 @@ public class ListWordsController<Word extends ListElement> {
 		initializeFoundWordStrategies();
 	}
 
-
 	public ListWordsHolder<Word> getListWordsHolder() {
 		return listWordsHolder;
 	}

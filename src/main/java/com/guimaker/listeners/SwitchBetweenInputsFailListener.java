@@ -1,6 +1,7 @@
 package com.guimaker.listeners;
 
 import com.guimaker.enums.MoveDirection;
+import com.guimaker.list.myList.MyList;
 
 import javax.swing.text.JTextComponent;
 
