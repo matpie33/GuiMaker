@@ -1,21 +1,28 @@
 package com.guimaker.list.myList.filtering;
 
 import com.guimaker.enums.Anchor;
+import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
+import com.guimaker.enums.KeyModifiers;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListRowData;
+import com.guimaker.list.myList.ListConfiguration;
+import com.guimaker.model.HotkeyWrapper;
+import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComboboxOptions;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.options.TextComponentOptions;
 import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
+import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.Prompts;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class ListFilteringPanel<Word extends ListElement> {
 
@@ -34,7 +41,8 @@ public class ListFilteringPanel<Word extends ListElement> {
 	}
 
 	public JPanel createPanel(ListRowData<Word> listRowData,
-			AbstractButton buttonClearFilter) {
+			AbstractButton buttonClearFilter,
+			ListConfiguration listConfiguration) {
 		this.buttonClearFilter = buttonClearFilter;
 		this.listRowData = listRowData;
 		addActionFilterImmediatelyToTextFields(listRowData);
@@ -54,8 +62,25 @@ public class ListFilteringPanel<Word extends ListElement> {
 				SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
 						searchOptionPrompt, comboBox));
 		addFilteringInputAndButton();
+		if (listConfiguration.getWordDictionaryData() != null) {
+			searchPanel.addRow(
+					SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
+							createComboboxForSearchingInDictionary(
+									listConfiguration)));
+		}
 
 		return searchPanel.getPanel();
+	}
+
+	private JComponent createComboboxForSearchingInDictionary(
+			ListConfiguration listConfiguration) {
+		return GuiElementsCreator.createButtonlikeComponent(
+				new ButtonOptions(ButtonType.CHECKBOX).text(
+						ButtonsNames.ENABLE_SEARCH_IN_DICTIONARY),
+				listFilteringController.createActionEnableSearchInDictionary(
+						listConfiguration),
+				new HotkeyWrapper(KeyModifiers.CONTROL, KeyEvent.VK_Y));
+
 	}
 
 	private void addActionFilterImmediatelyToTextFields(

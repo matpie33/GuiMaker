@@ -3,14 +3,23 @@ package com.guimaker.list.myList.filtering;
 import com.guimaker.enums.ListWordsLoadingDirection;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementPropertyManager;
+import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.ListWordsController;
 import com.guimaker.list.myList.panel.ListViewManager;
 import com.guimaker.model.FilteredWordMatch;
+import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.model.ListRow;
+import com.guimaker.model.WordDictionaryData;
+import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.WordSearching;
+import com.guimaker.webPanel.WebPagePanel;
 
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.SortedMap;
 
 public class ListFilteringController<Word extends ListElement> {
@@ -20,6 +29,7 @@ public class ListFilteringController<Word extends ListElement> {
 	private ListViewManager<Word> listViewManager;
 	private ListWordsController<Word> listWordsController;
 	private final int numberOfWordsToDisplayByFilter = 10;
+	private Component splitPaneRightComponentBeforeChange;
 
 	public ListFilteringController(ListViewManager<Word> listViewManager,
 			ListWordsController<Word> listWordsController) {
@@ -57,8 +67,8 @@ public class ListFilteringController<Word extends ListElement> {
 										.getText();
 		ListElementPropertyManager<?, Word> filterInputPropertyManager = listFilteringPanel.getPropertyManagerForInput();
 		SortedMap<FilteredWordMatch, ListRow<Word>> words = WordSearching.filterWords(
-				listWordsController.getListWordsHolder().getWordsWithDetails
-						(), text,
+				listWordsController.getListWordsHolder()
+								   .getWordsWithDetails(), text,
 				filterInputPropertyManager);
 		listViewManager.clear();
 
@@ -69,7 +79,8 @@ public class ListFilteringController<Word extends ListElement> {
 			}
 			int rowNumber = listRow.getRowNumber() - 1;
 			listRow.setPanel(listViewManager.addRow(
-					listWordsController.getListWordsHolder().getWordInRow(rowNumber), newRowNumber++,
+					listWordsController.getListWordsHolder()
+									   .getWordInRow(rowNumber), newRowNumber++,
 					true, ListWordsLoadingDirection.NEXT,
 					listViewManager.getInputGoal())
 											.getWrappingPanel());
@@ -81,4 +92,63 @@ public class ListFilteringController<Word extends ListElement> {
 		listViewManager.updateRowsPanel();
 	}
 
+	public AbstractAction createActionEnableSearchInDictionary(
+			ListConfiguration listConfiguration) {
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JCheckBox checkBox = (JCheckBox) e.getSource();
+				JSplitPane splitPaneToPutDictionaryInto = listConfiguration.getWordDictionaryData()
+																		   .getSplitPaneToPutDictionaryInto();
+				if (checkBox.isSelected()) {
+					if (splitPaneRightComponentBeforeChange == null) {
+						splitPaneRightComponentBeforeChange = splitPaneToPutDictionaryInto.getRightComponent();
+					}
+					WebPagePanel dictionaryPanel = createDictionaryPanel(
+							listConfiguration);
+					CommonActionsCreator.addHotkey(
+							new HotkeyWrapper(KeyEvent.VK_ENTER),
+							createActionSearchInDictionary(dictionaryPanel,
+									listConfiguration.getWordDictionaryData()),
+							splitPaneToPutDictionaryInto);
+				}
+				else {
+					splitPaneToPutDictionaryInto.setRightComponent(
+							splitPaneRightComponentBeforeChange);
+				}
+
+			}
+		};
+	}
+
+	private WebPagePanel createDictionaryPanel(
+			ListConfiguration listConfiguration) {
+		WebPagePanel webPagePanel = new WebPagePanel(null, null,
+				listConfiguration.getApplicationChangesManager()
+								 .getApplicationWindow());
+		WordDictionaryData wordDictionaryData = listConfiguration.getWordDictionaryData();
+		webPagePanel.showPage(
+				String.format(wordDictionaryData.getSearchUrlPattern(), " "));
+		JSplitPane splitPaneToPutDictionaryInto = wordDictionaryData.getSplitPaneToPutDictionaryInto();
+		splitPaneToPutDictionaryInto.setRightComponent(
+				(webPagePanel.getSwitchingPanel()));
+		splitPaneToPutDictionaryInto.setResizeWeight(0.2D);
+		return webPagePanel;
+	}
+
+	private AbstractAction createActionSearchInDictionary(
+			WebPagePanel webPagePanel, WordDictionaryData wordDictionaryData) {
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (listFilteringPanel.getFilteringInput()
+									  .hasFocus()) {
+					webPagePanel.showPageWithoutGrabbingFocus(String.format(
+							wordDictionaryData.getSearchUrlPattern(),
+							listFilteringPanel.getFilteringInput()
+											  .getText()));
+				}
+			}
+		};
+	}
 }

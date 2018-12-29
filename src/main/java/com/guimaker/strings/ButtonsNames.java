@@ -15,4 +15,6 @@ public class ButtonsNames {
 	public static final String CONFIRM = "Tak";
 	public static final String REJECT = "Nie";
 	public static final String CLEAR_FILTER = "Wyczyść filtr";
+	public static final String ENABLE_SEARCH_IN_DICTIONARY = "Szukaj również "
+			+ "w słowniku";
 }

@@ -126,7 +126,7 @@ public class ListPanel<Word extends ListElement>
 			filterPanel.addRow(
 					SimpleRowBuilder.createRow(FillType.HORIZONTAL, Anchor.WEST,
 							listFilteringPanel.createPanel(rowForFilteringPanel,
-									createButtonClearFilter())));
+									createButtonClearFilter(), listConfiguration)));
 		}
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
 				filterPanel.getPanel()));

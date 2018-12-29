@@ -7,6 +7,7 @@ import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementInitializer;
 import com.guimaker.model.ParentListData;
+import com.guimaker.model.WordDictionaryData;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -29,6 +30,7 @@ public class ListConfiguration<Word extends ListElement> {
 	private String title;
 	private DialogWindow dialogWindow;
 	private ApplicationChangesManager applicationChangesManager;
+	private WordDictionaryData wordDictionaryData;
 
 	public ListConfiguration(String wordSpecificDeletePrompt,
 			ListRowCreator<Word> listRowCreator,
@@ -76,6 +78,14 @@ public class ListConfiguration<Word extends ListElement> {
 	public ListConfiguration<Word> displayMode(PanelDisplayMode displayMode) {
 		this.displayMode = displayMode;
 		return this;
+	}
+	public ListConfiguration<Word> dictionaryData(WordDictionaryData wordDictionaryData) {
+		this.wordDictionaryData = wordDictionaryData;
+		return this;
+	}
+
+	public WordDictionaryData getWordDictionaryData() {
+		return wordDictionaryData;
 	}
 
 	public ParentListData<?, Word> getParentListAndWordContainingThisList() {
