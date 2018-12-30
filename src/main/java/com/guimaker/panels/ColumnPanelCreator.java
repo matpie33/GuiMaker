@@ -1,9 +1,12 @@
 package com.guimaker.panels;
 
+import com.guimaker.enums.Anchor;
 import com.guimaker.enums.Direction;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
+import com.guimaker.model.PanelConfiguration;
 import com.guimaker.row.AbstractSimpleRow;
+import com.guimaker.row.SimpleRowBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,14 +64,20 @@ public class ColumnPanelCreator {
 			numberOfColumns = elementsInRow.size();
 		}
 		List<List<JComponent>> groupsOfComponentsThatShareColumn = abstractSimpleRow.getComponentsSharingColumn();
+
 		for (List<JComponent> componentsSharingColumn : groupsOfComponentsThatShareColumn) {
-			JPanel panel = new JPanel();
-			panel.setOpaque(false);
+			MainPanel mainPanel = new MainPanel(
+					new PanelConfiguration().setNotOpaque());
+			mainPanel.setSkipInsetsForExtremeEdges(true);
 			boolean first = true;
+			mainPanel.addRow(
+					SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
+							componentsSharingColumn.toArray(
+									new JComponent[] {})));
 			for (JComponent component : componentsSharingColumn) {
-				panel.add(component);
 				if (first) {
-					elementsInRow.set(elementsInRow.indexOf(component), panel);
+					elementsInRow.set(elementsInRow.indexOf(component),
+							mainPanel.getPanel());
 				}
 				else {
 					elementsInRow.remove(component);
@@ -76,6 +85,7 @@ public class ColumnPanelCreator {
 				first = false;
 			}
 		}
+
 		int indexOfElement = 0;
 		List<JComponent> verticallyFilledElements = Arrays.asList(
 				abstractSimpleRow.getVerticallyFilledElements());

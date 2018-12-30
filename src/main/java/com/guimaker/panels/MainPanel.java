@@ -214,8 +214,7 @@ public class MainPanel {
 			return null;
 		}
 		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
-				mapComponentToFilling(row), row.isWrapWithPanel(),
-				row.isUseAllExtraVerticalSpace());
+				mapComponentToFilling(row), row);
 		//TODO its better to always create a panel even if there is just 1
 		// component, because it's easier to add elements to this row later
 		if (panel == null) {
@@ -272,8 +271,7 @@ public class MainPanel {
 	}
 
 	private JComponent addComponentsToSinglePanel(JComponent[] components,
-			Map<JComponent, Integer> componentsFilling, boolean wrapWithPanel,
-			boolean useExtraSpaceVertically) {
+			Map<JComponent, Integer> componentsFilling, AbstractSimpleRow row) {
 		if (components.length == 1
 				&& !(components[0] instanceof JTextComponent)) {
 			return components[0];
@@ -304,7 +302,7 @@ public class MainPanel {
 			}
 			if (componentsFilling.containsKey(compo)) {
 				gbc.fill = componentsFilling.get(compo);
-				gbc.weighty = useExtraSpaceVertically ? 1 : 0;
+				gbc.weighty = row.isUseAllExtraVerticalSpace() ? 1 : 0;
 				if (gbc.fill == GridBagConstraints.HORIZONTAL) {
 					gbc.weightx = 1;
 				}
@@ -324,12 +322,15 @@ public class MainPanel {
 					&& gbc.fill != GridBagConstraints.HORIZONTAL) {
 				gbc.weightx = 1;
 			}
+			if (!row.isBorderEnabled() && i == 0) {
+				gbc.insets.left = 0;
+			}
 			if (skipInsetsForExtremeEdges) {
 				if (i == components.length - 1) {
 					gbc.insets.right = 0;
 				}
-				else if (i == 1) {
-					gbc.insets = initializeGridBagConstraints().insets;
+				else if (i == 0) {
+					gbc.insets.left = 0;
 				}
 			}
 
@@ -337,7 +338,7 @@ public class MainPanel {
 			gbc.gridx = gbc.gridx + 1;
 			i++;
 		}
-		if (!wrapWithPanel && components.length == 1) {
+		if (!row.isWrapWithPanel() && components.length == 1) {
 			return components[0];
 		}
 
@@ -530,7 +531,7 @@ public class MainPanel {
 			}
 		}
 		else {
-			JPanel panel = new JPanel ();
+			JPanel panel = new JPanel();
 			panel.setBackground(null);
 			replacePanel(row, panel);
 			panel.add(row);
