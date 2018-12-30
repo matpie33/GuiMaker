@@ -19,6 +19,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.SortedMap;
 
@@ -92,15 +94,14 @@ public class ListFilteringController<Word extends ListElement> {
 		listViewManager.updateRowsPanel();
 	}
 
-	public AbstractAction createActionEnableSearchInDictionary(
+	public ItemListener createActionEnableSearchInDictionary(
 			ListConfiguration listConfiguration) {
-		return new AbstractAction() {
+		return new ItemListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				JCheckBox checkBox = (JCheckBox) e.getSource();
+			public void itemStateChanged(ItemEvent e) {
 				JSplitPane splitPaneToPutDictionaryInto = listConfiguration.getWordDictionaryData()
 																		   .getSplitPaneToPutDictionaryInto();
-				if (checkBox.isSelected()) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
 					if (splitPaneRightComponentBeforeChange == null) {
 						splitPaneRightComponentBeforeChange = splitPaneToPutDictionaryInto.getRightComponent();
 					}

@@ -106,6 +106,16 @@ public class GuiElementsCreator {
 		return component;
 	}
 
+	public static AbstractButton createCheckbox(ButtonOptions buttonOptions,
+			ItemListener itemListener, HotkeyWrapper hotkeyWrapper) {
+		AbstractButton checkbox = createButtonlikeComponent(buttonOptions,
+				null);
+		checkbox.addItemListener(itemListener);
+		CommonActionsCreator.addHotkey(hotkeyWrapper, CommonActionsCreator
+				.createActionSelectDeselect(checkbox), checkbox);
+		return checkbox;
+	}
+
 	public static AbstractButton createButtonlikeComponent(
 			ButtonOptions options, AbstractAction actionOnClick) {
 		AbstractButton component;
@@ -162,7 +172,7 @@ public class GuiElementsCreator {
 		addUndoRedoActions(textComponent);
 
 		textComponent.setEditable(options.isEditable());
-		if (options.isSelectAllOnFocus()){
+		if (options.isSelectAllOnFocus()) {
 			textComponent.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusGained(FocusEvent e) {

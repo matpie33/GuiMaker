@@ -74,7 +74,7 @@ public class ListFilteringPanel<Word extends ListElement> {
 
 	private JComponent createComboboxForSearchingInDictionary(
 			ListConfiguration listConfiguration) {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createCheckbox(
 				new ButtonOptions(ButtonType.CHECKBOX).text(
 						ButtonsNames.ENABLE_SEARCH_IN_DICTIONARY),
 				listFilteringController.createActionEnableSearchInDictionary(

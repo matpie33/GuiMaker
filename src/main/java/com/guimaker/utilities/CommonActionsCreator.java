@@ -8,10 +8,7 @@ import com.guimaker.panels.GuiElementsCreator;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 
 public class CommonActionsCreator {
 
@@ -101,4 +98,13 @@ public class CommonActionsCreator {
 		textComponent.setForeground(Color.WHITE);
 	}
 
+	public static AbstractAction createActionSelectDeselect(
+			AbstractButton checkbox) {
+		return new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				checkbox.setSelected(!checkbox.isSelected());
+			}
+		};
+	}
 }
