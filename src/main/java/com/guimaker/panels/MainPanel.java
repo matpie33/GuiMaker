@@ -1,9 +1,6 @@
 package com.guimaker.panels;
 
-import com.guimaker.enums.Direction;
-import com.guimaker.enums.FillType;
-import com.guimaker.enums.PanelDisplayMode;
-import com.guimaker.enums.RowType;
+import com.guimaker.enums.*;
 import com.guimaker.inputSelection.InputSelectionManager;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
@@ -531,13 +528,18 @@ public class MainPanel {
 			}
 		}
 		else {
-			JPanel panel = new JPanel();
-			panel.setBackground(null);
+			MainPanel mainPanel = new MainPanel(
+					new PanelConfiguration().setNotOpaque());
+			mainPanel.setSkipInsetsForExtremeEdges(true);
+			JPanel panel = mainPanel.getPanel();
 			replacePanel(row, panel);
 			panel.add(row);
-			for (JComponent element : elements) {
-				panel.add(element);
-			}
+			List<JComponent> components = new ArrayList<>();
+			components.add(row);
+			components.addAll(Arrays.asList(elements));
+			mainPanel.addRow(
+					SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
+							components.toArray(new JComponent[] {})));
 		}
 		updateView();
 	}
