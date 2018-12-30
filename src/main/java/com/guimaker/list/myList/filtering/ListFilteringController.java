@@ -96,6 +96,8 @@ public class ListFilteringController<Word extends ListElement> {
 
 	public ItemListener createActionEnableSearchInDictionary(
 			ListConfiguration listConfiguration) {
+		WebPagePanel webPagePanel = createWebPagePanel(listConfiguration,
+				listConfiguration.getWordDictionaryData());
 		return new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -105,11 +107,11 @@ public class ListFilteringController<Word extends ListElement> {
 					if (splitPaneRightComponentBeforeChange == null) {
 						splitPaneRightComponentBeforeChange = splitPaneToPutDictionaryInto.getRightComponent();
 					}
-					WebPagePanel dictionaryPanel = createDictionaryPanel(
-							listConfiguration);
+					addWebPagePanel(listConfiguration.getWordDictionaryData(),
+							webPagePanel);
 					CommonActionsCreator.addHotkey(
 							new HotkeyWrapper(KeyEvent.VK_ENTER),
-							createActionSearchInDictionary(dictionaryPanel,
+							createActionSearchInDictionary(webPagePanel,
 									listConfiguration.getWordDictionaryData()),
 							splitPaneToPutDictionaryInto);
 				}
@@ -122,18 +124,21 @@ public class ListFilteringController<Word extends ListElement> {
 		};
 	}
 
-	private WebPagePanel createDictionaryPanel(
-			ListConfiguration listConfiguration) {
-		WebPagePanel webPagePanel = new WebPagePanel(null, null,
-				listConfiguration.getApplicationChangesManager()
-								 .getApplicationWindow());
-		WordDictionaryData wordDictionaryData = listConfiguration.getWordDictionaryData();
-		webPagePanel.showPage(
-				String.format(wordDictionaryData.getSearchUrlPattern(), " "));
+	private void addWebPagePanel(WordDictionaryData wordDictionaryData,
+			WebPagePanel webPagePanel) {
 		JSplitPane splitPaneToPutDictionaryInto = wordDictionaryData.getSplitPaneToPutDictionaryInto();
 		splitPaneToPutDictionaryInto.setRightComponent(
 				(webPagePanel.getSwitchingPanel()));
-		splitPaneToPutDictionaryInto.setResizeWeight(0.2D);
+		splitPaneToPutDictionaryInto.setResizeWeight(0.5D);
+	}
+
+	private WebPagePanel createWebPagePanel(ListConfiguration listConfiguration,
+			WordDictionaryData wordDictionaryData) {
+		WebPagePanel webPagePanel = new WebPagePanel(null, null,
+				listConfiguration.getApplicationChangesManager()
+								 .getApplicationWindow());
+		webPagePanel.showPage(
+				String.format(wordDictionaryData.getSearchUrlPattern(), " "));
 		return webPagePanel;
 	}
 
