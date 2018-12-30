@@ -61,13 +61,13 @@ public class ListFilteringPanel<Word extends ListElement> {
 		searchPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
 						searchOptionPrompt, comboBox));
-		addFilteringInputAndButton();
 		if (listConfiguration.getWordDictionaryData() != null) {
 			searchPanel.addRow(
 					SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
 							createComboboxForSearchingInDictionary(
 									listConfiguration)));
 		}
+		addFilteringInputAndButton();
 
 		return searchPanel.getPanel();
 	}
