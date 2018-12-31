@@ -3,12 +3,16 @@ package com.guimaker.panels;
 import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.ConditionForHotkey;
 import com.guimaker.enums.KeyModifiers;
+import com.guimaker.enums.SplitPaneOrientation;
 import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.*;
 import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.LimitDocumentFilter;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.text.*;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
@@ -370,5 +374,48 @@ public class GuiElementsCreator {
 			.setOpaque(textPaneOptions.isOpaque());
 		return pane;
 	}
+
+	public static JSplitPane createSplitPane(
+			SplitPaneOrientation splitPaneOrientation,
+			JComponent leftOrUpperComponent, JComponent rightOrDownComponent,
+			double splittingWeight) {
+		JSplitPane splitPane = new JSplitPane(splitPaneOrientation.getValue());
+		splitPane.setContinuousLayout(true);
+		splitPane.setLeftComponent(leftOrUpperComponent);
+		splitPane.setRightComponent(rightOrDownComponent);
+		splitPane.setResizeWeight(splittingWeight);
+		splitPane.setBorder(null);
+		splitPane.setUI(createSplitPaneDivider(splitPaneOrientation));
+		splitPane.setBorder(null);
+		return splitPane;
+	}
+
+	private static BasicSplitPaneUI createSplitPaneDivider(
+			SplitPaneOrientation splitPaneOrientation) {
+		return new BasicSplitPaneUI() {
+			public BasicSplitPaneDivider createDefaultDivider() {
+				return new BasicSplitPaneDivider(this) {
+					public void setBorder(Border b) {
+						int hor = splitPaneOrientation.equals(
+								SplitPaneOrientation.HORIZONTAL) ? 1 : 0;
+						int ver = splitPaneOrientation.equals(
+								SplitPaneOrientation.VERTICAL) ? 1 : 0;
+						super.setBorder(
+								BorderFactory.createMatteBorder(ver, hor, ver,
+										hor,
+										Color.BLACK));
+					}
+
+					@Override
+					public void paint(Graphics g) {
+						g.setColor(Color.LIGHT_GRAY);
+						g.fillRect(0, 0, getSize().width, getSize().height);
+						super.paint(g);
+					}
+				};
+			}
+		};
+	}
+
 
 }
