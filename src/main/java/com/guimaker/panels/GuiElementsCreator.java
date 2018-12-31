@@ -27,6 +27,12 @@ public class GuiElementsCreator {
 		UIManager.put("Label.disabledForeground", Color.WHITE);
 	}
 
+	public static JTabbedPane createTabbedPane (){
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setUI(new CustomTabbedPane());
+		return tabbedPane;
+	}
+
 	public static JLabel createLabel(ComponentOptions options) {
 		JLabel label = new JLabel();
 		setGeneralComponentOptions(options, label);
