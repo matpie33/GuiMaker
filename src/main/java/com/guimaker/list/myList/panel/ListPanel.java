@@ -182,6 +182,7 @@ public class ListPanel<Word extends ListElement>
 										.setPanelDisplayMode(
 												listConfiguration.getDisplayMode())
 										.putRowsAsHighestAsPossible());
+		rowsPanel.setGapsBetweenRowsTo0();
 
 		addElementsForEmptyList();
 
