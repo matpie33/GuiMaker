@@ -10,6 +10,7 @@ import com.guimaker.list.myList.ListWordsController;
 import com.guimaker.list.myList.filtering.ListFilteringController;
 import com.guimaker.list.myList.filtering.ListFilteringPanel;
 import com.guimaker.model.CommonListElements;
+import com.guimaker.model.ListColors;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ComponentOptions;
 import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
@@ -32,6 +33,7 @@ import java.util.List;
 public class ListPanel<Word extends ListElement>
 		extends AbstractPanelWithHotkeysInfo {
 
+	private ListColors listColors;
 	private ListConfiguration listConfiguration;
 	private ListElementsCreator<Word> listElementsCreator;
 	private String title;
@@ -39,7 +41,7 @@ public class ListPanel<Word extends ListElement>
 	private JScrollPane scrollPane;
 	private JComponent listElementsPanel;
 	private final Dimension scrollPanesSize = new Dimension(550, 100);
-	private Color contentColor = BasicColors.PURPLE_DARK_1;
+	private Color contentColor;
 	private MainPanel rowsPanel;
 	private AbstractButton buttonLoadPreviousWords;
 	private AbstractButton buttonLoadNextWords;
@@ -52,6 +54,12 @@ public class ListPanel<Word extends ListElement>
 			ListConfiguration listConfiguration,
 			ListViewManager<Word> listViewManager,
 			ListWordsController<Word> controller) {
+		listColors = listConfiguration.getApplicationChangesManager()
+										.getApplicationWindow()
+										.getApplicationConfiguration()
+										.getListColors();
+		contentColor = listColors
+										.getBackgroundColor();
 		listFilteringPanel = new ListFilteringController<>(listViewManager,
 				controller).getListFilteringPanel();
 		listPanelUpdater = new ListPanelUpdater(this, listConfiguration);
@@ -79,7 +87,7 @@ public class ListPanel<Word extends ListElement>
 		filterPanel = new MainPanel();
 		filterPanel.setGapsBetweenRowsTo0();
 		filterPanel.setRowsBorder(getDefaultBorder());
-		filterPanel.setRowColor(BasicColors.GREEN_BRIGHT_1);
+		filterPanel.setRowColor(listColors.getFilterPanelColor());
 	}
 
 	@Override
@@ -126,7 +134,8 @@ public class ListPanel<Word extends ListElement>
 			filterPanel.addRow(
 					SimpleRowBuilder.createRow(FillType.HORIZONTAL, Anchor.WEST,
 							listFilteringPanel.createPanel(rowForFilteringPanel,
-									createButtonClearFilter(), listConfiguration)));
+									createButtonClearFilter(),
+									listConfiguration)));
 		}
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
 				filterPanel.getPanel()));
@@ -256,7 +265,8 @@ public class ListPanel<Word extends ListElement>
 	}
 
 	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
-		mainPanel.addElementsToRow(mainPanel.getIndexOfRowContainingElements
-				(navigationButtons), buttons);
+		mainPanel.addElementsToRow(
+				mainPanel.getIndexOfRowContainingElements(navigationButtons),
+				buttons);
 	}
 }

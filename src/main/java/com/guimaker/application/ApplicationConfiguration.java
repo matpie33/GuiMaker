@@ -1,14 +1,14 @@
 package com.guimaker.application;
 
 import com.guimaker.customPositioning.CustomPositioner;
+import com.guimaker.model.ListColors;
 
 import java.awt.*;
 
 public class ApplicationConfiguration {
 
 	private CustomPositioner insertWordPanelPositioner;
-	private Color listRowHighlightColor;
-	private Color listRowEditTemporarilyColor;
+	private ListColors listColors;
 	private String title;
 	private Color panelBackgroundColor;
 	private Color contentPanelColor;
@@ -32,25 +32,6 @@ public class ApplicationConfiguration {
 		return this;
 	}
 
-	public Color getListRowHighlightColor() {
-		return listRowHighlightColor;
-	}
-
-	public ApplicationConfiguration setListRowHighlightColor(
-			Color listRowHighlightColor) {
-		this.listRowHighlightColor = listRowHighlightColor;
-		return this;
-	}
-
-	public Color getListRowEditTemporarilyColor() {
-		return listRowEditTemporarilyColor;
-	}
-
-	public ApplicationConfiguration setListRowEditTemporarilyColor(
-			Color listRowEditTemporarilyColor) {
-		this.listRowEditTemporarilyColor = listRowEditTemporarilyColor;
-		return this;
-	}
 
 	public Color getPanelBackgroundColor() {
 		return panelBackgroundColor;
@@ -59,6 +40,15 @@ public class ApplicationConfiguration {
 	public ApplicationConfiguration setPanelBackgroundColor(
 			Color panelBackgroundColor) {
 		this.panelBackgroundColor = panelBackgroundColor;
+		return this;
+	}
+
+	public ListColors getListColors() {
+		return listColors;
+	}
+
+	public ApplicationConfiguration setListColors(ListColors listColors) {
+		this.listColors = listColors;
 		return this;
 	}
 

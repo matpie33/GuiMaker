@@ -133,7 +133,7 @@ public class ListViewManager<Word extends ListElement> {
 		changePanelColor(rowNumber,
 				applicationChangesManager.getApplicationWindow()
 										 .getApplicationConfiguration()
-										 .getListRowHighlightColor());
+										 .getListColors().getSelectedRowColor());
 
 		listPanel.getRowsPanel()
 				 .getPanel()
@@ -189,17 +189,20 @@ public class ListViewManager<Word extends ListElement> {
 			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
 											 .getApplicationConfiguration()
-											 .getListRowHighlightColor());
+											 .getListColors()
+											 .getSelectedRowColor());
 		}
-		else{
-			newPanel.getPanel().setOpaque(false);
+		else {
+			newPanel.getPanel()
+					.setOpaque(false);
 		}
 		if (customInputGoal != null && customInputGoal.equals(
 				InputGoal.EDIT_TEMPORARILY)) {
 			newPanel.setBackgroundColor(
 					applicationChangesManager.getApplicationWindow()
 											 .getApplicationConfiguration()
-											 .getListRowEditTemporarilyColor());
+											 .getListColors()
+											 .getEditRowColor());
 			newPanel.updateView();
 		}
 		listPanelUpdater.replacePanelsInRowsPanel(listRow.getJPanel(),
