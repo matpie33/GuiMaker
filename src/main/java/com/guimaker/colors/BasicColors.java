@@ -31,5 +31,7 @@ public class BasicColors {
 	public static final Color BLUE_NORMAL_7 = new Color(60, 65, 255);
 	public static final Color PURPLE_DARK_3 = new Color(100, 60, 105);
 	public static final Color PURPLE_LIGHT_1 = new Color(140, 90, 150);
+	public static final Color BLUE_NORMAL_9 = new Color(36, 60, 150);
+	public static final Color GREEN_BRIGHT_2 = new Color(15, 170, 130);
 
 }
