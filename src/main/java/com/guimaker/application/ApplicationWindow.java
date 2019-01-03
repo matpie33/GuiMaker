@@ -183,4 +183,7 @@ public class ApplicationWindow extends DialogWindow {
 		timeSpentHandler.ifPresent(TimeSpentHandler::startTimer);
 	}
 
+	public void addToTitle(String string) {
+		container.setTitle(applicationConfiguration.getTitle() + ", " + string);
+	}
 }
