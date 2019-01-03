@@ -80,8 +80,7 @@ public class ListActionsCreator<Word extends ListElement> {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				listWordsController.setInEditMode(true);
-				listWordsController.repaint(word, InputGoal.EDIT_TEMPORARILY);
+				listWordsController.editTemporarily(word);
 			}
 		};
 	}

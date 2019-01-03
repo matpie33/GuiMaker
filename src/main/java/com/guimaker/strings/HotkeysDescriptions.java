@@ -12,4 +12,5 @@ public class HotkeysDescriptions {
 	public static final String SELECT_INPUT_ABOVE_CURRENT = "Przechodzi do pola tekstowego powyżej zaznaczonego.";
 	public static final String CLOSE_WINDOW = "Zamyka okno";
 	public static final String CONFIRM_ACTION = "Akceptuje zmiany";
+	public static final String EDIT_WORD = "Edytuje słowo";
 }

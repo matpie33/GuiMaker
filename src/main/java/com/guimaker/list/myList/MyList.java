@@ -190,6 +190,13 @@ public class MyList<Word extends ListElement>
 		return listController.getPanelWithSelectedInput();
 	}
 
+	public void editParentWord(){
+		MyList list = parentListAndWordContainingThisList.getList();
+		ListElement parentWord = parentListAndWordContainingThisList.getParentWord();
+		list.listController.editTemporarily(parentWord);
+
+	}
+
 	public void selectNextInputInSameRow() {
 		MainPanel panelWithSelectedInput = getPanelWithSelectedInput();
 		if (panelWithSelectedInput == null) {

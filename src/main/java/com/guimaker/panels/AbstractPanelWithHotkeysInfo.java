@@ -61,6 +61,8 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	}
 
 	private void addHotkeys(JComponent rootPanel) {
+		addHotkey(KeyModifiers.ALT, KeyEvent.VK_E, wrapToAction
+				(MyList::editParentWord), rootPanel, HotkeysDescriptions.EDIT_WORD);
 		for (Map.Entry<MoveDirection, HotkeyWrapper> hotkey : hotkeysForMovingBetweenInputs.entrySet()) {
 			HotkeyWrapper hotkeyWrapper = hotkey.getValue();
 			KeyModifiers keyModifier = KeyModifiers.of(

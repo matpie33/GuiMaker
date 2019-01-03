@@ -404,6 +404,11 @@ public class ListWordsController<Word extends ListElement> {
 		return progressUpdater;
 	}
 
+	public void editTemporarily(Word word){
+		setInEditMode(true);
+		repaint(word, InputGoal.EDIT_TEMPORARILY);
+	}
+
 	public void setInEditMode(boolean inEditMode) {
 		isInEditMode = inEditMode;
 	}
