@@ -23,6 +23,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -91,6 +92,16 @@ public class WebPagePanel {
 			}
 		};
 	}
+
+	public void addJavaObjectReferenceForJavascript(Object o ){
+		PlatformImpl.runLater(()->{
+			JSObject jsObject = (JSObject) webView.getEngine().executeScript("window");
+			jsObject.setMember(o.getClass().getSimpleName(), o);
+		});
+
+	}
+
+
 
 	public void addJavascript(String javascript) {
 		PlatformImpl.runLater(() -> webView.getEngine()
