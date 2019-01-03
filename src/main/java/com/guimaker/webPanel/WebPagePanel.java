@@ -14,6 +14,7 @@ import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.Prompts;
 import com.guimaker.utilities.ElementCopier;
+import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,6 +46,7 @@ public class WebPagePanel {
 	private AbstractButton reloadButton;
 	private String currentlyLoadingPage;
 	private ApplicationWindow applicationWindow;
+	private final String JAVASCRIPT_ONLOAD = "window.onload=function(){%s};";
 
 	//TODO it's too coupled to kanji context, should be more generic
 	public WebPagePanel(ContextOwner contextOwner,
@@ -90,6 +92,14 @@ public class WebPagePanel {
 		};
 	}
 
+	public void addJavascript(String javascript) {
+		PlatformImpl.runLater(() -> webView.getEngine()
+										   .executeScript(String.format(
+												   JAVASCRIPT_ONLOAD,
+												   javascript)));
+
+	}
+
 	private void showPanel(String panel) {
 		((CardLayout) switchingPanel.getLayout()).show(switchingPanel, panel);
 	}
@@ -115,6 +125,7 @@ public class WebPagePanel {
 			@Override
 			public void run() {
 				webView = new WebView();
+
 				StackPane pane = new StackPane(webView);
 				webView.getEngine()
 					   .getLoadWorker()
