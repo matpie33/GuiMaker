@@ -5,6 +5,7 @@ import com.guimaker.enums.Anchor;
 import com.guimaker.enums.ButtonType;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.TextAlignment;
+import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.TextPaneOptions;
@@ -13,6 +14,7 @@ import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.Prompts;
+import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.ElementCopier;
 import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Platform;
@@ -93,15 +95,24 @@ public class WebPagePanel {
 		};
 	}
 
-	public void addJavaObjectReferenceForJavascript(Object o ){
-		PlatformImpl.runLater(()->{
-			JSObject jsObject = (JSObject) webView.getEngine().executeScript("window");
-			jsObject.setMember(o.getClass().getSimpleName(), o);
+	public void addJavaObjectReferenceForJavascript(Object o) {
+		PlatformImpl.runLater(() -> {
+			JSObject jsObject = (JSObject) webView.getEngine()
+												  .executeScript("window");
+			jsObject.setMember(o.getClass()
+								.getSimpleName(), o);
 		});
 
 	}
 
+	public void addHotkey(HotkeyWrapper hotkey, AbstractAction action) {
+		CommonActionsCreator.addHotkey(hotkey, action, getSwitchingPanel());
+	}
 
+	public void executeJavascript(String javascript) {
+		PlatformImpl.runLater(() -> webView.getEngine()
+										   .executeScript(javascript));
+	}
 
 	public void addJavascript(String javascript) {
 		PlatformImpl.runLater(() -> webView.getEngine()
