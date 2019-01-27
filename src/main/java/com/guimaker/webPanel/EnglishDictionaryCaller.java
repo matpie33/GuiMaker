@@ -24,7 +24,6 @@ public class EnglishDictionaryCaller {
 	private static final String MEANING_CHILD_NODE = "text";
 	private static final String POLISH_LANGUAGE = "pol";
 	private static final String ENGLISH_LANGUAGE = "eng";
-	private static final String SPACEBAR_REPLACEMENT = "%20";
 	public static final String LETTER_REGEX = "[a-zA-z]";
 
 	//called from javascript
