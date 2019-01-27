@@ -18,7 +18,6 @@ import java.util.Optional;
 
 public class ApplicationWindow extends DialogWindow {
 
-	public static final String RESOURCES_PATH = "resources/";
 	private JPanel mainApplicationPanel;
 	private AbstractPanelWithHotkeysInfo startingPanel;
 	private JFrame container;
@@ -27,7 +26,6 @@ public class ApplicationWindow extends DialogWindow {
 	private static Font kanjiFont = new Font("MS Mincho", Font.PLAIN, 100);
 	private JMenuBar menuBar;
 	private final ApplicationConfiguration applicationConfiguration;
-	private BufferedImage icon;
 	private String iconName = "";
 
 	public ApplicationWindow(
@@ -55,7 +53,7 @@ public class ApplicationWindow extends DialogWindow {
 	}
 
 	public void setIconName(String path) {
-		this.iconName = RESOURCES_PATH + path;
+		this.iconName = path;
 	}
 
 	private BufferedImage loadIcon() {
