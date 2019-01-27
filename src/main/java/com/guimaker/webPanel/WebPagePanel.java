@@ -1,10 +1,7 @@
 package com.guimaker.webPanel;
 
 import com.guimaker.application.ApplicationWindow;
-import com.guimaker.enums.Anchor;
-import com.guimaker.enums.ButtonType;
-import com.guimaker.enums.FillType;
-import com.guimaker.enums.TextAlignment;
+import com.guimaker.enums.*;
 import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ButtonOptions;
@@ -31,6 +28,10 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class WebPagePanel {
 
@@ -49,7 +50,8 @@ public class WebPagePanel {
 	private AbstractButton reloadButton;
 	private String currentlyLoadingPage;
 	private ApplicationWindow applicationWindow;
-	private final String JAVASCRIPT_ONLOAD = "window.onload=function(){%s};";
+	private final static String JAVASCRIPT_ROOT_DIRECTORY = "js/";
+	private WebPageActions webPageActions;
 
 	//TODO it's too coupled to kanji context, should be more generic
 	public WebPagePanel(ContextOwner contextOwner,
@@ -57,6 +59,7 @@ public class WebPagePanel {
 			ApplicationWindow applicationWindow) {
 		this.applicationWindow = applicationWindow;
 		this.contextOwner = contextOwner;
+		webPageActions = new WebPageActions(this);
 		webPage = new JFXPanel();
 		switchingPanel = new JPanel(new CardLayout());
 		createButtonReload();
@@ -66,7 +69,14 @@ public class WebPagePanel {
 		}
 		initiateConnectionFailListener(connectionFailPageHandler);
 		initiatePanels();
+		initiateHotkeys();
 		shouldGrabFocusOnReload = true;
+	}
+
+	private void initiateHotkeys() {
+		addHotkey(new HotkeyWrapper(KeyModifiers.ALT, KeyEvent.VK_R,
+						ConditionForHotkey.COMPONENT_FOCUSED),
+				webPageActions.createActionCallEnglishDictionary());
 	}
 
 	private void initiateConnectionFailListener(
@@ -106,20 +116,16 @@ public class WebPagePanel {
 	}
 
 	public void addHotkey(HotkeyWrapper hotkey, AbstractAction action) {
-		CommonActionsCreator.addHotkey(hotkey, action, getSwitchingPanel());
+		CommonActionsCreator.addHotkey(hotkey, action, getWebPanel());
 	}
 
-	public void executeJavascript(String javascript) {
+	private void executeJavascript(String javascript) {
 		PlatformImpl.runLater(() -> webView.getEngine()
 										   .executeScript(javascript));
 	}
 
-	public void addJavascript(String javascript) {
-		PlatformImpl.runLater(() -> webView.getEngine()
-										   .executeScript(String.format(
-												   JAVASCRIPT_ONLOAD,
-												   javascript)));
-
+	public String getJavascriptForShowingTooltip() {
+		return webPageActions.getJavascriptFileForShowingTooltip();
 	}
 
 	private void showPanel(String panel) {
@@ -168,6 +174,27 @@ public class WebPagePanel {
 			}
 		});
 
+	}
+
+	public void executeJavascriptFiles(String... fileNames) {
+		StringBuilder builder = new StringBuilder();
+		Arrays.stream(fileNames)
+			  .forEach(fileName -> builder.append(
+					  getJavascriptFromFile(fileName)));
+		executeJavascript(builder.toString());
+	}
+
+	private String getJavascriptFromFile(String filename) {
+		InputStream resourceAsStream = getClass().getClassLoader()
+												 .getResourceAsStream(
+														 JAVASCRIPT_ROOT_DIRECTORY
+																 + filename);
+		return convertStreamToString(resourceAsStream);
+	}
+
+	private String convertStreamToString(InputStream inputStream) {
+		Scanner s = new Scanner(inputStream).useDelimiter("\\A");
+		return s.hasNext() ? s.next() : "";
 	}
 
 	private void createButtonReload() {
