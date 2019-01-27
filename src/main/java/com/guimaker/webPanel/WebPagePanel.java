@@ -6,10 +6,12 @@ import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.TextPaneOptions;
+import com.guimaker.panels.AbstractPanelWithHotkeysInfo;
 import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
+import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.strings.Prompts;
 import com.guimaker.utilities.CommonActionsCreator;
 import com.guimaker.utilities.ElementCopier;
@@ -53,8 +55,8 @@ public class WebPagePanel {
 	private final static String JAVASCRIPT_ROOT_DIRECTORY = "js/";
 	private WebPageActions webPageActions;
 
-	//TODO it's too coupled to kanji context, should be more generic
-	public WebPagePanel(ContextOwner contextOwner,
+	public WebPagePanel(AbstractPanelWithHotkeysInfo parentPanel,
+			ContextOwner contextOwner,
 			ConnectionFailPageHandler connectionFailPageHandler,
 			ApplicationWindow applicationWindow) {
 		this.applicationWindow = applicationWindow;
@@ -69,14 +71,18 @@ public class WebPagePanel {
 		}
 		initiateConnectionFailListener(connectionFailPageHandler);
 		initiatePanels();
-		initiateHotkeys();
+		initiateHotkeys(parentPanel);
 		shouldGrabFocusOnReload = true;
 	}
 
-	private void initiateHotkeys() {
-		addHotkey(new HotkeyWrapper(KeyModifiers.ALT, KeyEvent.VK_R,
-						ConditionForHotkey.COMPONENT_FOCUSED),
-				webPageActions.createActionCallEnglishDictionary());
+	private void initiateHotkeys(AbstractPanelWithHotkeysInfo parentPanel) {
+		HotkeyWrapper hotkey = new HotkeyWrapper(KeyModifiers.ALT,
+				KeyEvent.VK_R, ConditionForHotkey.COMPONENT_FOCUSED);
+		AbstractAction action = webPageActions.createActionCallEnglishDictionary();
+		addHotkey(hotkey, action);
+		parentPanel.addHotkeyInformationOnly(hotkey,
+				HotkeysDescriptions.TRANSLATES_SELECTED_WORD_INTO_ENGLISH,
+				action);
 	}
 
 	private void initiateConnectionFailListener(

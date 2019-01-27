@@ -13,4 +13,7 @@ public class HotkeysDescriptions {
 	public static final String CLOSE_WINDOW = "Zamyka okno";
 	public static final String CONFIRM_ACTION = "Akceptuje zmiany";
 	public static final String EDIT_WORD = "Edytuje słowo";
+	public static final String TRANSLATES_SELECTED_WORD_INTO_ENGLISH =
+			"Tłumaczy zaznaczone słowo z angielskiego na polski na stronie "
+					+ "internetowej.";
 }

@@ -134,7 +134,8 @@ public class ListFilteringController<Word extends ListElement> {
 
 	private WebPagePanel createWebPagePanel(ListConfiguration listConfiguration,
 			WordDictionaryData wordDictionaryData) {
-		WebPagePanel webPagePanel = new WebPagePanel(null, null,
+		WebPagePanel webPagePanel = new WebPagePanel(
+				listViewManager.getListPanel(), null, null,
 				listConfiguration.getApplicationChangesManager()
 								 .getApplicationWindow());
 		webPagePanel.showPage(

@@ -53,6 +53,10 @@ public class ListViewManager<Word extends ListElement> {
 
 	}
 
+	public ListPanel<Word> getListPanel() {
+		return listPanel;
+	}
+
 	public void inheritScrollPane() {
 		listConfiguration.inheritScrollbar(true);
 	}

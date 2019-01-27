@@ -178,9 +178,13 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		return mainPanel;
 	}
 
-	public void addHotkeysInformation(int keyEvent, String hotkeyDescription) {
-		HotkeyWrapper wrapper = new HotkeyWrapper(KeyModifiers.NONE, keyEvent);
-		addHotkeyInformation(hotkeyDescription, wrapper);
+	public void addHotkeyInformationOnly(HotkeyWrapper hotkeyWrapper,
+			String hotkeyDescription, AbstractAction action) {
+		if (hotkeysMapping.containsKey(hotkeyWrapper)){
+			return;
+		}
+		addHotkeyInformationToView(hotkeyDescription, hotkeyWrapper);
+		hotkeysMapping.put(hotkeyWrapper, action);
 	}
 
 	public void addHotkey(int keyEvent, AbstractAction action,
@@ -200,9 +204,9 @@ public abstract class AbstractPanelWithHotkeysInfo {
 							+ KeyEvent.getKeyText(wrapper.getKeyEvent())
 							+ " in the class: " + this);
 		}
-		hotkeysMapping.put(wrapper, action);
+
 		CommonActionsCreator.addHotkey(wrapper, action, component);
-		addHotkeyInformation(hotkeyDescription, wrapper);
+		addHotkeyInformationOnly(wrapper,hotkeyDescription, action);
 	}
 
 	public AbstractButton createButtonWithHotkey(int keyEvent,
@@ -222,7 +226,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 		return button;
 	}
 
-	private void addHotkeyInformation(String hotkeyDescription,
+	private void addHotkeyInformationToView(String hotkeyDescription,
 			HotkeyWrapper hotkey) {
 		if (hotkeyDescription.isEmpty()) {
 			return;

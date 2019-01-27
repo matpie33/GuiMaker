@@ -39,11 +39,13 @@ public class EnglishDictionaryCaller {
 
 	private String removeNonLetterCharsFromFirstAndLastIndex(
 			String wordToCheck) {
-		while (!(wordToCheck.charAt(0) + "").matches(LETTER_REGEX)) {
+		while (!wordToCheck.isEmpty() && !(wordToCheck.charAt(0) + "").matches
+				(LETTER_REGEX)) {
 			wordToCheck = wordToCheck.substring(1, wordToCheck.length());
 		}
 
-		while ((!(wordToCheck.charAt(wordToCheck.length() - 1) + "").matches(
+		while (!wordToCheck.isEmpty() && (!(wordToCheck.charAt(wordToCheck
+				.length() - 1) + "").matches(
 				"[a-zA-Z]"))) {
 			wordToCheck = wordToCheck.substring(0, wordToCheck.length() - 1);
 		}
