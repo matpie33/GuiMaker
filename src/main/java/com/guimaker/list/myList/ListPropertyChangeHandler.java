@@ -230,10 +230,10 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		boolean isValid = !somethingHasChanged
 				|| listElementPropertyManager.validateInput(input,
 				propertyHolder);
-		if (!isValid) {
+		if (isRequired && !isValid) {
 			error.append(listElementPropertyManager.getInvalidPropertyReason());
 		}
-		return isValid;
+		return !isRequired || isValid;
 	}
 
 	private void displayMessageAboutFailedValidation(JTextComponent input,
