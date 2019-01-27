@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +24,31 @@ public class EnglishDictionaryCaller {
 	private static final String MEANING_CHILD_NODE = "text";
 	private static final String POLISH_LANGUAGE = "pol";
 	private static final String ENGLISH_LANGUAGE = "eng";
+	private static final String SPACEBAR_REPLACEMENT = "%20";
+	public static final String LETTER_REGEX = "[a-zA-z]";
 
 	//called from javascript
 	public String callDictionaryForEnglishWord(String wordToCheck)
 			throws IOException {
+		wordToCheck = wordToCheck.trim();
+		wordToCheck = removeNonLetterCharsFromFirstAndLastIndex(wordToCheck);
+		wordToCheck = URLEncoder.encode(wordToCheck, "UTF-8");
 		URLConnection request = makeApiCallToDictionary(wordToCheck,
 				ENGLISH_LANGUAGE, POLISH_LANGUAGE);
 		return getWordMeaningsFromJSON(request).toString();
+	}
+
+	private String removeNonLetterCharsFromFirstAndLastIndex(
+			String wordToCheck) {
+		while (!(wordToCheck.charAt(0) + "").matches(LETTER_REGEX)) {
+			wordToCheck = wordToCheck.substring(1, wordToCheck.length());
+		}
+
+		while ((!(wordToCheck.charAt(wordToCheck.length() - 1) + "").matches(
+				"[a-zA-Z]"))) {
+			wordToCheck = wordToCheck.substring(0, wordToCheck.length() - 1);
+		}
+		return wordToCheck;
 	}
 
 	private List<String> getWordMeaningsFromJSON(URLConnection request)
