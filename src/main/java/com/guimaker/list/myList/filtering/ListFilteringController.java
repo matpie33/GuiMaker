@@ -152,8 +152,9 @@ public class ListFilteringController<Word extends ListElement> {
 									  .hasFocus()) {
 					webPagePanel.showPageWithoutGrabbingFocus(String.format(
 							wordDictionaryData.getSearchUrlPattern(),
-							listFilteringPanel.getFilteringInput()
-											  .getText()));
+							WordSearching.removeDiacriticsAndCapitalLetters(
+									listFilteringPanel.getFilteringInput()
+													  .getText())));
 				}
 			}
 		};

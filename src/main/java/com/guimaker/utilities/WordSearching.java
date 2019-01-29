@@ -13,6 +13,7 @@ import java.util.*;
 public class WordSearching {
 
 	private static Map<Character, Character> polishDiacriticsMap;
+	private static Map<Character, Character> japaneseCharactersReplacement;
 
 	static {
 		polishDiacriticsMap = new HashMap<>();
@@ -32,13 +33,21 @@ public class WordSearching {
 		polishDiacriticsMap.put('Ó', 'O');
 		polishDiacriticsMap.put('Ń', 'N');
 		polishDiacriticsMap.put('Ś', 'S');
+
+		japaneseCharactersReplacement = new HashMap<>();
+		japaneseCharactersReplacement.put('ｎ', 'ん');
 	}
 
-	private static String removeDiacriticsAndCapitalLetters(String word) {
+
+
+	public static String removeDiacriticsAndCapitalLetters(String word) {
 		for (Map.Entry<Character, Character> letterAndReplacement : polishDiacriticsMap.entrySet()) {
 			word = word.replace(letterAndReplacement.getKey(),
 					letterAndReplacement.getValue())
 					   .toLowerCase();
+		}
+		for (Map.Entry<Character, Character> replacement : japaneseCharactersReplacement.entrySet()) {
+			word = word.replace(replacement.getKey(), replacement.getValue());
 		}
 		return word;
 	}
@@ -123,7 +132,7 @@ public class WordSearching {
 		return filteredWordsMatch;
 	}
 
-	private static <Word extends ListElement> Double calculateTotalMatch(
+	private static Double calculateTotalMatch(
 			List<Double> matchForSeparateWordsInGivenRow) {
 		return MathUtils.average(matchForSeparateWordsInGivenRow);
 
