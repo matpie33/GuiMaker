@@ -6,10 +6,11 @@ import java.awt.*;
 
 public class ListColors {
 
-	private Color backgroundColor = BasicColors.PURPLE_DARK_1;
+	private Color rowColor = BasicColors.PURPLE_DARK_1;
 	private Color selectedRowColor = BasicColors.BLUE_NORMAL_7;
 	private Color editRowColor = BasicColors.BLUE_NORMAL_4;
 	private Color filterPanelColor = BasicColors.GREEN_BRIGHT_1;
+	private Color backgroundColor = BasicColors.PURPLE_NORMAL_2;
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
@@ -17,6 +18,15 @@ public class ListColors {
 
 	public ListColors backgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
+		return this;
+	}
+
+	public Color getRowColor() {
+		return rowColor;
+	}
+
+	public ListColors rowColor(Color backgroundColor) {
+		this.rowColor = backgroundColor;
 		return this;
 	}
 

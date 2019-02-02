@@ -57,7 +57,7 @@ public class ListPanel<Word extends ListElement>
 									  .getApplicationWindow()
 									  .getApplicationConfiguration()
 									  .getListColors();
-		contentColor = listColors.getBackgroundColor();
+		contentColor = listColors.getRowColor();
 		listFilteringPanel = new ListFilteringController<>(listViewManager,
 				controller).getListFilteringPanel();
 		listPanelUpdater = new ListPanelUpdater(this, listConfiguration);
@@ -247,7 +247,8 @@ public class ListPanel<Word extends ListElement>
 	public void setParentDialog(DialogWindow dialog) {
 		super.setParentDialog(dialog);
 		mainPanel.setBackgroundColor(dialog.getParentConfiguration()
-										   .getContentPanelColor());
+										   .getListColors()
+										   .getBackgroundColor());
 
 	}
 
