@@ -21,10 +21,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbstractPanelWithHotkeysInfo {
@@ -36,7 +34,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	private Anchor buttonsAnchor = Anchor.EAST;
 	private Border defaultBorder = BorderFactory.createBevelBorder(
 			BevelBorder.LOWERED);
-	private Map<HotkeyWrapper, AbstractAction> hotkeysMapping = new HashMap<>();
+	private Map<HotkeyWrapper, EventListener> hotkeysMapping = new HashMap<>();
 	private boolean isMaximized;
 	private List<MyList> navigableByKeyboardLists = new ArrayList<>();
 	private Map<MoveDirection, HotkeyWrapper> hotkeysForMovingBetweenInputs = new HashMap<>();
@@ -179,7 +177,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	}
 
 	public void addHotkeyInformationOnly(HotkeyWrapper hotkeyWrapper,
-			String hotkeyDescription, AbstractAction action) {
+			String hotkeyDescription, EventListener action) {
 		if (hotkeysMapping.containsKey(hotkeyWrapper)){
 			return;
 		}

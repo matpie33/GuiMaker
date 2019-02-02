@@ -8,6 +8,7 @@ import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.ListConfiguration;
+import com.guimaker.list.myList.panel.ListPanel;
 import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComboboxOptions;
@@ -17,11 +18,13 @@ import com.guimaker.panels.GuiElementsCreator;
 import com.guimaker.panels.MainPanel;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
+import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.strings.Prompts;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 
 public class ListFilteringPanel<Word extends ListElement> {
@@ -40,8 +43,8 @@ public class ListFilteringPanel<Word extends ListElement> {
 		this.listFilteringController = listFilteringController;
 	}
 
-	public JPanel createPanel(ListRowData<Word> listRowData,
-			AbstractButton buttonClearFilter,
+	public JPanel createPanel(ListPanel<Word> listPanel,
+			ListRowData<Word> listRowData, AbstractButton buttonClearFilter,
 			ListConfiguration listConfiguration) {
 		this.buttonClearFilter = buttonClearFilter;
 		this.listRowData = listRowData;
@@ -65,7 +68,7 @@ public class ListFilteringPanel<Word extends ListElement> {
 			searchPanel.addRow(
 					SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,
 							createComboboxForSearchingInDictionary(
-									listConfiguration)));
+									listConfiguration, listPanel)));
 		}
 		addFilteringInputAndButton();
 
@@ -73,13 +76,18 @@ public class ListFilteringPanel<Word extends ListElement> {
 	}
 
 	private JComponent createComboboxForSearchingInDictionary(
-			ListConfiguration listConfiguration) {
+			ListConfiguration listConfiguration, ListPanel<Word> listPanel) {
+
+		HotkeyWrapper hotkeyWrapper = new HotkeyWrapper(KeyModifiers.ALT,
+				KeyEvent.VK_X);
+		ItemListener action = listFilteringController.createActionEnableSearchInDictionary(
+				listConfiguration);
+		listPanel.addHotkeyInformationOnly(hotkeyWrapper,
+				HotkeysDescriptions.OPEN_SEARCH_IN_DICTIONARY_PANEL, action);
 		return GuiElementsCreator.createCheckbox(
 				new ButtonOptions(ButtonType.CHECKBOX).text(
-						ButtonsNames.ENABLE_SEARCH_IN_DICTIONARY),
-				listFilteringController.createActionEnableSearchInDictionary(
-						listConfiguration),
-				new HotkeyWrapper(KeyModifiers.ALT, KeyEvent.VK_X));
+						ButtonsNames.ENABLE_SEARCH_IN_DICTIONARY), action,
+				hotkeyWrapper);
 
 	}
 

@@ -1,7 +1,6 @@
 package com.guimaker.list.myList.panel;
 
 import com.guimaker.application.DialogWindow;
-import com.guimaker.colors.BasicColors;
 import com.guimaker.enums.*;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListRowData;
@@ -55,11 +54,10 @@ public class ListPanel<Word extends ListElement>
 			ListViewManager<Word> listViewManager,
 			ListWordsController<Word> controller) {
 		listColors = listConfiguration.getApplicationChangesManager()
-										.getApplicationWindow()
-										.getApplicationConfiguration()
-										.getListColors();
-		contentColor = listColors
-										.getBackgroundColor();
+									  .getApplicationWindow()
+									  .getApplicationConfiguration()
+									  .getListColors();
+		contentColor = listColors.getBackgroundColor();
 		listFilteringPanel = new ListFilteringController<>(listViewManager,
 				controller).getListFilteringPanel();
 		listPanelUpdater = new ListPanelUpdater(this, listConfiguration);
@@ -133,7 +131,8 @@ public class ListPanel<Word extends ListElement>
 		if (isFilteringEnabled()) {
 			filterPanel.addRow(
 					SimpleRowBuilder.createRow(FillType.HORIZONTAL, Anchor.WEST,
-							listFilteringPanel.createPanel(rowForFilteringPanel,
+							listFilteringPanel.createPanel(this,
+									rowForFilteringPanel,
 									createButtonClearFilter(),
 									listConfiguration)));
 		}
