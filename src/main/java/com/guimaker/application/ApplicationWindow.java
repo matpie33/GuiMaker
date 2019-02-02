@@ -125,8 +125,13 @@ public class ApplicationWindow extends DialogWindow {
 					shouldClose = showConfirmDialog(Prompts.CLOSE_APPLICATION);
 				}
 				if (shouldClose) {
-					applicationChangesManager.save();
-					System.exit(0);
+					KeyboardFocusManager.getCurrentKeyboardFocusManager()
+										.clearGlobalFocusOwner();
+					SwingUtilities.invokeLater(() -> {
+						applicationChangesManager.save();
+						System.exit(0);
+					});
+
 				}
 				else {
 					resumeTimeMeasuring();
