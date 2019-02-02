@@ -79,7 +79,7 @@ public class ListFilteringPanel<Word extends ListElement> {
 						ButtonsNames.ENABLE_SEARCH_IN_DICTIONARY),
 				listFilteringController.createActionEnableSearchInDictionary(
 						listConfiguration),
-				new HotkeyWrapper(KeyModifiers.CONTROL, KeyEvent.VK_Y));
+				new HotkeyWrapper(KeyModifiers.ALT, KeyEvent.VK_X));
 
 	}
 
