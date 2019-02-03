@@ -863,16 +863,29 @@ public class MainPanel {
 			return columnPanelCreator.getIndexOfRowContainingElements(elements);
 		}
 		for (int i = 0; i < rows.size(); i++) {
-			JComponent panel = rows.get(i);
-			List<Component> e = Arrays.asList(panel.getComponents());
-			if (elements.length == 1 && panel.equals(elements[0])) {
+			if (doesPanelContainElements(rows.get(i), elements))
 				return i;
-			}
-			if (e.containsAll(Arrays.asList(elements))) {
-				return i;
-			}
 		}
 		return -1;
+	}
+
+	private boolean doesPanelContainElements(JComponent panel,
+			Component[] elements) {
+		List<Component> e = Arrays.asList(panel.getComponents());
+		if (panel instanceof JPanel){
+			for (Component component : panel.getComponents()) {
+				if (doesPanelContainElements((JComponent)component, elements)){
+					return true;
+				}
+			}
+		}
+		if (elements.length == 1 && panel.equals(elements[0])) {
+			return true;
+		}
+		if (e.containsAll(Arrays.asList(elements))) {
+			return true;
+		}
+		return false;
 	}
 
 	public void clear() {

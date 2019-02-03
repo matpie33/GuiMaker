@@ -160,10 +160,12 @@ public class ListPanel<Word extends ListElement>
 	}
 
 	private List<AbstractButton> getNavigationButtons() {
+		//TODO refactor this method so that it initializes navigation buttons
+		// only once at constructor, and then it only gets navigation buttons
 		List<AbstractButton> navigationButtons = new ArrayList<>(Arrays.asList(
 				listConfiguration.getAdditionalNavigationButtons()));
 		if (listConfiguration.isWordAddingEnabled()) {
-			navigationButtons.add(listElementsCreator.createButtonAddWord());
+			navigationButtons.add(listElementsCreator.getButtonAddWord());
 		}
 		this.navigationButtons = navigationButtons;
 		return navigationButtons;
@@ -265,8 +267,10 @@ public class ListPanel<Word extends ListElement>
 	}
 
 	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
-		mainPanel.addElementsToRow(
-				mainPanel.getIndexOfRowContainingElements(navigationButtons),
-				buttons);
+		mainPanel.removeRowWithElements(
+				navigationButtons.toArray(new JComponent[] {}));
+		navigationButtons.addAll(Arrays.asList(buttons));
+		mainPanel.addRow(
+				SimpleRowBuilder.createRow(FillType.NONE, navigationButtons));
 	}
 }

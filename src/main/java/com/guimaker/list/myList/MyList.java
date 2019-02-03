@@ -2,6 +2,7 @@ package com.guimaker.list.myList;
 
 import com.guimaker.application.ApplicationChangesManager;
 import com.guimaker.enums.InputGoal;
+import com.guimaker.enums.KeyModifiers;
 import com.guimaker.enums.ListElementModificationType;
 import com.guimaker.enums.MoveDirection;
 import com.guimaker.list.*;
@@ -305,7 +306,16 @@ public class MyList<Word extends ListElement>
 				null;
 	}
 
-	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
+	private void addAdditionalNavigationButtons(AbstractButton... buttons) {
 		listController.addAdditionalNavigationButtons(buttons);
 	}
+
+	public void addButtonWithHotkey (AbstractButton button, KeyModifiers
+			keyModifiers, int keyEvent, AbstractAction actionOnClick,
+			String hotkeyDescription){
+		listController.addButtonWithHotkey(button, keyModifiers, keyEvent,
+				actionOnClick, hotkeyDescription);
+		addAdditionalNavigationButtons(button);
+	}
+
 }

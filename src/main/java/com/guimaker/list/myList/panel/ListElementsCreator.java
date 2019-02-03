@@ -23,6 +23,7 @@ public class ListElementsCreator<Word extends ListElement> {
 
 	private ListPanel<Word> listPanel;
 	private ListActionsCreator<Word> listActionsCreator;
+	private AbstractButton buttonAddWord;
 
 	public ListElementsCreator(ListPanel<Word> listPanel,
 			ListActionsCreator<Word> listActionsCreator) {
@@ -85,14 +86,17 @@ public class ListElementsCreator<Word extends ListElement> {
 		return "" + rowNumber + ". ";
 	}
 
-	public AbstractButton createButtonAddWord() {
-		String name = ButtonsNames.ADD;
-		String hotkeyDescription = HotkeysDescriptions.ADD_WORD;
-		int keyEvent = KeyEvent.VK_I;
-		//TODO add in my list a parameter with hotkeys mapping for add/search panels
-		return listPanel.createButtonWithHotkey(KeyModifiers.CONTROL, keyEvent,
-				listActionsCreator.createActionShowInsertWordDialog(), name,
-				hotkeyDescription);
+	public AbstractButton getButtonAddWord() {
+		if (buttonAddWord == null){
+			String name = ButtonsNames.ADD;
+			String hotkeyDescription = HotkeysDescriptions.ADD_WORD;
+			int keyEvent = KeyEvent.VK_I;
+			//TODO add in my list a parameter with hotkeys mapping for add/search panels
+			buttonAddWord = listPanel.createButtonWithHotkey(KeyModifiers.CONTROL,
+					keyEvent, listActionsCreator.createActionShowInsertWordDialog(),
+					name, hotkeyDescription);
+		}
+		return buttonAddWord;
 
 	}
 

@@ -1,9 +1,6 @@
 package com.guimaker.list.myList;
 
-import com.guimaker.enums.InputGoal;
-import com.guimaker.enums.ListElementModificationType;
-import com.guimaker.enums.ListWordsLoadingDirection;
-import com.guimaker.enums.MoveDirection;
+import com.guimaker.enums.*;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementInitializer;
 import com.guimaker.list.ListObserver;
@@ -493,5 +490,12 @@ public class ListWordsController<Word extends ListElement> {
 
 	public void addAdditionalNavigationButtons(AbstractButton... buttons) {
 		listViewManager.addAdditionalNavigationButtons(buttons);
+	}
+
+	public void addButtonWithHotkey(AbstractButton button,
+			KeyModifiers keyModifiers, int keyEvent,
+			AbstractAction actionOnClick, String hotkeyDescription) {
+		listViewManager.getListPanel().addHotkey(keyModifiers, keyEvent,
+				actionOnClick, button, hotkeyDescription);
 	}
 }
