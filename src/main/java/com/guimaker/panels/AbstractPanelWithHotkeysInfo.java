@@ -191,6 +191,11 @@ public abstract class AbstractPanelWithHotkeysInfo {
 				hotkeyDescription);
 	}
 
+	public boolean hasHotkey (HotkeyWrapper hotkeyWrapper){
+		return hotkeysMapping.containsKey(hotkeyWrapper);
+	}
+
+
 	public void addHotkey(KeyModifiers keyModifier, int keyEvent,
 			AbstractAction action, JComponent component,
 			String hotkeyDescription) {
