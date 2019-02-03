@@ -12,7 +12,7 @@ public class ElementCopier {
 
 	public static AbstractButton copyButton(AbstractButton buttonToCopy) {
 		ActionListener[] actionListeners = buttonToCopy.getActionListeners();
-		AbstractButton copiedButton = GuiElementsCreator.createButtonlikeComponent(
+		AbstractButton copiedButton = GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						buttonToCopy.getText()), null);
 		for (ActionListener actionListener : actionListeners) {

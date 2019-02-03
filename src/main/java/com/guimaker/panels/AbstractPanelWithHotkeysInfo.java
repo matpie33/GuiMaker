@@ -222,7 +222,7 @@ public abstract class AbstractPanelWithHotkeysInfo {
 	public AbstractButton createButtonWithHotkey(KeyModifiers keyModifier,
 			int keyEvent, AbstractAction action, String buttonLabel,
 			String hotkeyDescription) {
-		AbstractButton button = GuiElementsCreator.createButtonlikeComponent(
+		AbstractButton button = GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(buttonLabel), action);
 		addHotkey(keyModifier, keyEvent, action, button, hotkeyDescription);
 		button.setFocusable(false);

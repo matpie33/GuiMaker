@@ -14,7 +14,7 @@ public class CommonActionsCreator {
 
 	public static AbstractButton createButtonDispose(String text,
 			int keyEventName, final Window window) {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON),
 				createDisposeAction(window), keyEventName);
 	}
@@ -40,7 +40,7 @@ public class CommonActionsCreator {
 				dialog.setVisible(false);
 			}
 		};
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON), action, keyEventName);
 	}
 

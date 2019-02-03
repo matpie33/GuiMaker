@@ -32,7 +32,7 @@ public class ListElementsCreator<Word extends ListElement> {
 
 	public AbstractButton createButtonLoadWords(String buttonName,
 			ListWordsLoadingDirection loadingDirection) {
-		AbstractButton button = GuiElementsCreator.createButtonlikeComponent(
+		AbstractButton button = GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(buttonName),
 				listActionsCreator.createActionShowNextOrPreviousWords(
 						loadingDirection));
@@ -41,26 +41,26 @@ public class ListElementsCreator<Word extends ListElement> {
 	}
 
 	private AbstractButton createButtonRemoveWord(Word word) {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						ButtonsNames.REMOVE_ROW),
 				listActionsCreator.createDeleteRowAction(word));
 	}
 
 	public AbstractButton createButtonAddRow(InputGoal inputGoal) {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.ADD_ROW),
 				listActionsCreator.createActionAddNewWord(inputGoal));
 	}
 
 	private AbstractButton createButtonEditWord(Word word) {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(ButtonsNames.EDIT),
 				listActionsCreator.createEditWordAction(word));
 	}
 
 	private AbstractButton createButtonFinishEditing(Word word) {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						ButtonsNames.FINISH_EDITING),
 				listActionsCreator.createFinishEditAction(word),
@@ -97,7 +97,7 @@ public class ListElementsCreator<Word extends ListElement> {
 	}
 
 	public AbstractButton createButtonClearFilter() {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						ButtonsNames.CLEAR_FILTER),
 				listActionsCreator.createActionClearFilter());

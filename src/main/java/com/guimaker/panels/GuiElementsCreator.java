@@ -94,22 +94,22 @@ public class GuiElementsCreator {
 		};
 	}
 
-	private static AbstractButton createButtonlikeComponent(
+	private static AbstractButton createButtonLikeComponent(
 			ButtonOptions options, AbstractAction actionOnClick, int hotkey,
 			KeyModifiers keyModifier) {
-		return createButtonlikeComponent(options, actionOnClick,
+		return createButtonLikeComponent(options, actionOnClick,
 				new HotkeyWrapper(keyModifier, hotkey));
 	}
 
 	public static AbstractButton createButtonLikeComponent(
 			ButtonOptions options) {
-		return createButtonlikeComponent(options, null);
+		return createButtonLikeComponent(options, null);
 	}
 
-	public static AbstractButton createButtonlikeComponent(
+	public static AbstractButton createButtonLikeComponent(
 			ButtonOptions options, AbstractAction actionOnClick,
 			HotkeyWrapper hotkeyWrapper) {
-		AbstractButton component = createButtonlikeComponent(options,
+		AbstractButton component = createButtonLikeComponent(options,
 				actionOnClick);
 
 		CommonActionsCreator.addHotkey(hotkeyWrapper, actionOnClick, component);
@@ -118,7 +118,7 @@ public class GuiElementsCreator {
 
 	public static AbstractButton createCheckbox(ButtonOptions buttonOptions,
 			ItemListener itemListener, HotkeyWrapper hotkeyWrapper) {
-		AbstractButton checkbox = createButtonlikeComponent(buttonOptions,
+		AbstractButton checkbox = createButtonLikeComponent(buttonOptions,
 				null);
 		checkbox.addItemListener(itemListener);
 		CommonActionsCreator.addHotkey(hotkeyWrapper, CommonActionsCreator
@@ -126,7 +126,7 @@ public class GuiElementsCreator {
 		return checkbox;
 	}
 
-	public static AbstractButton createButtonlikeComponent(
+	public static AbstractButton createButtonLikeComponent(
 			ButtonOptions options, AbstractAction actionOnClick) {
 		AbstractButton component;
 		String text = options.getText();
@@ -149,9 +149,9 @@ public class GuiElementsCreator {
 		return component;
 	}
 
-	public static AbstractButton createButtonlikeComponent(
+	public static AbstractButton createButtonLikeComponent(
 			ButtonOptions options, AbstractAction actionOnClick, int hotkey) {
-		return createButtonlikeComponent(options, actionOnClick, hotkey,
+		return createButtonLikeComponent(options, actionOnClick, hotkey,
 				KeyModifiers.NONE);
 	}
 

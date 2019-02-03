@@ -158,7 +158,7 @@ public class SplitPanePainter {
 	}
 
 	private AbstractButton createButtonCollapsePanel() {
-		return GuiElementsCreator.createButtonlikeComponent(
+		return GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text("-"),
 				splitPaneActionsCreator.createActionCollapsePanel());
 	}

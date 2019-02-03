@@ -204,7 +204,7 @@ public class WebPagePanel {
 	}
 
 	private void createButtonReload() {
-		reloadButton = GuiElementsCreator.createButtonlikeComponent(
+		reloadButton = GuiElementsCreator.createButtonLikeComponent(
 				new ButtonOptions(ButtonType.BUTTON).text(
 						ButtonsNames.RELOAD_PAGE), new AbstractAction() {
 					@Override
