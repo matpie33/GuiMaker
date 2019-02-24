@@ -207,6 +207,9 @@ public abstract class AbstractPanelWithHotkeysInfo {
 							+ KeyEvent.getKeyText(wrapper.getKeyEvent())
 							+ " in the class: " + this);
 		}
+		if (component instanceof AbstractButton){
+			((AbstractButton)component).addActionListener(action);
+		}
 
 		CommonActionsCreator.addHotkey(wrapper, action, component);
 		addHotkeyInformationOnly(wrapper,hotkeyDescription, action);
