@@ -78,8 +78,8 @@ public class ListFilteringPanel<Word extends ListElement> {
 	private JComponent createComboboxForSearchingInDictionary(
 			ListConfiguration listConfiguration, ListPanel<Word> listPanel) {
 
-		HotkeyWrapper hotkeyWrapper = new HotkeyWrapper(KeyModifiers.ALT,
-				KeyEvent.VK_X);
+		HotkeyWrapper hotkeyWrapper = new HotkeyWrapper(KeyModifiers.CONTROL,
+				KeyEvent.VK_E);
 		ItemListener action = listFilteringController.createActionEnableSearchInDictionary(
 				listConfiguration);
 		listPanel.addHotkeyInformationOnly(hotkeyWrapper,
