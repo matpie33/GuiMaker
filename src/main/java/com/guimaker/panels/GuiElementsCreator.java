@@ -121,8 +121,10 @@ public class GuiElementsCreator {
 		AbstractButton checkbox = createButtonLikeComponent(buttonOptions,
 				null);
 		checkbox.addItemListener(itemListener);
-		CommonActionsCreator.addHotkey(hotkeyWrapper, CommonActionsCreator
-				.createActionSelectDeselect(checkbox), checkbox);
+		if (hotkeyWrapper != null){
+			CommonActionsCreator.addHotkey(hotkeyWrapper, CommonActionsCreator
+					.createActionSelectDeselect(checkbox), checkbox);
+		}
 		return checkbox;
 	}
 
