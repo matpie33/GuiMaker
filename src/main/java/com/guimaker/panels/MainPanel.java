@@ -285,7 +285,8 @@ public class MainPanel {
 		int i = 0;
 		JTextComponent firstTextComponentInRow = null;
 		for (JComponent compo : components) {
-			if (compo == null) {
+			if (compo == null || row.getComponentsThatDidntMatchCondition()
+					.contains(compo)) {
 				continue;
 			}
 			boolean isTextInput = manageTextInput(compo,

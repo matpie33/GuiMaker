@@ -27,6 +27,8 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	private double weightY;
 	private boolean wrapWithPanel = true;
 	private List<List<JComponent>> componentsSharingColumn = new ArrayList<>();
+	private List<JComponent> componentsThatDidntMatchCondition = new
+			ArrayList <> ();
 
 	public Border getBorder() {
 		return border;
@@ -227,6 +229,17 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	public Row setWeightY(double weightY) {
 		this.weightY = weightY;
 		return getThis();
+	}
+	public Row componentOnlyIfConditionMatches(JComponent component,
+			boolean conditionPassed) {
+		if (!conditionPassed){
+			componentsThatDidntMatchCondition.add(component);
+		}
+		return getThis();
+	}
+
+	public List<JComponent> getComponentsThatDidntMatchCondition() {
+		return componentsThatDidntMatchCondition;
 	}
 
 	public double getWeightY() {
