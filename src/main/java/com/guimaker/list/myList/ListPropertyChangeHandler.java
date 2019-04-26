@@ -213,9 +213,15 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private Property validateAndConvertToProperty(JTextComponent input,
 			boolean somethingHasChanged) {
 		StringBuilder error = new StringBuilder();
-		boolean isValid =
-				(isInputEmpty(input) && !isRequired) || isInputValid(error,
-						input, somethingHasChanged);
+		boolean isValid;
+		if (isInputEmpty(input)) {
+			isValid = !isRequired;
+			error.append(
+					isValid ? "" : ExceptionsMessages.REQUIRED_FIELD_IS_EMPTY);
+		}
+		else {
+			isValid = isInputValid(error, input, somethingHasChanged);
+		}
 
 		if (!isValid) {
 			displayMessageAboutFailedValidation(input, error.toString());
