@@ -92,7 +92,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 
 	}
 
-	private boolean isTextFieldEmpty(JTextComponent textComponent) {
+	private boolean isInputEmpty(JTextComponent textComponent) {
 		return textComponent.getText()
 							.isEmpty() || textComponent.getText()
 													   .equals(defaultValue);
@@ -151,7 +151,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			WordInMyListExistence duplication = childWordExistence.exists() ?
 					childWordExistence :
 					rootWordExistence;
-			if (inputGoal.equals(InputGoal.ADD)){
+			if (inputGoal.equals(InputGoal.ADD)) {
 				list.showWord(propertyHolder);
 			}
 			setTextInputToPreviousValue(input);
@@ -213,7 +213,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private Property validateAndConvertToProperty(JTextComponent input,
 			boolean somethingHasChanged) {
 		StringBuilder error = new StringBuilder();
-		boolean isValid = isInputValid(error, input, somethingHasChanged);
+		boolean isValid =
+				(isInputEmpty(input) && !isRequired) || isInputValid(error,
+						input, somethingHasChanged);
 
 		if (!isValid) {
 			displayMessageAboutFailedValidation(input, error.toString());
@@ -230,10 +232,10 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 		boolean isValid = !somethingHasChanged
 				|| listElementPropertyManager.validateInput(input,
 				propertyHolder);
-		if (isRequired && !isValid) {
+		if (!isValid) {
 			error.append(listElementPropertyManager.getInvalidPropertyReason());
 		}
-		return !isRequired || isValid;
+		return isValid;
 	}
 
 	private void displayMessageAboutFailedValidation(JTextComponent input,
@@ -246,7 +248,7 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	private Property convertTextInputToProperty(JTextComponent input) {
 		Property property = listElementPropertyManager.convertToProperty(input);
 		if (property.getClass()
-					.equals(String.class) && isTextFieldEmpty(input)) {
+					.equals(String.class) && isInputEmpty(input)) {
 			property = (Property) "";
 		}
 		return property;
