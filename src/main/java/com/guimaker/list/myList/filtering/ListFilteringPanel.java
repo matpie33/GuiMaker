@@ -163,6 +163,8 @@ public class ListFilteringPanel<Word extends ListElement> {
 				else {
 					comboBox.setSelectedIndex(0);
 				}
+				getFilteringInput().requestFocusInWindow();
+				getFilteringInput().selectAll();
 
 			}
 		};
