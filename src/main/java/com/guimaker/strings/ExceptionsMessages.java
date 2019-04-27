@@ -16,4 +16,6 @@ public class ExceptionsMessages {
 					+ "a może jest błąd we wpisanym słowie.";
 	public static final String REQUIRED_FIELD_IS_EMPTY =
 			"Pole obowiązkowe nie zostało wypełnione.";
+	public static final String NO_WORKING_DICTIONARY_API =
+			"Nie ma działającego słownika.";
 }
