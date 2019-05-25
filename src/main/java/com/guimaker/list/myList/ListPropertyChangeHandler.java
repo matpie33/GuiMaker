@@ -101,6 +101,9 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 	@Override
 	public void focusLost(FocusEvent e) {
 		JTextComponent input = (JTextComponent) e.getSource();
+		if (!SwingUtilities.getWindowAncestor(input).isShowing()){
+			return;
+		}
 		boolean somethingHasChanged = !input.getText()
 											.equals(previousValueOfTextInput);
 		if (!somethingHasChanged && inputGoal.equals(InputGoal.EDIT)) {
