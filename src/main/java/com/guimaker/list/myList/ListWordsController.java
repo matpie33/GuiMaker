@@ -481,6 +481,7 @@ public class ListWordsController<Word extends ListElement> {
 		lastRowVisible = listWordsHolder.get0BasedRowNumberOfWord(word);
 		showNextWord();
 		lastRowVisible--;
+		listViewManager.updateRowsPanel();
 
 	}
 

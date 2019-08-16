@@ -157,12 +157,12 @@ public class ListPropertyChangeHandler<Property, PropertyHolder extends ListElem
 			if (inputGoal.equals(InputGoal.ADD)) {
 				list.showWord(propertyHolder);
 			}
-			setTextInputToPreviousValue(input);
-			setWordToPreviousValue(input, propertyNewValue);
 			int duplicateRowNumber = duplication.getOneBasedRowNumber();
 			String exceptionMessage = getExceptionForDuplicate(propertyNewValue,
 					duplicateRowNumber, duplication);
-			dialogWindow.showMessageDialog(exceptionMessage, false);
+			dialogWindow.showMessageDialog(exceptionMessage, true);
+			setTextInputToPreviousValue(input);
+			setWordToPreviousValue(input, propertyNewValue);
 			return false;
 		}
 		else {
