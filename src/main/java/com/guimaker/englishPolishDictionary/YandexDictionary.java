@@ -27,7 +27,8 @@ public class YandexDictionary implements EnglishPolishDictionary {
 	}
 
 	@Override
-	public List<String> getWordMeaningsFromJSON(URLConnection request) {
+	public List<String> getWordMeaningsFromJSON(URLConnection request,
+			String wordToCheck) {
 		try {
 
 			return getWords(request);

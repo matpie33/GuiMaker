@@ -10,7 +10,8 @@ public class DummyDictionary implements EnglishPolishDictionary {
 	}
 
 	@Override
-	public List<String> getWordMeaningsFromJSON(URLConnection request) {
+	public List<String> getWordMeaningsFromJSON(URLConnection request,
+			String wordToCheck) {
 		throw new UnsupportedOperationException(
 				"This class is only for tests.");
 	}

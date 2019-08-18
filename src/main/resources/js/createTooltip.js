@@ -1,6 +1,8 @@
 
 function createTooltipDiv (text){
 
+    text = text.replace("[", "");
+    text = text.replace("]", "");
     var selection = window.getSelection();
     var range = selection.getRangeAt(0);
     var rect = range.getBoundingClientRect();
@@ -9,7 +11,7 @@ function createTooltipDiv (text){
     div.style.border = '2px solid black';
     div.style.position = 'fixed';
     div.style.top = (rect.top - 50) + 'px';
-    div.style.fontSize = '30px';
+    div.style.fontSize = '20px';
     div.style.background = 'white';
     div.style.wordBreak='break-word';
     div.style.padding = '0px 4px';

@@ -1,5 +1,6 @@
 package com.guimaker.webPanel;
 
+import com.guimaker.englishPolishDictionary.DictDictionary;
 import com.guimaker.englishPolishDictionary.DummyDictionary;
 import com.guimaker.englishPolishDictionary.EnglishPolishDictionary;
 import com.guimaker.englishPolishDictionary.YandexDictionary;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EnglishDictionaryCaller {
-	private EnglishPolishDictionary defaultAPI = new YandexDictionary();
+	private EnglishPolishDictionary defaultAPI = new DictDictionary();
 	private List<EnglishPolishDictionary> englishPolishAlternativeApis = Arrays.asList(
 			defaultAPI, new DummyDictionary());
 	private static final String LETTER_REGEX = "[a-zA-z]";
@@ -28,7 +29,7 @@ public class EnglishDictionaryCaller {
 		URLConnection request = makeApiCallToDictionary(wordToCheck);
 		return request == null ?
 				ExceptionsMessages.NO_WORKING_DICTIONARY_API :
-				defaultAPI.getWordMeaningsFromJSON(request)
+				defaultAPI.getWordMeaningsFromJSON(request, wordToCheck)
 						  .toString();
 	}
 
