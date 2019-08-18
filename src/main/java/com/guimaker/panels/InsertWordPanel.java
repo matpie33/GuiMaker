@@ -6,6 +6,7 @@ import com.guimaker.controllers.InsertWordController;
 import com.guimaker.enums.FillType;
 import com.guimaker.list.ListElement;
 import com.guimaker.list.myList.MyList;
+import com.guimaker.options.ScrollPaneOptions;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;
 import com.guimaker.strings.HotkeysDescriptions;
@@ -44,11 +45,12 @@ public class InsertWordPanel<Word extends ListElement>
 
 	@Override
 	public void createElements() {
-		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.BOTH,
-				controller.createListRowPanel()
-						  .getPanel())
-										 .fillAllVertically()
-										 .fillHorizontallyEqually());
+		JScrollPane scrollPane = GuiElementsCreator.createScrollPane(
+				new ScrollPaneOptions().componentToWrap(
+						controller.createListRowPanel()
+								  .getPanel())
+									   .opaque(false));
+		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.BOTH, scrollPane));
 		controller.focusFirstInput();
 	}
 
