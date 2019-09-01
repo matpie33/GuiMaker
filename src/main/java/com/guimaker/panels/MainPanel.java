@@ -286,7 +286,7 @@ public class MainPanel {
 		JTextComponent firstTextComponentInRow = null;
 		for (JComponent compo : components) {
 			if (compo == null || row.getComponentsThatDidntMatchCondition()
-					.contains(compo)) {
+									.contains(compo)) {
 				continue;
 			}
 			boolean isTextInput = manageTextInput(compo,
@@ -504,6 +504,9 @@ public class MainPanel {
 	}
 
 	public void removeRow(int number) {
+		if (rows.size() <= number) {
+			return;
+		}
 		JComponent row = rows.get(number);
 		removeAndUpdateRows(row, number, true);
 	}
@@ -873,9 +876,10 @@ public class MainPanel {
 	private boolean doesPanelContainElements(JComponent panel,
 			Component[] elements) {
 		List<Component> e = Arrays.asList(panel.getComponents());
-		if (panel instanceof JPanel){
+		if (panel instanceof JPanel) {
 			for (Component component : panel.getComponents()) {
-				if (doesPanelContainElements((JComponent)component, elements)){
+				if (doesPanelContainElements((JComponent) component,
+						elements)) {
 					return true;
 				}
 			}
