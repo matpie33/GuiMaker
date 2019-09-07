@@ -333,7 +333,7 @@ public class ListWordsController<Word extends ListElement> {
 			return rowWithSelectedInput.getWrappingPanel();
 		}
 		else {
-			return findFirstVisiblePanelInScrollPane();
+			return findFirstVisibleRowInScrollPane().getWrappingPanel();
 		}
 	}
 
@@ -352,7 +352,8 @@ public class ListWordsController<Word extends ListElement> {
 		// main panel, currently for each row theres new main panel created
 		ListRow<Word> selectedRow = listWordsHolder.getRowWithSelectedInput();
 		if (selectedRow == null) {
-			MainPanel firstVisiblePanel = findFirstVisiblePanelInScrollPane();
+			MainPanel firstVisiblePanel = findFirstVisibleRowInScrollPane()
+					.getWrappingPanel();
 			firstVisiblePanel.selectNextInputInSameRow();
 			return;
 		}
@@ -378,13 +379,13 @@ public class ListWordsController<Word extends ListElement> {
 		}
 	}
 
-	public MainPanel findFirstVisiblePanelInScrollPane() {
+	public ListRow<Word> findFirstVisibleRowInScrollPane() {
 		for (ListRow<Word> row : listWordsHolder.getWordsWithDetails()) {
 			MainPanel wrappingPanel = row.getWrappingPanel();
 			if (!wrappingPanel.getPanel()
 							  .getVisibleRect()
 							  .isEmpty()) {
-				return wrappingPanel;
+				return row;
 			}
 		}
 		return null;
@@ -499,4 +500,5 @@ public class ListWordsController<Word extends ListElement> {
 		listViewManager.getListPanel().addHotkey(keyModifiers, keyEvent,
 				actionOnClick, button, hotkeyDescription);
 	}
+
 }

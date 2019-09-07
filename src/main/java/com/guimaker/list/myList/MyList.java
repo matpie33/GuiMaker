@@ -191,10 +191,18 @@ public class MyList<Word extends ListElement>
 		return listController.getPanelWithSelectedInput();
 	}
 
-	public void editParentWord(){
-		MyList list = parentListAndWordContainingThisList.getList();
-		ListElement parentWord = parentListAndWordContainingThisList.getParentWord();
-		list.listController.editTemporarily(parentWord);
+	public void editParentWord() {
+		if (parentListAndWordContainingThisList != null) {
+
+			MyList list = parentListAndWordContainingThisList.getList();
+			ListElement parentWord = parentListAndWordContainingThisList.getParentWord();
+			list.listController.editTemporarily(parentWord);
+		}
+		else {
+			Word word = listController.findFirstVisibleRowInScrollPane()
+									  .getWord();
+			listController.editTemporarily(word);
+		}
 
 	}
 
@@ -207,7 +215,8 @@ public class MyList<Word extends ListElement>
 	}
 
 	private MainPanel findFirstVisiblePanelInScrollpane() {
-		return listController.findFirstVisiblePanelInScrollPane();
+		return listController.findFirstVisibleRowInScrollPane()
+							 .getWrappingPanel();
 	}
 
 	public void selectPreviousInputInSameRow() {
@@ -310,12 +319,11 @@ public class MyList<Word extends ListElement>
 		listController.addAdditionalNavigationButtons(buttons);
 	}
 
-	public void addButtonWithHotkey (AbstractButton button, KeyModifiers
-			keyModifiers, int keyEvent, AbstractAction actionOnClick,
-			String hotkeyDescription){
+	public void addButtonWithHotkey(AbstractButton button,
+			KeyModifiers keyModifiers, int keyEvent,
+			AbstractAction actionOnClick, String hotkeyDescription) {
 		listController.addButtonWithHotkey(button, keyModifiers, keyEvent,
 				actionOnClick, hotkeyDescription);
 		addAdditionalNavigationButtons(button);
 	}
-
 }
