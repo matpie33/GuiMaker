@@ -95,24 +95,33 @@ public class MainPanel {
 	// by calling removAll" - try to optimize drawing
 
 	public MainPanel(PanelConfiguration panelConfiguration) {
+		extractConfigurationData(panelConfiguration);
+		elementsShifter = new ElementsShifter(panel,
+				shouldPutRowsHighestAsPossible);
+		rows = new LinkedList<>();
+		inputSelectionManager = new InputSelectionManager(displayMode);
+	}
+
+	private void extractConfigurationData(
+			PanelConfiguration panelConfiguration) {
 		opaque = panelConfiguration.isOpaque();
 		columnPanelCreator = new ColumnPanelCreator(
 				panelConfiguration.getPanelDisplayMode(), gapBetweenRows);
 		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
 				paddingLeft);
-
-		numberOfRows = 0;
 		originalBackgroundColor = panelConfiguration.getColorToUse();
 		shouldPutRowsHighestAsPossible = panelConfiguration.shouldPutRowsAsHighestAsPossible();
+		createPanel(panelConfiguration);
+		displayMode = panelConfiguration.getPanelDisplayMode();
+	}
+
+	private void createPanel(PanelConfiguration panelConfiguration) {
 		if (panelConfiguration.isScrollHorizontally()) {
 			panel = new JPanel();
 		}
 		else {
 			panel = new HorizontallyNonscrollablePanel();
 		}
-		elementsShifter = new ElementsShifter(panel,
-				shouldPutRowsHighestAsPossible);
-
 		if (panelConfiguration.getColorToUse() == null
 				&& panelConfiguration.isOpaque()) {
 			panel.setBackground(defaultColor);
@@ -123,12 +132,7 @@ public class MainPanel {
 		else if (!panelConfiguration.isOpaque()) {
 			panel.setOpaque(false);
 		}
-
 		panel.setLayout(new GridBagLayout());
-		rows = new LinkedList<>();
-		displayMode = panelConfiguration.getPanelDisplayMode();
-		inputSelectionManager = new InputSelectionManager(displayMode);
-
 	}
 
 	public void setGapsBetweenColumns(int gapBetweenColumns) {
