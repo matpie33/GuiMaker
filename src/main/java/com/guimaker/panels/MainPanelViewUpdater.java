@@ -39,22 +39,19 @@ public class MainPanelViewUpdater {
 	private ColumnPanelCreator columnPanelCreator;
 	private PanelTextInputsManager panelTextInputsManager;
 
-	public MainPanelViewUpdater(boolean skipInsetsForExtremeEdges,
-			boolean opaque, boolean opaqueRows, PanelDisplayMode displayMode,
-			int paddingRight, int paddingLeft, int paddingTop,
-			int paddingBottom, boolean shouldPutRowsHighestAsPossible,
-			int gapBetweenRows, JPanel panel) {
-		this.skipInsetsForExtremeEdges = skipInsetsForExtremeEdges;
-		this.opaque = opaque;
-		this.opaqueRows = opaqueRows;
-		this.displayMode = displayMode;
-		this.paddingRight = paddingRight;
-		this.paddingLeft = paddingLeft;
-		this.paddingTop = paddingTop;
-		this.paddingBottom = paddingBottom;
-		this.shouldPutRowsHighestAsPossible = shouldPutRowsHighestAsPossible;
+	public MainPanelViewUpdater(PanelConfiguration panelConfiguration,
+			JPanel panel) {
+		this.skipInsetsForExtremeEdges = panelConfiguration.isSkipInsetsForExtremeEdges();
+		this.opaque = panelConfiguration.isOpaque();
+		this.opaqueRows = panelConfiguration.isOpaqueRows();
+		this.displayMode = panelConfiguration.getPanelDisplayMode();
+		this.paddingRight = panelConfiguration.getPaddingRight();
+		this.paddingLeft = panelConfiguration.getPaddingLeft();
+		this.paddingTop = panelConfiguration.getPaddingTop();
+		this.paddingBottom = panelConfiguration.getPaddingBottom();
+		this.shouldPutRowsHighestAsPossible = panelConfiguration.shouldPutRowsAsHighestAsPossible();
 		this.panel = panel;
-		this.gapBetweenRows = gapBetweenRows;
+		this.gapBetweenRows = panelConfiguration.getGapBetweenRows();
 
 		elementsShifter = new ElementsShifter(panel,
 				shouldPutRowsHighestAsPossible);
@@ -67,9 +64,8 @@ public class MainPanelViewUpdater {
 	}
 
 	public void addRows(ComplexRow complexRow) {
-		JComponent panel = null;
 		for (AbstractSimpleRow row : complexRow.getAllRows()) {
-			panel = addRow(row, rows.size());
+			 addRow(row, rows.size());
 		}
 	}
 
@@ -431,7 +427,6 @@ public class MainPanelViewUpdater {
 
 	}
 
-
 	private void giveLastRowTheRestOfSpace() {
 		if (rows.isEmpty()) {
 			return;
@@ -465,7 +460,6 @@ public class MainPanelViewUpdater {
 								   entry.getValue()));
 
 	}
-
 
 	public void insertElementInPlaceOfElement(JComponent elementToAdd,
 			JComponent elementToReplace) {
@@ -540,7 +534,6 @@ public class MainPanelViewUpdater {
 
 	}
 
-
 	public int getIndexOfRowContainingElements(Component... elements) {
 
 		if (columnPanelCreator.isInitialized()) {
@@ -577,7 +570,6 @@ public class MainPanelViewUpdater {
 
 	}
 
-
 	public void changeEnabledStateOfLastElementInRow(int rowNumber,
 			boolean enabled) {
 		JComponent panel = rows.get(rowNumber);
@@ -593,7 +585,6 @@ public class MainPanelViewUpdater {
 		GridBagLayout layout = (GridBagLayout) panel.getLayout();
 		return layout.getConstraints(component);
 	}
-
 
 	public void addRowsOfElementsInColumn(ComplexRow complexRow) {
 		for (AbstractSimpleRow abstractSimpleRow1 : complexRow.getAllRows()) {
@@ -623,7 +614,6 @@ public class MainPanelViewUpdater {
 		rowNumberToTypeMap.put(rowNumberToTypeMap.lastKey() + 1,
 				RowType.COLUMN_BELOW_COLUMN);
 	}
-
 
 	private RowType movePanels(Direction direction, int startIndex,
 			int absoluteIncrementDecrementValue) {

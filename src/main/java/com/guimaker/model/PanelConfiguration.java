@@ -11,6 +11,79 @@ public class PanelConfiguration {
 	private boolean scrollHorizontally = true;
 	private boolean opaque = true;
 	private Color colorToUse;
+	private boolean skipInsetsForExtremeEdges = false;
+	private boolean opaqueRows = true;
+	private static final int paddingDefaultValue = 4;
+	private int paddingRight = paddingDefaultValue;
+	private int paddingLeft = paddingDefaultValue;
+	private int paddingTop = paddingDefaultValue;
+	private int paddingBottom = paddingDefaultValue;
+	private int gapBetweenRows = 4;
+
+	public void setOpaque(boolean opaque) {
+		this.opaque = opaque;
+	}
+
+	public boolean isSkipInsetsForExtremeEdges() {
+		return skipInsetsForExtremeEdges;
+	}
+
+	public void setSkipInsetsForExtremeEdges(
+			boolean skipInsetsForExtremeEdges) {
+		this.skipInsetsForExtremeEdges = skipInsetsForExtremeEdges;
+	}
+
+	public boolean isOpaqueRows() {
+		return opaqueRows;
+	}
+
+	public void setOpaqueRows(boolean opaqueRows) {
+		this.opaqueRows = opaqueRows;
+	}
+
+	public static int getPaddingDefaultValue() {
+		return paddingDefaultValue;
+	}
+
+	public int getPaddingRight() {
+		return paddingRight;
+	}
+
+	public void setPaddingRight(int paddingRight) {
+		this.paddingRight = paddingRight;
+	}
+
+	public int getPaddingLeft() {
+		return paddingLeft;
+	}
+
+	public void setPaddingLeft(int paddingLeft) {
+		this.paddingLeft = paddingLeft;
+	}
+
+	public int getPaddingTop() {
+		return paddingTop;
+	}
+
+	public void setPaddingTop(int paddingTop) {
+		this.paddingTop = paddingTop;
+	}
+
+	public int getPaddingBottom() {
+		return paddingBottom;
+	}
+
+	public void setPaddingBottom(int paddingBottom) {
+		this.paddingBottom = paddingBottom;
+	}
+
+	public int getGapBetweenRows() {
+		return gapBetweenRows;
+	}
+
+	public void setGapBetweenRows(int gapBetweenRows) {
+		this.gapBetweenRows = gapBetweenRows;
+	}
 
 	public PanelDisplayMode getPanelDisplayMode() {
 		return panelDisplayMode;

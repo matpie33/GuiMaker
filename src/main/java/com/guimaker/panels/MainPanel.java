@@ -14,30 +14,16 @@ import java.util.List;
 
 public class MainPanel {
 
-	private static final int paddingDefaultValue = 4;
-
 	private JPanel panel;
-	private static final int gapBetweenRows = 4;
-
-	private static final int paddingRight = paddingDefaultValue;
-	private static final int paddingLeft = paddingDefaultValue;
-	private static final int paddingTop = paddingDefaultValue;
-	private static final int paddingBottom = paddingDefaultValue;
 
 	private static Color defaultColor;
-	private static final boolean opaqueRows = true;
-	private static final boolean skipInsetsForExtremeEdges = false;
 
 	private MainPanelViewUpdater mainPanelViewUpdater;
 
 	public MainPanel(PanelConfiguration panelConfiguration) {
 		createPanel(panelConfiguration);
 		mainPanelViewUpdater = new MainPanelViewUpdater(
-				skipInsetsForExtremeEdges, panelConfiguration.isOpaque(),
-				opaqueRows, panelConfiguration.getPanelDisplayMode(),
-				paddingRight, paddingLeft, paddingTop, paddingBottom,
-				panelConfiguration.shouldPutRowsAsHighestAsPossible(),
-				gapBetweenRows, panel);
+				panelConfiguration, panel);
 	}
 
 	public static void setDefaultColor(Color defaultColor) {
