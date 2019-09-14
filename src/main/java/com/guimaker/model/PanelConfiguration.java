@@ -12,7 +12,6 @@ public class PanelConfiguration {
 	private boolean opaque = true;
 	private Color colorToUse;
 	private boolean skipInsetsForExtremeEdges = false;
-	private boolean opaqueRows = true;
 	private static final int paddingDefaultValue = 4;
 	private int paddingRight = paddingDefaultValue;
 	private int paddingLeft = paddingDefaultValue;
@@ -20,8 +19,9 @@ public class PanelConfiguration {
 	private int paddingBottom = paddingDefaultValue;
 	private int gapBetweenRows = 4;
 
-	public void setOpaque(boolean opaque) {
+	public PanelConfiguration setOpaque(boolean opaque) {
 		this.opaque = opaque;
+		return this;
 	}
 
 	public boolean isSkipInsetsForExtremeEdges() {
@@ -31,14 +31,6 @@ public class PanelConfiguration {
 	public void setSkipInsetsForExtremeEdges(
 			boolean skipInsetsForExtremeEdges) {
 		this.skipInsetsForExtremeEdges = skipInsetsForExtremeEdges;
-	}
-
-	public boolean isOpaqueRows() {
-		return opaqueRows;
-	}
-
-	public void setOpaqueRows(boolean opaqueRows) {
-		this.opaqueRows = opaqueRows;
 	}
 
 	public static int getPaddingDefaultValue() {

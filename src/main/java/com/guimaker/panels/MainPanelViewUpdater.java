@@ -19,7 +19,7 @@ public class MainPanelViewUpdater {
 
 	private boolean rowsHaveNonZeroWeightsY;
 	private TreeMap<Integer, RowType> rowNumberToTypeMap = new TreeMap<>();
-	private Border borderToUse;
+	private Border rowBorder;
 	private Color rowColor;
 	private int numberOfRows;
 	private boolean skipInsetsForExtremeEdges;
@@ -43,7 +43,6 @@ public class MainPanelViewUpdater {
 			JPanel panel) {
 		this.skipInsetsForExtremeEdges = panelConfiguration.isSkipInsetsForExtremeEdges();
 		this.opaque = panelConfiguration.isOpaque();
-		this.opaqueRows = panelConfiguration.isOpaqueRows();
 		this.displayMode = panelConfiguration.getPanelDisplayMode();
 		this.paddingRight = panelConfiguration.getPaddingRight();
 		this.paddingLeft = panelConfiguration.getPaddingLeft();
@@ -65,7 +64,7 @@ public class MainPanelViewUpdater {
 
 	public void addRows(ComplexRow complexRow) {
 		for (AbstractSimpleRow row : complexRow.getAllRows()) {
-			 addRow(row, rows.size());
+			addRow(row, rows.size());
 		}
 	}
 
@@ -91,18 +90,20 @@ public class MainPanelViewUpdater {
 		if (panel == null) {
 			return null;
 		}
-		if (panel instanceof JPanel && row.isBorderEnabled() && (
-				borderToUse != null || row.getBorder() != null)) {
-			panel.setBorder(
-					borderToUse != null ? borderToUse : row.getBorder());
+		if (panel instanceof JPanel) {
+			if (row.isBorderEnabled() && (rowBorder != null
+					|| row.getBorder() != null)) {
+				panel.setBorder(
+						rowBorder != null ? rowBorder : row.getBorder());
+			}
+			if ((rowColor != null || row.getColor() != null)) {
+				panel.setBackground(
+						row.getColor() != null ? row.getColor() : rowColor);
+				panel.setOpaque(
+						row.isOpaque() != null ? row.isOpaque() : opaque);
+			}
 		}
-		if (panel instanceof JPanel && (rowColor != null
-				|| row.getColor() != null)) {
-			panel.setBackground(
-					row.getColor() != null ? row.getColor() : rowColor);
-			panel.setOpaque(opaque && row.isOpaque());
-		}
-		if (!opaqueRows) {
+		if (!opaque){
 			panel.setOpaque(false);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
@@ -111,7 +112,7 @@ public class MainPanelViewUpdater {
 
 	private Map<JComponent, Integer> mapComponentToFilling(
 			AbstractSimpleRow row) {
-		Map<JComponent, Integer> componentsFilling = new HashMap<JComponent, Integer>();
+		Map<JComponent, Integer> componentsFilling = new HashMap<>();
 		JComponent[] horizontal = row.getHorizontallyFilledElements();
 		List<JComponent> vertical = new ArrayList<JComponent>(
 				Arrays.asList(row.getVerticallyFilledElements()));
@@ -738,7 +739,7 @@ public class MainPanelViewUpdater {
 	}
 
 	public void setRowsBorder(Border border) {
-		borderToUse = border;
+		rowBorder = border;
 	}
 
 	public void setWrappingPanelBorder(Border border) {

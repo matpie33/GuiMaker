@@ -17,7 +17,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 	private Anchor anchor;
 	private Color color;
 	private FillType fillType;
-	private boolean isOpaque = true;
+	private Boolean isOpaque;
 	private boolean borderEnabled;
 	private boolean useAllExtraVerticalSpace = false;
 	private int columnToPutRowInto;
@@ -197,7 +197,7 @@ public abstract class AbstractSimpleRow<Row extends AbstractSimpleRow<Row>> {
 		return getThis();
 	}
 
-	public boolean isOpaque() {
+	public Boolean isOpaque() {
 		return isOpaque;
 	}
 

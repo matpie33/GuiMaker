@@ -121,9 +121,6 @@ public class MainPanel {
 		mainPanelViewUpdater.setPadding(padding);
 	}
 
-	public void setOpaqueRows(boolean opaque) {
-		mainPanelViewUpdater.setOpaqueRows(opaque);
-	}
 
 	public int getNumberOfRows() {
 		return mainPanelViewUpdater.getNumberOfRows();

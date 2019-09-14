@@ -191,6 +191,7 @@ public class ListPanel<Word extends ListElement>
 				new PanelConfiguration().setColorToUse(contentColor)
 										.setPanelDisplayMode(
 												listConfiguration.getDisplayMode())
+										.setOpaque(false)
 										.putRowsAsHighestAsPossible());
 		rowsPanel.setGapsBetweenRowsTo0();
 
@@ -200,7 +201,6 @@ public class ListPanel<Word extends ListElement>
 		if (hasParentList) {
 			rowsPanel.setWrappingPanelBorder(getDefaultBorder());
 		}
-		rowsPanel.setOpaqueRows(false);
 	}
 
 	public CommonListElements createCommonListElements(Word word,
