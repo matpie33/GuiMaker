@@ -10,6 +10,7 @@ import com.guimaker.list.ListRowData;
 import com.guimaker.list.myList.ListConfiguration;
 import com.guimaker.list.myList.panel.ListPanel;
 import com.guimaker.model.HotkeyWrapper;
+import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComboboxOptions;
 import com.guimaker.options.ComponentOptions;
@@ -22,7 +23,9 @@ import com.guimaker.strings.HotkeysDescriptions;
 import com.guimaker.strings.Prompts;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -43,14 +46,17 @@ public class ListFilteringPanel<Word extends ListElement> {
 		this.listFilteringController = listFilteringController;
 	}
 
-	public JPanel createPanel(ListPanel<Word> listPanel,
-			ListRowData<Word> listRowData, AbstractButton buttonClearFilter,
+	public JPanel createPanel(Color filterPanelColor, ListPanel<Word> listPanel,
+			Border defaultBorder, ListRowData<Word> listRowData,
+			AbstractButton buttonClearFilter,
 			ListConfiguration listConfiguration) {
 		this.buttonClearFilter = buttonClearFilter;
 		this.listRowData = listRowData;
 		addActionFilterImmediatelyToTextFields(listRowData);
 
-		searchPanel = new MainPanel();
+		searchPanel = new MainPanel(
+				new PanelConfiguration().setColorToUse(filterPanelColor)
+										.setBorder(defaultBorder));
 
 		JLabel searchOptionPrompt = GuiElementsCreator.createLabel(
 				new ComponentOptions().text(Prompts.SEARCH_OPTION_PROMPT));

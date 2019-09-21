@@ -36,7 +36,6 @@ public class ListPanel<Word extends ListElement>
 	private ListConfiguration listConfiguration;
 	private ListElementsCreator<Word> listElementsCreator;
 	private String title;
-	private MainPanel filterPanel;
 	private JScrollPane scrollPane;
 	private JComponent listElementsPanel;
 	private final Dimension scrollPanesSize = new Dimension(550, 100);
@@ -70,7 +69,6 @@ public class ListPanel<Word extends ListElement>
 		setParentDialog(listConfiguration.getDialogWindow());
 		setMainPanelProperties();
 		createRowsPanel();
-		createFilterPanel();
 	}
 
 	public void setRowForFilteringPanel(ListRowData rowForFilteringPanel) {
@@ -79,13 +77,6 @@ public class ListPanel<Word extends ListElement>
 
 	public ListPanelUpdater getListPanelUpdater() {
 		return listPanelUpdater;
-	}
-
-	private void createFilterPanel() {
-		filterPanel = new MainPanel();
-		filterPanel.setGapsBetweenRowsTo0();
-		filterPanel.setRowsBorder(getDefaultBorder());
-		filterPanel.setRowColor(listColors.getFilterPanelColor());
 	}
 
 	@Override
@@ -129,29 +120,41 @@ public class ListPanel<Word extends ListElement>
 							listElementsCreator.createTitleLabel(title)));
 		}
 		if (isFilteringEnabled()) {
-			filterPanel.addRow(
-					SimpleRowBuilder.createRow(FillType.HORIZONTAL, Anchor.WEST,
-							listFilteringPanel.createPanel(this,
-									rowForFilteringPanel,
-									createButtonClearFilter(),
-									listConfiguration)));
+			mainPanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
+
+					listFilteringPanel.createPanel(
+							listColors.getFilterPanelColor(), this,
+							getDefaultBorder(), rowForFilteringPanel,
+							createButtonClearFilter(), listConfiguration)));
 		}
-		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.HORIZONTAL,
-				filterPanel.getPanel()));
+
 		buttonLoadPreviousWords = listElementsCreator.createButtonLoadWords(
 				ButtonsNames.SHOW_PREVIOUS_WORDS_ON_LIST,
 				ListWordsLoadingDirection.PREVIOUS);
-		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
-				buttonLoadPreviousWords));
-		mainPanel.addRow(
-				SimpleRowBuilder.createRow(FillType.BOTH, listElementsPanel));
 		buttonLoadNextWords = listElementsCreator.createButtonLoadWords(
 				ButtonsNames.SHOW_NEXT_WORDS_ON_LIST,
 				ListWordsLoadingDirection.NEXT);
+		if (listConfiguration.isShowButtonsLoadNextPreviousWords()){
+			mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
+					buttonLoadPreviousWords, buttonLoadNextWords));
+		}
+
 		mainPanel.addRow(
-				SimpleRowBuilder.createRow(FillType.NONE, buttonLoadNextWords));
+				SimpleRowBuilder.createRow(FillType.BOTH, listElementsPanel));
 		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 				getNavigationButtons()));
+	}
+
+	@Override
+	public JPanel getPanel() {
+		if (listConfiguration.isSkipTitle() && !isFilteringEnabled()
+				&& getNavigationButtons().isEmpty()
+				&& !buttonLoadNextWords.isVisible()) {
+			return (JPanel) listElementsPanel;
+		}
+		else {
+			return super.getPanel();
+		}
 	}
 
 	private boolean isFilteringEnabled() {
@@ -256,10 +259,6 @@ public class ListPanel<Word extends ListElement>
 
 	public MainPanel getMainPanel() {
 		return mainPanel;
-	}
-
-	public MainPanel getFilterPanel() {
-		return filterPanel;
 	}
 
 	public ListFilteringPanel getFilteringPanel() {

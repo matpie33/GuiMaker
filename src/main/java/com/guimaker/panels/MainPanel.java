@@ -70,6 +70,7 @@ public class MainPanel {
 		else if (!panelConfiguration.isOpaque()) {
 			panel.setOpaque(false);
 		}
+		panel.setBorder(panelConfiguration.getBorder());
 		panel.setLayout(new GridBagLayout());
 	}
 

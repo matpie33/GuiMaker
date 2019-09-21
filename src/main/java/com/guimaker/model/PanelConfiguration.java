@@ -2,6 +2,7 @@ package com.guimaker.model;
 
 import com.guimaker.enums.PanelDisplayMode;
 
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class PanelConfiguration {
@@ -12,15 +13,25 @@ public class PanelConfiguration {
 	private boolean opaque = true;
 	private Color colorToUse;
 	private boolean skipInsetsForExtremeEdges = false;
-	private static final int paddingDefaultValue = 4;
+	private static final int paddingDefaultValue = 6;
 	private int paddingRight = paddingDefaultValue;
 	private int paddingLeft = paddingDefaultValue;
 	private int paddingTop = paddingDefaultValue;
 	private int paddingBottom = paddingDefaultValue;
 	private int gapBetweenRows = 4;
+	private Border border;
 
 	public PanelConfiguration setOpaque(boolean opaque) {
 		this.opaque = opaque;
+		return this;
+	}
+
+	public Border getBorder() {
+		return border;
+	}
+
+	public PanelConfiguration setBorder(Border border) {
+		this.border = border;
 		return this;
 	}
 
@@ -60,6 +71,7 @@ public class PanelConfiguration {
 	public void setPaddingTop(int paddingTop) {
 		this.paddingTop = paddingTop;
 	}
+
 
 	public int getPaddingBottom() {
 		return paddingBottom;

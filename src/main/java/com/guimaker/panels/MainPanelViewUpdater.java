@@ -103,7 +103,7 @@ public class MainPanelViewUpdater {
 						row.isOpaque() != null ? row.isOpaque() : opaque);
 			}
 		}
-		if (!opaque){
+		if (!opaque) {
 			panel.setOpaque(false);
 		}
 		createConstraintsAndAdd(panel, row, rowNumber);
@@ -144,8 +144,7 @@ public class MainPanelViewUpdater {
 
 	private JComponent addComponentsToSinglePanel(JComponent[] components,
 			Map<JComponent, Integer> componentsFilling, AbstractSimpleRow row) {
-		if (components.length == 1
-				&& !(components[0] instanceof JTextComponent)) {
+		if (components.length == 1 && components[0] instanceof JPanel) {
 			return components[0];
 		}
 		JPanel p = new JPanel();
@@ -199,20 +198,20 @@ public class MainPanelViewUpdater {
 				gbc.insets.left = 0;
 			}
 			if (skipInsetsForExtremeEdges) {
-				if (i == components.length - 1) {
-					gbc.insets.right = 0;
-				}
-				else if (i == 0) {
-					gbc.insets.left = 0;
-				}
+				//TODO this variable should probably be removed
 			}
 
+			if (i != components.length - 1) {
+				gbc.insets.right = paddingRight;
+				//TODO change it: padding right -> distance between elements
+				// inside row, padding left -> distance between row and panel
+				// edges
+			}
 			p.add(compo, gbc);
 			gbc.gridx = gbc.gridx + 1;
 			i++;
 		}
 		if (!row.isWrapWithPanel() && components.length == 1) {
-			return components[0];
 		}
 
 		return p;
@@ -221,8 +220,7 @@ public class MainPanelViewUpdater {
 	private GridBagConstraints initializeGridBagConstraints() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(paddingTop, paddingLeft, paddingBottom,
-				paddingRight);
+		gbc.insets = new Insets(0, 0, 0, 0);
 		return gbc;
 	}
 
@@ -270,12 +268,7 @@ public class MainPanelViewUpdater {
 		c.anchor = anchor;
 		c.fill = fill;
 		int a = gapBetweenRows;
-		if (!skipInsetsForExtremeEdges) {
-			c.insets = new Insets(a, a, a, a);
-		}
-		else {
-			c.insets = new Insets(a, 0, a, 0);
-		}
+		c.insets = new Insets(a, paddingLeft, a, paddingLeft);
 
 		panel.add(p, c);
 		rows.add(rowNumber, p);

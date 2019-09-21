@@ -102,8 +102,7 @@ public class ColumnPanelCreator {
 			c.gridx = startingColumn++;
 			c.gridy = rowNumber;
 			c.anchor = GridBagConstraints.WEST;
-			c.insets = new Insets(paddingTop, paddingLeft, paddingBottom,
-					paddingRight);
+			c.insets = new Insets(gapBetweenRows, 0, gapBetweenRows, 0);
 			c.weighty = 0;
 			c.weightx = 0;
 			if (panelDisplayMode.equals(PanelDisplayMode.VIEW)
