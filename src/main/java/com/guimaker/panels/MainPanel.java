@@ -22,8 +22,8 @@ public class MainPanel {
 
 	public MainPanel(PanelConfiguration panelConfiguration) {
 		createPanel(panelConfiguration);
-		mainPanelViewUpdater = new MainPanelViewUpdater(
-				panelConfiguration, panel);
+		mainPanelViewUpdater = new MainPanelViewUpdater(panelConfiguration,
+				panel);
 	}
 
 	public static void setDefaultColor(Color defaultColor) {
@@ -79,12 +79,6 @@ public class MainPanel {
 		mainPanelViewUpdater.addSwitchBetweenInputsFailedListener(listener);
 	}
 
-	public void setSkipInsetsForExtremeEdges(
-			boolean skipInsetsForExtremeEdges) {
-		mainPanelViewUpdater.setSkipInsetsForExtremeEdges(
-				skipInsetsForExtremeEdges);
-	}
-
 	public JComponent addRow(AbstractSimpleRow abstractSimpleRows) {
 		return mainPanelViewUpdater.addRow(abstractSimpleRows);
 	}
@@ -121,7 +115,6 @@ public class MainPanel {
 	public void setPadding(int padding) {
 		mainPanelViewUpdater.setPadding(padding);
 	}
-
 
 	public int getNumberOfRows() {
 		return mainPanelViewUpdater.getNumberOfRows();

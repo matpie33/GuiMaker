@@ -141,8 +141,10 @@ public class ListPanel<Word extends ListElement>
 
 		mainPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.BOTH, listElementsPanel));
-		mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
-				getNavigationButtons()));
+		if (!getNavigationButtons().isEmpty()){
+			mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
+					getNavigationButtons()));
+		}
 	}
 
 	@Override

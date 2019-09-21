@@ -68,7 +68,6 @@ public class ColumnPanelCreator {
 		for (List<JComponent> componentsSharingColumn : groupsOfComponentsThatShareColumn) {
 			MainPanel mainPanel = new MainPanel(
 					new PanelConfiguration().setNotOpaque());
-			mainPanel.setSkipInsetsForExtremeEdges(true);
 			boolean first = true;
 			mainPanel.addRow(
 					SimpleRowBuilder.createRow(FillType.NONE, Anchor.WEST,

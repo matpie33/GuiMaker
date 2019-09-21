@@ -22,7 +22,6 @@ public class MainPanelViewUpdater {
 	private Border rowBorder;
 	private Color rowColor;
 	private int numberOfRows;
-	private boolean skipInsetsForExtremeEdges;
 	private boolean opaque;
 	private boolean opaqueRows;
 	private ElementsShifter elementsShifter;
@@ -41,7 +40,6 @@ public class MainPanelViewUpdater {
 
 	public MainPanelViewUpdater(PanelConfiguration panelConfiguration,
 			JPanel panel) {
-		this.skipInsetsForExtremeEdges = panelConfiguration.isSkipInsetsForExtremeEdges();
 		this.opaque = panelConfiguration.isOpaque();
 		this.displayMode = panelConfiguration.getPanelDisplayMode();
 		this.paddingRight = panelConfiguration.getPaddingRight();
@@ -196,9 +194,6 @@ public class MainPanelViewUpdater {
 			}
 			if (!row.isBorderEnabled() && i == 0) {
 				gbc.insets.left = 0;
-			}
-			if (skipInsetsForExtremeEdges) {
-				//TODO this variable should probably be removed
 			}
 
 			if (i != components.length - 1) {
@@ -369,7 +364,6 @@ public class MainPanelViewUpdater {
 		else {
 			MainPanel mainPanel = new MainPanel(
 					new PanelConfiguration().setNotOpaque());
-			mainPanel.setSkipInsetsForExtremeEdges(true);
 			JPanel panel = mainPanel.getPanel();
 			replacePanel(row, panel);
 			panel.add(row);
@@ -739,10 +733,6 @@ public class MainPanelViewUpdater {
 		panel.setBorder(border);
 	}
 
-	public void setSkipInsetsForExtremeEdges(
-			boolean skipInsetsForExtremeEdges) {
-		this.skipInsetsForExtremeEdges = skipInsetsForExtremeEdges;
-	}
 
 	public void setPadding(int padding) {
 		this.paddingLeft = padding;

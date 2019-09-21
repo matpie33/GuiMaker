@@ -12,7 +12,6 @@ public class PanelConfiguration {
 	private boolean scrollHorizontally = true;
 	private boolean opaque = true;
 	private Color colorToUse;
-	private boolean skipInsetsForExtremeEdges = false;
 	private static final int paddingDefaultValue = 6;
 	private int paddingRight = paddingDefaultValue;
 	private int paddingLeft = paddingDefaultValue;
@@ -33,15 +32,6 @@ public class PanelConfiguration {
 	public PanelConfiguration setBorder(Border border) {
 		this.border = border;
 		return this;
-	}
-
-	public boolean isSkipInsetsForExtremeEdges() {
-		return skipInsetsForExtremeEdges;
-	}
-
-	public void setSkipInsetsForExtremeEdges(
-			boolean skipInsetsForExtremeEdges) {
-		this.skipInsetsForExtremeEdges = skipInsetsForExtremeEdges;
 	}
 
 	public static int getPaddingDefaultValue() {
