@@ -4,7 +4,7 @@ import com.guimaker.list.ListElement;
 import com.guimaker.list.ListElementPropertyManager;
 import com.guimaker.list.ListPropertyInformation;
 import com.guimaker.list.ListRowData;
-import com.guimaker.panels.MainPanel;
+import com.guimaker.panels.mainPanel.MainPanel;
 
 import javax.swing.text.JTextComponent;
 

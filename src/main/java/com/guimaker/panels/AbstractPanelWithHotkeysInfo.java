@@ -7,6 +7,7 @@ import com.guimaker.list.myList.MyList;
 import com.guimaker.model.HotkeyWrapper;
 import com.guimaker.options.ButtonOptions;
 import com.guimaker.options.ComponentOptions;
+import com.guimaker.panels.mainPanel.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.strings.ButtonsNames;

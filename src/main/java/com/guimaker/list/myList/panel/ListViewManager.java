@@ -14,7 +14,7 @@ import com.guimaker.list.myList.ListWordsController;
 import com.guimaker.model.CommonListElements;
 import com.guimaker.model.ListRow;
 import com.guimaker.panels.InsertWordPanel;
-import com.guimaker.panels.MainPanel;
+import com.guimaker.panels.mainPanel.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 import com.guimaker.utilities.Range;

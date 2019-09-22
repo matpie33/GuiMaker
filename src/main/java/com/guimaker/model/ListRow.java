@@ -1,6 +1,6 @@
 package com.guimaker.model;
 
-import com.guimaker.panels.MainPanel;
+import com.guimaker.panels.mainPanel.MainPanel;
 
 import javax.swing.*;
 

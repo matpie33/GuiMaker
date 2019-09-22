@@ -1,6 +1,6 @@
 package com.guimaker.list;
 
-import com.guimaker.panels.MainPanel;
+import com.guimaker.panels.mainPanel.MainPanel;
 
 import java.util.HashMap;
 import java.util.Map;

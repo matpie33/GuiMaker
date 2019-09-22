@@ -1,10 +1,11 @@
-package com.guimaker.panels;
+package com.guimaker.panels.mainPanel;
 
 import com.guimaker.enums.Anchor;
 import com.guimaker.enums.Direction;
 import com.guimaker.enums.FillType;
 import com.guimaker.enums.PanelDisplayMode;
 import com.guimaker.model.PanelConfiguration;
+import com.guimaker.panels.ElementsShifter;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 

@@ -4,6 +4,7 @@ import com.guimaker.enums.Anchor;
 import com.guimaker.enums.FillType;
 import com.guimaker.model.PanelConfiguration;
 import com.guimaker.options.ComponentOptions;
+import com.guimaker.panels.mainPanel.MainPanel;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.SimpleRowBuilder;
 

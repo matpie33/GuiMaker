@@ -2,6 +2,7 @@ package com.guimaker.panels;
 
 import com.guimaker.colors.BasicColors;
 import com.guimaker.model.PanelConfiguration;
+import com.guimaker.panels.mainPanel.MainPanel;
 
 import javax.swing.*;
 import java.awt.*;

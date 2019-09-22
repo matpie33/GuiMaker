@@ -11,7 +11,7 @@ import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.ParentListData;
 import com.guimaker.model.PropertyPostValidationData;
 import com.guimaker.panels.InsertWordPanel;
-import com.guimaker.panels.MainPanel;
+import com.guimaker.panels.mainPanel.MainPanel;
 import com.guimaker.swingUtilities.ProgressUpdater;
 
 import javax.swing.*;

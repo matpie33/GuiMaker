@@ -1,9 +1,11 @@
-package com.guimaker.panels;
+package com.guimaker.panels.mainPanel;
 
 import com.guimaker.enums.*;
 import com.guimaker.inputSelection.ListInputsSelectionManager;
 import com.guimaker.listeners.SwitchBetweenInputsFailListener;
 import com.guimaker.model.PanelConfiguration;
+import com.guimaker.panels.ElementsShifter;
+import com.guimaker.panels.PanelTextInputsManager;
 import com.guimaker.row.AbstractSimpleRow;
 import com.guimaker.row.ComplexRow;
 import com.guimaker.row.SimpleRowBuilder;
