@@ -21,17 +21,13 @@ public class MainPanelViewUpdater {
 	private TreeMap<Integer, RowType> rowNumberToTypeMap = new TreeMap<>();
 	private Border rowBorder;
 	private Color rowColor;
-	private int numberOfRows;
 	private boolean opaque;
-	private boolean opaqueRows;
 	private ElementsShifter elementsShifter;
 	private List<JComponent> rows;
 	private PanelDisplayMode displayMode;
 	private JPanel panel;
-	private int paddingRight;
-	private int paddingLeft;
-	private int paddingTop;
-	private int paddingBottom;
+	private int distanceBetweenElementsInsideRow;
+	private int distanceBetweenRowAndPanelEdges;
 	private boolean shouldPutRowsHighestAsPossible;
 	private int gapBetweenRows;
 
@@ -42,10 +38,8 @@ public class MainPanelViewUpdater {
 			JPanel panel) {
 		this.opaque = panelConfiguration.isOpaque();
 		this.displayMode = panelConfiguration.getPanelDisplayMode();
-		this.paddingRight = panelConfiguration.getPaddingRight();
-		this.paddingLeft = panelConfiguration.getPaddingLeft();
-		this.paddingTop = panelConfiguration.getPaddingTop();
-		this.paddingBottom = panelConfiguration.getPaddingBottom();
+		this.distanceBetweenElementsInsideRow = panelConfiguration.getDistanceBetweenElementsInsideRow();
+		this.distanceBetweenRowAndPanelEdges = panelConfiguration.getDistanceBetweenRowAndPanelEdges();
 		this.shouldPutRowsHighestAsPossible = panelConfiguration.shouldPutRowsAsHighestAsPossible();
 		this.panel = panel;
 		this.gapBetweenRows = panelConfiguration.getGapBetweenRows();
@@ -55,8 +49,7 @@ public class MainPanelViewUpdater {
 		rows = new ArrayList<>();
 		columnPanelCreator = new ColumnPanelCreator(displayMode,
 				gapBetweenRows);
-		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
-				paddingLeft);
+		columnPanelCreator.setPadding(distanceBetweenElementsInsideRow);
 		panelTextInputsManager = new PanelTextInputsManager(displayMode);
 	}
 
@@ -81,25 +74,19 @@ public class MainPanelViewUpdater {
 		if (!row.shouldAddRow()) {
 			return null;
 		}
-		JComponent panel = addComponentsToSinglePanel(row.getComponents(),
+		JPanel panel = addComponentsToSinglePanel(row.getComponents(),
 				mapComponentToFilling(row), row);
-		//TODO its better to always create a panel even if there is just 1
-		// component, because it's easier to add elements to this row later
 		if (panel == null) {
 			return null;
 		}
-		if (panel instanceof JPanel) {
-			if (row.isBorderEnabled() && (rowBorder != null
-					|| row.getBorder() != null)) {
-				panel.setBorder(
-						rowBorder != null ? rowBorder : row.getBorder());
-			}
-			if ((rowColor != null || row.getColor() != null)) {
-				panel.setBackground(
-						row.getColor() != null ? row.getColor() : rowColor);
-				panel.setOpaque(
-						row.isOpaque() != null ? row.isOpaque() : opaque);
-			}
+		if (row.isBorderEnabled() && (rowBorder != null
+				|| row.getBorder() != null)) {
+			panel.setBorder(rowBorder != null ? rowBorder : row.getBorder());
+		}
+		if ((rowColor != null || row.getColor() != null)) {
+			panel.setBackground(
+					row.getColor() != null ? row.getColor() : rowColor);
+			panel.setOpaque(row.isOpaque() != null ? row.isOpaque() : opaque);
 		}
 		if (!opaque) {
 			panel.setOpaque(false);
@@ -140,10 +127,10 @@ public class MainPanelViewUpdater {
 		return componentsFilling;
 	}
 
-	private JComponent addComponentsToSinglePanel(JComponent[] components,
+	private JPanel addComponentsToSinglePanel(JComponent[] components,
 			Map<JComponent, Integer> componentsFilling, AbstractSimpleRow row) {
 		if (components.length == 1 && components[0] instanceof JPanel) {
-			return components[0];
+			return (JPanel) components[0];
 		}
 		JPanel p = new JPanel();
 		p.setLayout(new GridBagLayout());
@@ -197,16 +184,11 @@ public class MainPanelViewUpdater {
 			}
 
 			if (i != components.length - 1) {
-				gbc.insets.right = paddingRight;
-				//TODO change it: padding right -> distance between elements
-				// inside row, padding left -> distance between row and panel
-				// edges
+				gbc.insets.right = distanceBetweenElementsInsideRow;
 			}
 			p.add(compo, gbc);
 			gbc.gridx = gbc.gridx + 1;
 			i++;
-		}
-		if (!row.isWrapWithPanel() && components.length == 1) {
 		}
 
 		return p;
@@ -263,7 +245,8 @@ public class MainPanelViewUpdater {
 		c.anchor = anchor;
 		c.fill = fill;
 		int a = gapBetweenRows;
-		c.insets = new Insets(a, paddingLeft, a, paddingLeft);
+		c.insets = new Insets(a, distanceBetweenRowAndPanelEdges, a,
+				distanceBetweenRowAndPanelEdges);
 
 		panel.add(p, c);
 		rows.add(rowNumber, p);
@@ -319,9 +302,6 @@ public class MainPanelViewUpdater {
 	public void removeLastRow() {
 		if (!rows.isEmpty()) {
 			removeRow(rows.get(rows.size() - 1));
-		}
-		else if (numberOfRows > 0) {
-			removeRowInAColumnWay(numberOfRows - 1);
 		}
 
 	}
@@ -643,7 +623,7 @@ public class MainPanelViewUpdater {
 	}
 
 	public int getNumberOfRows() {
-		return Math.max(rows.size(), numberOfRows);
+		return rows.size();
 	}
 
 	public List<JComponent> getRows() {
@@ -733,18 +713,13 @@ public class MainPanelViewUpdater {
 		panel.setBorder(border);
 	}
 
-
 	public void setPadding(int padding) {
-		this.paddingLeft = padding;
-		this.paddingBottom = padding;
-		this.paddingTop = padding;
-		this.paddingRight = padding;
-		columnPanelCreator.setPadding(paddingTop, paddingRight, paddingBottom,
-				paddingLeft);
+		this.distanceBetweenRowAndPanelEdges = padding;
+		this.distanceBetweenElementsInsideRow = padding;
+		columnPanelCreator.setPadding(distanceBetweenElementsInsideRow);
 	}
 
 	public void setOpaqueRows(boolean opaque) {
-		opaqueRows = opaque;
 	}
 
 	public JPanel getPanel() {

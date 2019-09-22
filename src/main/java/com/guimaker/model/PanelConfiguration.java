@@ -13,10 +13,8 @@ public class PanelConfiguration {
 	private boolean opaque = true;
 	private Color colorToUse;
 	private static final int paddingDefaultValue = 6;
-	private int paddingRight = paddingDefaultValue;
-	private int paddingLeft = paddingDefaultValue;
-	private int paddingTop = paddingDefaultValue;
-	private int paddingBottom = paddingDefaultValue;
+	private int distanceBetweenElementsInsideRow = paddingDefaultValue;
+	private int distanceBetweenRowAndPanelEdges = paddingDefaultValue;
 	private int gapBetweenRows = 4;
 	private Border border;
 
@@ -38,38 +36,24 @@ public class PanelConfiguration {
 		return paddingDefaultValue;
 	}
 
-	public int getPaddingRight() {
-		return paddingRight;
+	public int getDistanceBetweenElementsInsideRow() {
+		return distanceBetweenElementsInsideRow;
 	}
 
-	public void setPaddingRight(int paddingRight) {
-		this.paddingRight = paddingRight;
+	public void setDistanceBetweenElementsInsideRow(int distanceBetweenElementsInsideRow) {
+		this.distanceBetweenElementsInsideRow = distanceBetweenElementsInsideRow;
 	}
 
-	public int getPaddingLeft() {
-		return paddingLeft;
+	public int getDistanceBetweenRowAndPanelEdges() {
+		return distanceBetweenRowAndPanelEdges;
 	}
 
-	public void setPaddingLeft(int paddingLeft) {
-		this.paddingLeft = paddingLeft;
+	public PanelConfiguration setDistanceBetweenRowAndPanelEdges(int
+			distanceBetweenRowAndPanelEdges) {
+		this.distanceBetweenRowAndPanelEdges = distanceBetweenRowAndPanelEdges;
+		return this;
 	}
 
-	public int getPaddingTop() {
-		return paddingTop;
-	}
-
-	public void setPaddingTop(int paddingTop) {
-		this.paddingTop = paddingTop;
-	}
-
-
-	public int getPaddingBottom() {
-		return paddingBottom;
-	}
-
-	public void setPaddingBottom(int paddingBottom) {
-		this.paddingBottom = paddingBottom;
-	}
 
 	public int getGapBetweenRows() {
 		return gapBetweenRows;

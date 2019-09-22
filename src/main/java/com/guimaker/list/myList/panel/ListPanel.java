@@ -134,14 +134,14 @@ public class ListPanel<Word extends ListElement>
 		buttonLoadNextWords = listElementsCreator.createButtonLoadWords(
 				ButtonsNames.SHOW_NEXT_WORDS_ON_LIST,
 				ListWordsLoadingDirection.NEXT);
-		if (listConfiguration.isShowButtonsLoadNextPreviousWords()){
+		if (listConfiguration.isShowButtonsLoadNextPreviousWords()) {
 			mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 					buttonLoadPreviousWords, buttonLoadNextWords));
 		}
 
 		mainPanel.addRow(
 				SimpleRowBuilder.createRow(FillType.BOTH, listElementsPanel));
-		if (!getNavigationButtons().isEmpty()){
+		if (!getNavigationButtons().isEmpty()) {
 			mainPanel.addRow(SimpleRowBuilder.createRow(FillType.NONE,
 					getNavigationButtons()));
 		}
@@ -197,7 +197,9 @@ public class ListPanel<Word extends ListElement>
 										.setPanelDisplayMode(
 												listConfiguration.getDisplayMode())
 										.setOpaque(false)
-										.putRowsAsHighestAsPossible());
+										.putRowsAsHighestAsPossible()
+										.setDistanceBetweenRowAndPanelEdges(0))
+		;
 		rowsPanel.setGapsBetweenRowsTo0();
 
 		addElementsForEmptyList();

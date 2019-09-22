@@ -21,8 +21,7 @@ public class ColumnPanelCreator {
 	private int numberOfRows;
 	private PanelDisplayMode panelDisplayMode;
 	private int gapBetweenRows;
-	private int gapsBetweenColumns = 0;
-	private int paddingLeft, paddingRight, paddingTop, paddingBottom;
+	private int distanceBetweenElementsInsideRow;
 	private ElementsShifter elementsShifter;
 
 	public ColumnPanelCreator(PanelDisplayMode panelDisplayMode,
@@ -34,11 +33,9 @@ public class ColumnPanelCreator {
 		elementsShifter = new ElementsShifter(wrappingPanel, false);
 	}
 
-	public void setPadding(int top, int right, int bottom, int left) {
-		paddingLeft = left;
-		paddingBottom = bottom;
-		paddingRight = right;
-		paddingTop = top;
+	public void setPadding(int distanceBetweenElementsInsideRow) {
+		this.distanceBetweenElementsInsideRow =
+				distanceBetweenElementsInsideRow;
 	}
 
 	public boolean isInitialized() {
@@ -104,6 +101,7 @@ public class ColumnPanelCreator {
 			c.insets = new Insets(gapBetweenRows, 0, gapBetweenRows, 0);
 			c.weighty = 0;
 			c.weightx = 0;
+			c.insets.right = distanceBetweenElementsInsideRow;
 			if (panelDisplayMode.equals(PanelDisplayMode.VIEW)
 					&& !(element instanceof AbstractButton)) {
 				element.setEnabled(false);
@@ -149,10 +147,6 @@ public class ColumnPanelCreator {
 		numberOfRows = 0;
 		numberOfColumns = 0;
 		wrappingPanel.removeAll();
-	}
-
-	public void setGapsBetweenColumns(int gapsBetweenColumns) {
-		this.gapsBetweenColumns = gapsBetweenColumns;
 	}
 
 	public void setGapBetweenRows(int gapBetweenRows) {
