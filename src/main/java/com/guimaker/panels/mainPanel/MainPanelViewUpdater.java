@@ -36,7 +36,27 @@ public class MainPanelViewUpdater {
 	private ColumnPanelCreator columnPanelCreator;
 	private PanelTextInputsManager panelTextInputsManager;
 
+	private ConstraintsCreator constraintsCreator;
+
 	public MainPanelViewUpdater(PanelConfiguration panelConfiguration,
+			JPanel panel) {
+		extractConfiguration(panelConfiguration, panel);
+		createHelpers(panel);
+	}
+
+	private void createHelpers(JPanel panel) {
+		elementsShifter = new ElementsShifter(panel,
+				shouldPutRowsHighestAsPossible);
+		rows = new ArrayList<>();
+		columnPanelCreator = new ColumnPanelCreator(displayMode,
+				gapBetweenRows);
+		columnPanelCreator.setPadding(distanceBetweenElementsInsideRow);
+		panelTextInputsManager = new PanelTextInputsManager(displayMode);
+		constraintsCreator = new ConstraintsCreator(
+				distanceBetweenElementsInsideRow);
+	}
+
+	private void extractConfiguration(PanelConfiguration panelConfiguration,
 			JPanel panel) {
 		this.opaque = panelConfiguration.isOpaque();
 		this.displayMode = panelConfiguration.getPanelDisplayMode();
@@ -45,14 +65,6 @@ public class MainPanelViewUpdater {
 		this.shouldPutRowsHighestAsPossible = panelConfiguration.shouldPutRowsAsHighestAsPossible();
 		this.panel = panel;
 		this.gapBetweenRows = panelConfiguration.getGapBetweenRows();
-
-		elementsShifter = new ElementsShifter(panel,
-				shouldPutRowsHighestAsPossible);
-		rows = new ArrayList<>();
-		columnPanelCreator = new ColumnPanelCreator(displayMode,
-				gapBetweenRows);
-		columnPanelCreator.setPadding(distanceBetweenElementsInsideRow);
-		panelTextInputsManager = new PanelTextInputsManager(displayMode);
 	}
 
 	public void addRows(ComplexRow complexRow) {
@@ -138,18 +150,15 @@ public class MainPanelViewUpdater {
 		p.setLayout(new GridBagLayout());
 		p.setOpaque(false);
 
-		GridBagConstraints gbc = initializeGridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.WEST;
-
-		int i = 0;
 		JTextComponent firstTextComponentInRow = null;
-		for (JComponent compo : components) {
+		for (int i = 0; i < components.length; i++) {
+			JComponent compo = components[i];
 			if (compo == null || row.getComponentsThatDidntMatchCondition()
 									.contains(compo)) {
 				continue;
 			}
+			GridBagConstraints gbc = constraintsCreator.getConstraintsForComponent(
+					compo, componentsFilling, row, i, components.length);
 			boolean isTextInput = panelTextInputsManager.manageTextInput(compo,
 					firstTextComponentInRow);
 			if (isTextInput && firstTextComponentInRow == null) {
@@ -159,48 +168,10 @@ public class MainPanelViewUpdater {
 					&& !(compo instanceof AbstractButton)) {
 				compo.setEnabled(false);
 			}
-			if (componentsFilling.containsKey(compo)) {
-				gbc.fill = componentsFilling.get(compo);
-				gbc.weighty = row.isUseAllExtraVerticalSpace() ? 1 : 0;
-				if (gbc.fill == GridBagConstraints.HORIZONTAL) {
-					gbc.weightx = 1;
-				}
-				else if (gbc.fill == GridBagConstraints.VERTICAL) {
-					gbc.weightx = 1;
-				}
-				else if (gbc.fill == GridBagConstraints.BOTH) {
-					gbc.weightx = 1;
-					gbc.weighty = 1;
-				}
-			}
-			else {
-				gbc.weightx = 0;
-				gbc.weighty = 0;
-			}
-			if (i == components.length - 1
-					&& gbc.fill != GridBagConstraints.HORIZONTAL) {
-				gbc.weightx = 1;
-			}
-			if (!row.isBorderEnabled() && i == 0) {
-				gbc.insets.left = 0;
-			}
-
-			if (i != components.length - 1) {
-				gbc.insets.right = distanceBetweenElementsInsideRow;
-			}
 			p.add(compo, gbc);
-			gbc.gridx = gbc.gridx + 1;
-			i++;
 		}
 
 		return p;
-	}
-
-	private GridBagConstraints initializeGridBagConstraints() {
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		return gbc;
 	}
 
 	private void createConstraintsAndAdd(JComponent p, AbstractSimpleRow row,
