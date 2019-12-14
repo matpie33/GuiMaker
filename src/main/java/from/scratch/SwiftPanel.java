@@ -21,49 +21,59 @@ public class SwiftPanel {
 
 	public void addElements(PanelRows panelRows) {
 
-		panelRows.getRows()
-				 .forEach(row -> {
-					 JPanel panel = new JPanel(new GridBagLayout());
-					 for (int i = 0; i < row.getUiComponents()
-											.size(); i++) {
+		JPanel currentPanel = null;
+		int numberOfRowsSharingColumnSize = 1;
+		for (PanelRows row : panelRows.getRows()) {
 
-						 GridBagConstraints constraints = createConstraintsForElementsInsideRow(
-								 i);
-						 panel.add(row.getUiComponents()
-									  .get(i), constraints);
+			if (!row.shouldKeepColumnSizeWithRowAbove()
+					|| currentPanel == null) {
+				currentPanel = new JPanel(new GridBagLayout());
+				numberOfRowsSharingColumnSize = 1;
+			}
+			else {
+				numberOfRowsSharingColumnSize++;
+			}
+			for (int i = 0; i < row.getUiComponents()
+								   .size(); i++) {
 
-					 }
-					 GridBagConstraints constraintsForRow = createConstraintsForNewRow();
-					 this.panel.add(panel, constraintsForRow);
-					 numberOfRows++;
-				 });
+				GridBagConstraints constraints = createConstraintsForElementsInsideRow(
+						i, numberOfRowsSharingColumnSize);
+				currentPanel.add(row.getUiComponents()
+									.get(i), constraints);
 
+			}
+			GridBagConstraints constraintsForRow = createConstraintsForNewRow();
+			this.panel.add(currentPanel, constraintsForRow);
+			numberOfRows++;
+		}
 	}
 
 	private GridBagConstraints createConstraintsForNewRow() {
 		GridBagConstraints constraints = new GridBagConstraints();
-		int insetTop = 0;
-		if (numberOfRows == 0) {
-			insetTop = spaceBetweenElementsVertically;
-		}
+
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.gridy = numberOfRows;
-		constraints.insets = new Insets(insetTop, 0,
-				spaceBetweenElementsVertically, 0);
+		constraints.insets = new Insets(0, 0, 0, 0);
 		return constraints;
 
 	}
 
 	private GridBagConstraints createConstraintsForElementsInsideRow(
-			int indexOfElement) {
+			int indexOfElement, int numberOfRowsSharingColumnSize) {
 		GridBagConstraints constraints = new GridBagConstraints();
 		int insetLeft = 0;
+		int insetTop = 0;
 		if (indexOfElement == 0) {
 			insetLeft = spaceBetweenElementsHorizontally;
 		}
+		if (numberOfRows == 0) {
+			insetTop = spaceBetweenElementsVertically;
+		}
+		constraints.gridy = numberOfRowsSharingColumnSize - 1;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.gridy = numberOfRows;
-		constraints.insets = new Insets(0, insetLeft, 0,
+		constraints.insets = new Insets(insetTop, insetLeft,
+				spaceBetweenElementsVertically,
 				spaceBetweenElementsHorizontally);
 		constraints.gridx = indexOfElement;
 		return constraints;

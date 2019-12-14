@@ -10,6 +10,7 @@ public class PanelRows {
 	private List<JComponent> uiComponents;
 	private FillType fillType;
 	private List<PanelRows> panelRows;
+	private boolean keepColumnSizeWithRowAbove = false;
 
 	public PanelRows(JComponent... uiComponents) {
 		this(Arrays.asList(uiComponents), new ArrayList<>());
@@ -40,5 +41,19 @@ public class PanelRows {
 
 	public List<PanelRows> getRows() {
 		return panelRows;
+	}
+
+	public PanelRows nextRowKeepingColumnSize(JComponent... elements) {
+		return new PanelRows(Arrays.asList(elements),
+				this.panelRows).keepColumnSizeWithRowAbove();
+	}
+
+	public PanelRows keepColumnSizeWithRowAbove() {
+		this.keepColumnSizeWithRowAbove = true;
+		return this;
+	}
+
+	public boolean shouldKeepColumnSizeWithRowAbove() {
+		return keepColumnSizeWithRowAbove;
 	}
 }

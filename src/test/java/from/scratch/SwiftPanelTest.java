@@ -41,6 +41,8 @@ class SwiftPanelTest {
 		//given
 		PanelRows panelRows = new PanelRows(new JButton("Test"),
 				new JLabel("Test label"), new JButton("Test button"));
+		int numberOfElements = panelRows.getUiComponents()
+										.size();
 
 		//when
 		swiftPanel.addElements(panelRows);
@@ -51,16 +53,15 @@ class SwiftPanelTest {
 
 		JPanel row1 = (JPanel) panel.getComponents()[0];
 		List<Integer> spacesBetween = getDistanceBetweenElementsHorizontally(
-				row1, 0);
+				row1);
 
 		for (int i = 0; i < row1.getComponents().length - 1; i++) {
 			assertTrue(row1.getComponents()[i + 1].getY()
 					== row1.getComponents()[i].getY());
 		}
-		assertEquals(4, spacesBetween.size());
+		assertEquals(numberOfElements, spacesBetween.size());
 		assertEquals(spacesBetween.get(1), spacesBetween.get(0));
 		assertEquals(spacesBetween.get(2), spacesBetween.get(1));
-		assertEquals(spacesBetween.get(3), spacesBetween.get(2));
 		assertTrue(spacesBetween.get(0) > 0);
 	}
 
@@ -82,39 +83,98 @@ class SwiftPanelTest {
 		JPanel row1 = (JPanel) panel.getComponents()[0];
 		JPanel row2 = (JPanel) panel.getComponents()[1];
 		List<Integer> horizontalSpacesBetweenElementsInRow1 = getDistanceBetweenElementsHorizontally(
-				row1, 0);
+				row1);
 		List<Integer> horizontalSpacesBetweenElementsInRow2 = getDistanceBetweenElementsHorizontally(
-				row2, 1);
+				row2);
 
 		assertCorrectYPositionsInRow(row1);
 		assertCorrectYPositionsInRow(row2);
 
-		int firstRowPositionY = row1.getY();
-		int distanceBetween1And2Row =
-				row2.getY() - (firstRowPositionY + row1.getHeight());
-		int distanceBetween2RowAndBottomEdge =
-				panel.getHeight() - (row2.getY() + row2.getHeight());
+		int distanceBetweenFirstRowAndPanelTopEdge =
+				getYCoordinate(row1.getComponent(0)) - getYCoordinate(panel);
+		int distanceBetween1And2Row = getYCoordinate(row2.getComponent(0)) - (
+				getYCoordinate(row1.getComponent(0)) + row1.getComponent(0)
+														   .getHeight());
+		int distanceBetween2RowAndPanelBottomEdge =
+				getYCoordinate(panel) + panel.getHeight() - (
+						getYCoordinate(row2.getComponent(0))
+								+ row2.getComponent(0)
+									  .getHeight());
 		assertTrue(row1.getY() < row2.getY());
-		assertTrue(firstRowPositionY > 0);
 		assertTrue(distanceBetween1And2Row > 0);
-		assertTrue(distanceBetween2RowAndBottomEdge > 0);
-		assertEquals(firstRowPositionY, distanceBetween1And2Row);
-		assertEquals(distanceBetween2RowAndBottomEdge, distanceBetween1And2Row);
+		assertTrue(distanceBetween2RowAndPanelBottomEdge > 0);
+		assertEquals(distanceBetweenFirstRowAndPanelTopEdge,
+				distanceBetween1And2Row);
+		assertEquals(distanceBetween2RowAndPanelBottomEdge,
+				distanceBetween1And2Row);
 
-		assertEquals(row1.getComponentCount() + 1,
+		assertEquals(row1.getComponentCount(),
 				horizontalSpacesBetweenElementsInRow1.size());
-		assertEquals(row2.getComponentCount() + 1,
+		assertEquals(row2.getComponentCount(),
 				horizontalSpacesBetweenElementsInRow2.size());
 
-		assertCorrectHorizontalSpaces(row1, 0);
-		assertCorrectHorizontalSpaces(row2, 1);
+		assertCorrectHorizontalSpaces(row1);
+		assertCorrectHorizontalSpaces(row2);
 
 		assertTrue(horizontalSpacesBetweenElementsInRow1.get(0) > 0);
 	}
 
-	private void assertCorrectHorizontalSpaces(JPanel row, int rowNumber) {
+	@Test
+	void shouldAddElementsToPanelInTwoRowsWithKeepingColumnSize() {
+		//given
+		JButton row1Element1 = new JButton("Test");
+		JLabel row1Element2 = new JLabel("Test label");
+		JButton row1Element3 = new JButton("Test button");
+		JButton row2Element1 = new JButton("Row2");
+		JButton row2Element2 = new JButton("Row2.22");
+		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
+				row1Element3).nextRowKeepingColumnSize(row2Element1,
+				row2Element2);
+
+		//when
+		swiftPanel.addElements(panelRows);
+		JPanel panel = swiftPanel.getPanel();
+		showPanel(panel);
+
+		//then
+
+		assertEquals(getXCoordinate(row1Element1),
+				getXCoordinate(row2Element1));
+		assertEquals(getXCoordinate(row1Element2),
+				getXCoordinate(row2Element2));
+
+		assertEquals(getYCoordinate(row1Element1),
+				getYCoordinate(row1Element2));
+		assertEquals(getYCoordinate(row1Element2),
+				getYCoordinate(row1Element3));
+		assertEquals(getYCoordinate(row2Element1),
+				getYCoordinate(row2Element2));
+
+		int distanceBetweenRow1And2 =
+				getYCoordinate(row2Element1) - (getYCoordinate(row1Element1)
+						+ row1Element1.getHeight());
+		assertEquals(distanceBetweenRow1And2,
+				getYCoordinate(row1Element1) - getYCoordinate(panel));
+		assertEquals(getYCoordinate(panel) + panel.getHeight() - (
+						getYCoordinate(row2Element1) + row2Element1.getHeight()),
+				distanceBetweenRow1And2);
+		assertTrue(distanceBetweenRow1And2 > 0);
+
+	}
+
+	private int getYCoordinate(Component c) {
+		return (int) c.getLocationOnScreen()
+					  .getY();
+	}
+
+	private int getXCoordinate(Component c) {
+		return (int) c.getLocationOnScreen()
+					  .getX();
+	}
+
+	private void assertCorrectHorizontalSpaces(JPanel row) {
 		List<Integer> horizontalSpacesBetweenElementsInRow1 = getDistanceBetweenElementsHorizontally(
-				row, rowNumber);
+				row);
 
 		for (int i = 0;
 			 i < horizontalSpacesBetweenElementsInRow1.size() - 1; i++) {
@@ -129,26 +189,24 @@ class SwiftPanelTest {
 		for (int i = 0; i < numberOfElementsInRow1 - 1; i++) {
 			Component component1 = row.getComponents()[i];
 			Component component2 = row.getComponents()[i + 1];
-			assertEquals(component1.getY(), component2.getY());
+			assertEquals(component1.getLocationOnScreen()
+								   .getY(), component2.getLocationOnScreen()
+													  .getY());
 		}
 	}
 
-	private List<Integer> getDistanceBetweenElementsHorizontally(JPanel panel,
-			int rowNumber) {
+	private List<Integer> getDistanceBetweenElementsHorizontally(JPanel panel) {
 		Component[] elementsInRow = panel.getComponents();
 		List<Integer> spacesBetween = new ArrayList<>();
-		int distanceFromFirstElementToLeftEdgeOfPanel = elementsInRow[0].getX();
+		int distanceFromFirstElementToLeftEdgeOfPanel =
+				getXCoordinate(elementsInRow[0]) - getXCoordinate(panel);
 		spacesBetween.add(distanceFromFirstElementToLeftEdgeOfPanel);
 		for (int i = 0; i < elementsInRow.length - 1; i++) {
 			Component right = elementsInRow[i + 1];
 			Component left = elementsInRow[i];
-			spacesBetween.add(right.getX() - (left.getX() + left.getWidth()));
+			spacesBetween.add(getXCoordinate(right) - (getXCoordinate(left)
+					+ left.getWidth()));
 		}
-		Component lastElement = elementsInRow[elementsInRow.length - 1];
-		int distanceOfLastElementToRightEdgeOfPanel =
-				panel.getWidth() - (lastElement.getX()
-						+ lastElement.getWidth());
-		spacesBetween.add(distanceOfLastElementToRightEdgeOfPanel);
 		return spacesBetween;
 	}
 
