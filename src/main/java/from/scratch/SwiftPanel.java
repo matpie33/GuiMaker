@@ -33,18 +33,25 @@ public class SwiftPanel {
 			else {
 				numberOfRowsSharingColumnSize++;
 			}
-			for (int i = 0; i < row.getUiComponents()
-								   .size(); i++) {
-
-				GridBagConstraints constraints = createConstraintsForElementsInsideRow(
-						i, numberOfRowsSharingColumnSize);
-				currentPanel.add(row.getUiComponents()
-									.get(i), constraints);
-
-			}
+			addElementsToPanel(currentPanel, numberOfRowsSharingColumnSize,
+					row);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow();
 			this.panel.add(currentPanel, constraintsForRow);
 			numberOfRows++;
+		}
+	}
+
+	private void addElementsToPanel(JPanel currentPanel,
+			int numberOfRowsSharingColumnSize, PanelRows row) {
+		for (int i = 0; i < row.getUiComponents()
+							   .size(); i++) {
+
+			JComponent element = row.getUiComponents()
+									.get(i);
+			GridBagConstraints constraints = createConstraintsForElementsInsideRow(
+					i, element, numberOfRowsSharingColumnSize, row);
+			currentPanel.add(element, constraints);
+
 		}
 	}
 
@@ -54,12 +61,16 @@ public class SwiftPanel {
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.gridy = numberOfRows;
 		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.weightx = 1;
+		constraints.weighty = 1;
+		constraints.fill = GridBagConstraints.BOTH;
 		return constraints;
 
 	}
 
 	private GridBagConstraints createConstraintsForElementsInsideRow(
-			int indexOfElement, int numberOfRowsSharingColumnSize) {
+			int indexOfElement, JComponent element,
+			int numberOfRowsSharingColumnSize, PanelRows row) {
 		GridBagConstraints constraints = new GridBagConstraints();
 		int insetLeft = 0;
 		int insetTop = 0;
@@ -69,6 +80,15 @@ public class SwiftPanel {
 		if (numberOfRows == 0) {
 			insetTop = spaceBetweenElementsVertically;
 		}
+		if (row.shouldFillElement(element)) {
+			constraints.fill = row.getFillType()
+								  .getGridBagConstraintsFilling();
+			constraints.weightx = row.getFillType()
+									 .getWeightX();
+			constraints.weighty = row.getFillType()
+									 .getWeightY();
+		}
+
 		constraints.gridy = numberOfRowsSharingColumnSize - 1;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.gridy = numberOfRows;

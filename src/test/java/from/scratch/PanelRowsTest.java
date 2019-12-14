@@ -15,9 +15,10 @@ class PanelRowsTest {
 		//given
 
 		//when
+		JButton button = new JButton("Test button");
 		PanelRows panelRows = new PanelRows(new JButton("Test"),
-				new JLabel("Test label"),
-				new JButton("Test button")).withFillType(FillType.HORIZONTAL);
+				new JLabel("Test label"), button).fillElement(
+				FillType.HORIZONTAL, button);
 
 		//then
 		assertEquals(FillType.HORIZONTAL, panelRows.getFillType());
@@ -26,15 +27,21 @@ class PanelRowsTest {
 	@Test
 	void shouldCreate2Rows() {
 		//given
-		JComponent[] componentsRow1 = { new JButton("B1"), new JLabel("L1") };
+		JButton button = new JButton("B1");
+		JComponent[] componentsRow1 = { button, new JLabel("L1") };
 		List<JComponent> row1 = Arrays.asList(componentsRow1);
-		JComponent[] componentsRow2 = { new JButton("B2"), new JLabel("L2") };
+		JButton button1 = new JButton("B2");
+		JComponent[] componentsRow2 = { button1, new JLabel("L2") };
 		List<JComponent> row2 = Arrays.asList(componentsRow2);
 
 		//when
-		PanelRows panelRows = new PanelRows(componentsRow1).withFillType(FillType.HORIZONTAL)
-										   .nextRow(componentsRow2)
-										   .withFillType(FillType.VERTICAL);
+		PanelRows panelRows = new PanelRows(componentsRow1).fillElement(
+				FillType.HORIZONTAL, button)
+														   .nextRow(
+																   componentsRow2)
+														   .fillElement(
+																   FillType.VERTICAL,
+																   button1);
 
 		//then
 		assertEquals(2, panelRows.getRows()

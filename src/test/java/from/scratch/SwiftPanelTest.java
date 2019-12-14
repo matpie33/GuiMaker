@@ -37,6 +37,54 @@ class SwiftPanelTest {
 	}
 
 	@Test
+	void shouldFillElementWithNormalRows() {
+		//given
+		JButton row1Element1 = new JButton("Test");
+		JLabel row1Element2 = new JLabel("Test labelll");
+		JButton row1Element3 = new JButton("Test very long butttoooooooon");
+		JButton row2Element1 = new JButton("Test");
+		JButton row2Element2 = new JButton("Test button");
+		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
+				row1Element3).nextRow(row2Element1, row2Element2)
+							 .fillElement(FillType.HORIZONTAL, row2Element2);
+
+		//when
+		swiftPanel.addElements(panelRows);
+		JPanel panel = swiftPanel.getPanel();
+		showPanel(panel);
+
+		//then
+		assertEquals(getXCoordinate(panel) + panel.getWidth() - (
+						getXCoordinate(row2Element2) + row2Element2.getWidth()),
+				getXCoordinate(row2Element1) - getXCoordinate(panel));
+	}
+
+	@Test
+	void shouldFillElementWithRowsPutAsColumns() {
+		//given
+		JButton row1Element1 = new JButton("Test");
+		JLabel row1Element2 = new JLabel("Test long labellllllllllllllll");
+		JButton row1Element3 = new JButton("Test very long butttoooooooon");
+		JButton row2Element1 = new JButton("Test");
+		JButton row2Element2 = new JButton("Test");
+		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
+				row1Element3).nextRowKeepingColumnSize(row2Element1,
+				row2Element2)
+							 .fillElement(FillType.HORIZONTAL, row2Element2);
+
+		//when
+		swiftPanel.addElements(panelRows);
+		JPanel panel = swiftPanel.getPanel();
+		showPanel(panel);
+
+		//then
+		assertEquals(
+				getXCoordinate(row1Element3) - (getXCoordinate(row2Element2)
+						+ row2Element2.getWidth()),
+				getXCoordinate(row2Element1) - getXCoordinate(panel));
+	}
+
+	@Test
 	void shouldAddElementsToPanelInSingleRowWithSpacesBetween() {
 		//given
 		PanelRows panelRows = new PanelRows(new JButton("Test"),
