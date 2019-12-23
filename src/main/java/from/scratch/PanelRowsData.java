@@ -7,6 +7,7 @@ public class PanelRowsData {
 
 	private int highestNumberOfColumns;
 	private List<PanelRows> panelRows;
+	private boolean hasAnyRowWithElementFilledVertically;
 
 	public PanelRowsData() {
 		panelRows = new ArrayList<>();
@@ -30,5 +31,13 @@ public class PanelRowsData {
 
 	public boolean isLast(PanelRows panelRows) {
 		return getRows().get(getRows().size() - 1) == panelRows;
+	}
+
+	public void setHasAnyRowWithElementFilledVertically() {
+		this.hasAnyRowWithElementFilledVertically = true;
+	}
+
+	public boolean hasAnyRowWithElementFilledVertically() {
+		return hasAnyRowWithElementFilledVertically;
 	}
 }

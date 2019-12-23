@@ -33,7 +33,20 @@ public class PanelRows {
 		}
 		this.fillType = fillType;
 		this.elementToFill = elementToFill;
+		if (shouldFillAnyElementVertically()) {
+			panelRowsData.setHasAnyRowWithElementFilledVertically();
+
+		}
 		return this;
+	}
+
+	public boolean shouldFillAnyElementVertically() {
+		return fillType.equals(FillType.VERTICAL) || fillType.equals(
+				FillType.BOTH);
+	}
+
+	public boolean shouldFillAnyElementHorizontally() {
+		return fillType.equals(FillType.HORIZONTAL);
 	}
 
 	public FillType getFillType() {
@@ -79,4 +92,9 @@ public class PanelRows {
 	public boolean isLast() {
 		return panelRowsData.isLast(this);
 	}
+
+	public boolean existsOtherRowWithElementFilledVertically() {
+		return panelRowsData.hasAnyRowWithElementFilledVertically();
+	}
+
 }

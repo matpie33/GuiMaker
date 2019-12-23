@@ -36,7 +36,7 @@ public class SwiftPanel {
 			addElementsToPanel(currentPanel, numberOfRowsSharingColumnSize, row,
 					isLast);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow(
-					isLast);
+					isLast, row);
 			this.panel.add(currentPanel, constraintsForRow);
 			numberOfRows++;
 		}
@@ -57,14 +57,18 @@ public class SwiftPanel {
 		}
 	}
 
-	private GridBagConstraints createConstraintsForNewRow(boolean last) {
+	private GridBagConstraints createConstraintsForNewRow(boolean last,
+			PanelRows row) {
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.gridy = numberOfRows;
 		constraints.insets = new Insets(0, 0, 0, 0);
 		constraints.weightx = 1;
-		constraints.weighty = last ? 1 : 0;
+		constraints.weighty = row.shouldFillAnyElementVertically() || (
+				!row.existsOtherRowWithElementFilledVertically() && last) ?
+				1 :
+				0;
 		constraints.fill = GridBagConstraints.BOTH;
 		return constraints;
 
@@ -79,7 +83,9 @@ public class SwiftPanel {
 		createFillAndWeightsForElementInRow(indexOfElement, element, row,
 				isLastRow, constraints);
 
-		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.anchor = isLastRow ?
+				GridBagConstraints.NORTHWEST :
+				GridBagConstraints.WEST;
 		constraints.gridy = numberOfRowsSharingColumnSize - 1;
 		constraints.gridy = numberOfRows;
 		constraints.gridx = indexOfElement;
@@ -100,10 +106,11 @@ public class SwiftPanel {
 		else if (row.shouldKeepColumnSizeWithRowAbove() ?
 				indexOfElement == row.getHighestNumberOfColumns() - 1 :
 				indexOfElement == row.getUiComponents()
-									 .size() - 1) {
+									 .size() - 1
+						&& !row.shouldFillAnyElementHorizontally()) {
 			constraints.weightx = 1;
 		}
-		if (isLastRow) {
+		if (isLastRow && !row.existsOtherRowWithElementFilledVertically()) {
 			constraints.weighty = 1;
 		}
 	}

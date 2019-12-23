@@ -1,52 +1,42 @@
 package from.scratch;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SwiftPanelTest {
+class SwiftPanelTest extends AbstractPanelTest {
 
 	private SwiftPanel swiftPanel = new SwiftPanel();
 
-	@Test
-	void shouldAddElementsToPanel() {
-		//given
-		JButton button1 = new JButton("Test");
-		JLabel label = new JLabel("Test label");
-		JButton button2 = new JButton("Test button");
-		PanelRows panelRows = new PanelRows(button1, label, button2);
-
-		//when
-		swiftPanel.addElements(panelRows);
-
-		//then
-		JPanel row1 = (JPanel) swiftPanel.getPanel()
-										 .getComponents()[0];
-		List<Component> components = Arrays.asList(row1.getComponents());
-		assertTrue(components.contains(button1));
-		assertTrue(components.contains(label));
-		assertTrue(components.contains(button2));
-		assertTrue(components.size() == 3);
-	}
-
+	//TODO create 2 or 3 tests only with different combinations:
+	// 1 with normal rows, 1 with column rows, and in both tests add some filled
+	// elements some anchored west/east etc
 	@Test
 	void shouldFillElementWithNormalRows() {
 		//given
 		JButton row1Element1 = new JButton("Test");
 		JLabel row1Element2 = new JLabel("Test labelll");
 		JButton row1Element3 = new JButton("Test very long butttoooooooon");
-		JButton row2Element1 = new JButton("Test");
+		JButton row2Element1 = new JButton("Test row 2");
 		JButton row2Element2 = new JButton("Test button");
+		JButton row3Element1 = new JButton("Teeest");
+		JButton row3Element2 = new JButton("Teeest2");
+		JButton row4Element1 = new JButton("Tee last row test");
+		JButton row4Element2 = new JButton("Test test test");
+
 		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
-				row1Element3).nextRow(row2Element1, row2Element2)
-							 .fillElement(FillType.HORIZONTAL, row2Element2);
+				row1Element3).fillElement(FillType.HORIZONTAL, row1Element1)
+							 .nextRow(row2Element1, row2Element2)
+							 .fillElement(FillType.BOTH, row2Element2)
+							 .nextRow(row3Element1, row3Element2)
+							 .nextRow(row4Element1, row4Element2)
+							 .fillElement(FillType.HORIZONTAL, row4Element2);
 
 		//when
 		swiftPanel.addElements(panelRows);
@@ -113,6 +103,7 @@ class SwiftPanelTest {
 		assertTrue(spacesBetween.get(0) > 0);
 	}
 
+	@Disabled
 	@Test
 	void shouldAddElementsToPanelInTwoRowsWithSpacesBetween() {
 		//given
@@ -149,7 +140,6 @@ class SwiftPanelTest {
 								+ row2.getComponent(0)
 									  .getHeight());
 
-
 		assertTrue(row1.getY() < row2.getY());
 		assertTrue(distanceBetween1And2Row > 0);
 		assertTrue(distanceBetween2RowAndPanelBottomEdge > 0);
@@ -169,6 +159,7 @@ class SwiftPanelTest {
 		assertTrue(horizontalSpacesBetweenElementsInRow1.get(0) > 0);
 	}
 
+	@Disabled
 	@Test
 	void shouldAddElementsToPanelInTwoRowsWithKeepingColumnSize() {
 		//given
@@ -210,70 +201,6 @@ class SwiftPanelTest {
 				distanceBetweenRow1And2);
 		assertTrue(distanceBetweenRow1And2 > 0);
 
-	}
-
-	private int getYCoordinate(Component c) {
-		return (int) c.getLocationOnScreen()
-					  .getY();
-	}
-
-	private int getXCoordinate(Component c) {
-		return (int) c.getLocationOnScreen()
-					  .getX();
-	}
-
-	private void assertCorrectHorizontalSpaces(JPanel row) {
-		List<Integer> horizontalSpacesBetweenElementsInRow1 = getDistanceBetweenElementsHorizontally(
-				row);
-
-		for (int i = 0;
-			 i < horizontalSpacesBetweenElementsInRow1.size() - 1; i++) {
-			assertEquals(horizontalSpacesBetweenElementsInRow1.get(i + 1),
-					horizontalSpacesBetweenElementsInRow1.get(i));
-		}
-	}
-
-	private void assertCorrectYPositionsInRow(JPanel row) {
-		int numberOfElementsInRow1 = row.getComponentCount();
-
-		for (int i = 0; i < numberOfElementsInRow1 - 1; i++) {
-			Component component1 = row.getComponents()[i];
-			Component component2 = row.getComponents()[i + 1];
-			assertEquals(component1.getLocationOnScreen()
-								   .getY(), component2.getLocationOnScreen()
-													  .getY());
-		}
-	}
-
-	private List<Integer> getDistanceBetweenElementsHorizontally(JPanel panel) {
-		Component[] elementsInRow = panel.getComponents();
-		List<Integer> spacesBetween = new ArrayList<>();
-		int distanceFromFirstElementToLeftEdgeOfPanel =
-				getXCoordinate(elementsInRow[0]) - getXCoordinate(panel);
-		spacesBetween.add(distanceFromFirstElementToLeftEdgeOfPanel);
-		for (int i = 0; i < elementsInRow.length - 1; i++) {
-			Component right = elementsInRow[i + 1];
-			Component left = elementsInRow[i];
-			spacesBetween.add(getXCoordinate(right) - (getXCoordinate(left)
-					+ left.getWidth()));
-		}
-		return spacesBetween;
-	}
-
-	private void showPanel(JPanel panel) {
-		JFrame frame = new JFrame();
-		frame.setContentPane(panel);
-		frame.pack();
-		frame.setVisible(true);
-
-		if (System.getProperty("Wait")!=null){
-			try {
-				Thread.sleep(1000000L);
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 }
