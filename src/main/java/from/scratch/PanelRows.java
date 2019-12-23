@@ -1,7 +1,6 @@
 package from.scratch;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,22 +9,21 @@ public class PanelRows {
 	private List<JComponent> uiComponents;
 	private FillType fillType;
 	private JComponent elementToFill;
-	private List<PanelRows> panelRows;
 	private boolean keepColumnSizeWithRowAboveOrBelow;
-	private ColumnRowsData columnRowsData;
-	private boolean isLast;
+	private PanelRowsData panelRowsData;
 
 	public PanelRows(JComponent... uiComponents) {
-		this(Arrays.asList(uiComponents), new ArrayList<>());
+		this(Arrays.asList(uiComponents), new PanelRowsData());
 	}
 
-	private PanelRows(List<JComponent> components, List<PanelRows> panelRows) {
-		this.panelRows = panelRows;
+	private PanelRows(List<JComponent> components,
+			PanelRowsData panelRowsData) {
+		this.panelRowsData = panelRowsData;
+		panelRowsData.addRow(this);
+		panelRowsData.checkHighestNumberOfColumns(components.size());
 		this.uiComponents = components;
-		this.panelRows.add(this);
 		keepColumnSizeWithRowAboveOrBelow = false;
 		fillType = FillType.NONE;
-		isLast = true;
 	}
 
 	public PanelRows fillElement(FillType fillType, JComponent elementToFill) {
@@ -51,50 +49,34 @@ public class PanelRows {
 	}
 
 	public PanelRows nextRow(JComponent... elements) {
-		isLast= false;
-		return new PanelRows(Arrays.asList(elements), panelRows);
-	}
-
-	public boolean isLast() {
-		return isLast;
+		return new PanelRows(Arrays.asList(elements), panelRowsData);
 	}
 
 	public List<PanelRows> getRows() {
-		return panelRows;
+		return panelRowsData.getRows();
 	}
 
 	public PanelRows nextRowKeepingColumnSize(JComponent... elements) {
-		int higherNumberOfColumns = Math.max(getUiComponents().size(),
-				elements.length);
-		if (columnRowsData == null) {
-			columnRowsData = new ColumnRowsData(higherNumberOfColumns);
-		}
-		else {
-			columnRowsData.setHighestNumberOfColumns(
-					Math.max(higherNumberOfColumns,
-							columnRowsData.getHighestNumberOfColumns()));
-		}
-		keepColumnSizeWithRowAboveOrBelow = true;
+		keepColumnSizeWithRowAboveOrBelow();
 
 		return new PanelRows(Arrays.asList(elements),
-				this.panelRows).keepColumnSizeWithRowAboveOrBelow(
-				columnRowsData);
+				this.panelRowsData).keepColumnSizeWithRowAboveOrBelow();
 	}
 
 	public int getHighestNumberOfColumns() {
-		return columnRowsData != null ?
-				columnRowsData.getHighestNumberOfColumns() :
-				0;
+		return panelRowsData.getHighestNumberOfColumns();
 	}
 
-	private PanelRows keepColumnSizeWithRowAboveOrBelow(
-			ColumnRowsData columnRowsData) {
+	private PanelRows keepColumnSizeWithRowAboveOrBelow() {
 		this.keepColumnSizeWithRowAboveOrBelow = true;
-		this.columnRowsData = columnRowsData;
 		return this;
 	}
 
 	public boolean shouldKeepColumnSizeWithRowAbove() {
 		return keepColumnSizeWithRowAboveOrBelow;
+	}
+
+	public boolean isLast() {
+		return panelRowsData.isLast(this);
 	}
 }
