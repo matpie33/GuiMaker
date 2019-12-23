@@ -148,6 +148,8 @@ class SwiftPanelTest {
 						getYCoordinate(row2.getComponent(0))
 								+ row2.getComponent(0)
 									  .getHeight());
+
+
 		assertTrue(row1.getY() < row2.getY());
 		assertTrue(distanceBetween1And2Row > 0);
 		assertTrue(distanceBetween2RowAndPanelBottomEdge > 0);
@@ -263,6 +265,15 @@ class SwiftPanelTest {
 		frame.setContentPane(panel);
 		frame.pack();
 		frame.setVisible(true);
+
+		if (System.getProperty("Wait")!=null){
+			try {
+				Thread.sleep(1000000L);
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
