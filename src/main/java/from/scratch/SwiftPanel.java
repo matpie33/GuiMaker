@@ -24,7 +24,7 @@ public class SwiftPanel {
 		JPanel currentPanel = null;
 		int numberOfRowsSharingColumnSize = 1;
 		for (PanelRows row : panelRows.getRows()) {
-			if (!row.shouldKeepColumnSizeWithRowAbove()
+			if (!row.shouldKeepColumnSizeWithRowAboveOrBelow()
 					|| currentPanel == null) {
 				currentPanel = new JPanel(new GridBagLayout());
 				numberOfRowsSharingColumnSize = 1;
@@ -36,10 +36,14 @@ public class SwiftPanel {
 			addElementsToPanel(currentPanel, numberOfRowsSharingColumnSize, row,
 					isLast);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow(
-					isLast, row);
+					false);
 			this.panel.add(currentPanel, constraintsForRow);
 			numberOfRows++;
 		}
+		currentPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints constraintsForNewRow = createConstraintsForNewRow(
+				true);
+		this.panel.add(currentPanel, constraintsForNewRow);
 	}
 
 	private void addElementsToPanel(JPanel currentPanel,
@@ -57,19 +61,17 @@ public class SwiftPanel {
 		}
 	}
 
-	private GridBagConstraints createConstraintsForNewRow(boolean last,
-			PanelRows row) {
+	private GridBagConstraints createConstraintsForNewRow(boolean last) {
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.gridy = numberOfRows;
 		constraints.insets = new Insets(0, 0, 0, 0);
 		constraints.weightx = 1;
-		constraints.weighty = row.shouldFillAnyElementVertically() || (
-				!row.existsOtherRowWithElementFilledVertically() && last) ?
-				1 :
-				0;
-		constraints.fill = GridBagConstraints.BOTH;
+		constraints.weighty = last ? 1 : 0;
+		constraints.fill = last ?
+				GridBagConstraints.BOTH :
+				GridBagConstraints.HORIZONTAL;
 		return constraints;
 
 	}
@@ -103,11 +105,11 @@ public class SwiftPanel {
 			constraints.weighty = row.getFillType()
 									 .getWeightY();
 		}
-		else if (row.shouldKeepColumnSizeWithRowAbove() ?
+		else if ((row.shouldKeepColumnSizeWithRowAboveOrBelow() ?
 				indexOfElement == row.getHighestNumberOfColumns() - 1 :
 				indexOfElement == row.getUiComponents()
-									 .size() - 1
-						&& !row.shouldFillAnyElementHorizontally()) {
+									 .size() - 1)
+				&& !row.shouldFillAnyElementHorizontally()) {
 			constraints.weightx = 1;
 		}
 		if (isLastRow && !row.existsOtherRowWithElementFilledVertically()) {

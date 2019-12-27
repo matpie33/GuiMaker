@@ -1,6 +1,7 @@
 package from.scratch;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class PanelRows {
 
 	private List<JComponent> uiComponents;
 	private FillType fillType;
-	private JComponent elementToFill;
+	private List<JComponent> elementsToFill;
 	private boolean keepColumnSizeWithRowAboveOrBelow;
 	private PanelRowsData panelRowsData;
 
@@ -24,15 +25,18 @@ public class PanelRows {
 		this.uiComponents = components;
 		keepColumnSizeWithRowAboveOrBelow = false;
 		fillType = FillType.NONE;
+		elementsToFill = new ArrayList<>();
 	}
 
-	public PanelRows fillElement(FillType fillType, JComponent elementToFill) {
-		if (!uiComponents.contains(elementToFill)) {
-			throw new IllegalArgumentException("Element to fill is not on the"
-					+ " list of elements to add to row.");
+	public PanelRows fillElement(FillType fillType,
+			JComponent... elementsToFill) {
+		if (!uiComponents.containsAll(Arrays.asList(elementsToFill))) {
+			throw new IllegalArgumentException(
+					"Some of the elements to fill are not on the"
+							+ " list of elements to add to row.");
 		}
 		this.fillType = fillType;
-		this.elementToFill = elementToFill;
+		this.elementsToFill = Arrays.asList(elementsToFill);
 		if (shouldFillAnyElementVertically()) {
 			panelRowsData.setHasAnyRowWithElementFilledVertically();
 
@@ -46,7 +50,8 @@ public class PanelRows {
 	}
 
 	public boolean shouldFillAnyElementHorizontally() {
-		return fillType.equals(FillType.HORIZONTAL);
+		return fillType.equals(FillType.HORIZONTAL) || fillType.equals(
+				FillType.BOTH);
 	}
 
 	public FillType getFillType() {
@@ -54,7 +59,7 @@ public class PanelRows {
 	}
 
 	public boolean shouldFillElement(JComponent element) {
-		return element == elementToFill;
+		return elementsToFill.contains(element);
 	}
 
 	public List<JComponent> getUiComponents() {
@@ -85,7 +90,7 @@ public class PanelRows {
 		return this;
 	}
 
-	public boolean shouldKeepColumnSizeWithRowAbove() {
+	public boolean shouldKeepColumnSizeWithRowAboveOrBelow() {
 		return keepColumnSizeWithRowAboveOrBelow;
 	}
 

@@ -7,17 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractPanelTest {
 
-	protected void checkDistancesBetweenRows(JPanel panel,
+	protected void assertDistancesBetweenRows(JPanel panel,
 			List<JComponent>... rows) {
 		for (List<JComponent> row : rows) {
 			for (int i = 0; i < row.size() - 1; i++) {
@@ -44,7 +43,32 @@ public abstract class AbstractPanelTest {
 
 	}
 
-	protected void checkThatComponentIsCenteredBetweenElements(
+	protected void assertElementsFilled(List<JComponent> allElementsInRow,
+			List<JComponent> elementsFilled) {
+		Map<JComponent, Double> weightsOfElements = new HashMap<>();
+		double sumOfWidths = 0;
+		for (JComponent element : allElementsInRow) {
+			sumOfWidths += element.getWidth();
+		}
+		for (JComponent element : allElementsInRow) {
+			weightsOfElements.put(element,
+					(double) element.getWidth() / sumOfWidths);
+		}
+		List<JComponent> notFilledElements = allElementsInRow.stream()
+															 .filter(element -> !elementsFilled.contains(
+																	 element))
+															 .collect(
+																	 Collectors.toList());
+		for (JComponent filledElement : elementsFilled) {
+			Double filledElementWeight = weightsOfElements.get(filledElement);
+			for (JComponent notFilledElement : notFilledElements) {
+				assertTrue(filledElementWeight > weightsOfElements.get(
+						notFilledElement));
+			}
+		}
+	}
+
+	protected void assertThatComponentIsCenteredBetweenElements(
 			JComponent elementBetween, JComponent elementAbove,
 			JComponent elementBelow) {
 		int yCoordinateElementBetween = getYCoordinate(elementBetween);
@@ -87,12 +111,33 @@ public abstract class AbstractPanelTest {
 		}
 	}
 
-	protected List<Integer> checkDistancesBetweenElementsHorizontally(
-			JPanel panel, JPanel rootPanel, boolean checkRightPanelEdgeToo) {
+	protected void assertSameXPositions(JComponent... elements) {
+		Set<Integer> xPositions = Arrays.stream(elements)
+										.map(this::getXCoordinate)
+										.collect(Collectors.toSet());
+		assertTrue(xPositions.size() == 1);
+	}
+
+	protected void assertSameYPositions(JComponent... elements) {
+		Set<Integer> yPositions = Arrays.stream(elements)
+										.map(this::getYCoordinate)
+										.collect(Collectors.toSet());
+		assertTrue(yPositions.size() == 1);
+	}
+
+	protected void assertDistancesBetweenElementsHorizontally(JPanel panel,
+			JPanel rootPanel, boolean checkRightPanelEdgeToo) {
 		Component[] elementsInRow = panel.getComponents();
+		assertDistanceBetweenElementsHorizontally(panel, rootPanel,
+				checkRightPanelEdgeToo, elementsInRow);
+	}
+
+	protected void assertDistanceBetweenElementsHorizontally(JComponent firstElement,
+			JPanel rootPanel, boolean checkRightPanelEdgeToo,
+			Component... elementsInRow) {
 		List<Integer> spacesBetween = new ArrayList<>();
 		int distanceFromFirstElementToLeftEdgeOfPanel =
-				getXCoordinate(elementsInRow[0]) - getXCoordinate(panel);
+				getXCoordinate(elementsInRow[0]) - getXCoordinate(firstElement);
 		spacesBetween.add(distanceFromFirstElementToLeftEdgeOfPanel);
 		for (int i = 0; i < elementsInRow.length - 1; i++) {
 			Component right = elementsInRow[i + 1];
@@ -113,7 +158,6 @@ public abstract class AbstractPanelTest {
 			assertEquals(space1, space2);
 			assertTrue(space1 > 0);
 		}
-		return spacesBetween;
 	}
 
 	protected void showPanel(JPanel panel, TestInfo testInfo) {

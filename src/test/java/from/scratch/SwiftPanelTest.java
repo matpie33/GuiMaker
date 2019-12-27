@@ -5,11 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,8 +23,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 	// 1 with normal rows, 1 with column rows, and in both tests add some filled
 	// elements some anchored west/east etc
 	@Test
-	void shouldFillElementWithNormalRows(TestInfo testInfo)
-			throws AWTException, IOException {
+	void shouldFillElementWithNormalRows(TestInfo testInfo) {
 		//given
 		JButton row1Element1 = new JButton("Test");
 		JLabel row1Element2 = new JLabel("Test labelll");
@@ -49,24 +49,24 @@ class SwiftPanelTest extends AbstractPanelTest {
 		showPanel(panel, testInfo);
 
 		//then
-		checkDistancesBetweenElementsHorizontally(
+		assertDistancesBetweenElementsHorizontally(
 				(JPanel) panel.getComponents()[0], panel, true);
-		checkDistancesBetweenElementsHorizontally(
+		assertDistancesBetweenElementsHorizontally(
 				(JPanel) panel.getComponents()[1], panel, true);
-		checkDistancesBetweenElementsHorizontally(
+		assertDistancesBetweenElementsHorizontally(
 				(JPanel) panel.getComponents()[2], panel, false);
-		checkDistancesBetweenElementsHorizontally(
+		assertDistancesBetweenElementsHorizontally(
 				(JPanel) panel.getComponents()[3], panel, true);
 		//noinspection unchecked
-		checkDistancesBetweenRows(panel,
+		assertDistancesBetweenRows(panel,
 				Arrays.asList(row1Element1, row1Element3),
 				Collections.singletonList(row2Element2),
 				Arrays.asList(row3Element1, row3Element2),
 				Arrays.asList(row4Element1, row4Element2));
 
-		checkThatComponentIsCenteredBetweenElements(row1Element1, panel,
+		assertThatComponentIsCenteredBetweenElements(row1Element1, panel,
 				row2Element2);
-		checkThatComponentIsCenteredBetweenElements(row2Element1, row1Element1,
+		assertThatComponentIsCenteredBetweenElements(row2Element1, row1Element1,
 				row3Element1);
 
 	}
@@ -76,13 +76,22 @@ class SwiftPanelTest extends AbstractPanelTest {
 		//given
 		JButton row1Element1 = new JButton("Test");
 		JLabel row1Element2 = new JLabel("Test long labellllllllllllllll");
-		JButton row1Element3 = new JButton("Test very long butttoooooooon");
+		JButton row1Element3 = new JButton("Test very long but");
 		JButton row2Element1 = new JButton("Test");
-		JButton row2Element2 = new JButton("Test");
+		JTextField row2Element2 = new JTextField("Test");
+		JComboBox<String> row2Element3 = new JComboBox<>();
+		row2Element3.addItem("Some text in there but not here");
+		JButton row3Element1 = new JButton("Test");
+		JTextField row3Element2 = new JTextField("Test");
+		JTextArea row3Element3 = new JTextArea("some kind", 1, 10);
+		JButton row3Element4 = new JButton("Test qwerwerwerw");
 		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
 				row1Element3).nextRowKeepingColumnSize(row2Element1,
-				row2Element2)
-							 .fillElement(FillType.HORIZONTAL, row2Element2);
+				row2Element2, row2Element3)
+							 .nextRowKeepingColumnSize(row3Element1,
+									 row3Element2, row3Element3, row3Element4)
+							 .fillElement(FillType.BOTH, row3Element2,
+									 row3Element3);
 
 		//when
 		swiftPanel.addElements(panelRows);
@@ -90,10 +99,31 @@ class SwiftPanelTest extends AbstractPanelTest {
 		showPanel(panel, testInfo);
 
 		//then
-		assertEquals(
-				getXCoordinate(row1Element3) - (getXCoordinate(row2Element2)
-						+ row2Element2.getWidth()),
-				getXCoordinate(row2Element1) - getXCoordinate(panel));
+		assertSameXPositions(row1Element1, row2Element1, row3Element1);
+		assertSameXPositions(row1Element2, row2Element2, row3Element2);
+		assertSameXPositions(row1Element3, row2Element3, row3Element3);
+
+		assertSameYPositions(row1Element1, row1Element3);
+		assertSameYPositions(row2Element1, row2Element3);
+		assertSameYPositions(row3Element1, row3Element2, row3Element3,
+				row3Element4);
+
+		assertThatComponentIsCenteredBetweenElements(row1Element2, panel,
+				row2Element1);
+		assertThatComponentIsCenteredBetweenElements(row2Element2, row1Element3,
+				row3Element2);
+		assertElementsFilled(
+				Arrays.asList(row3Element1, row3Element2, row3Element3,
+						row3Element4),
+				Arrays.asList(row3Element2, row3Element3));
+		assertDistanceBetweenElementsHorizontally(panel, panel, true,
+				row3Element1, row3Element2, row3Element3, row3Element4);
+		Set<Integer> differentHeights = Stream.of(row3Element1, row3Element2,
+				row3Element3, row3Element4)
+											  .map(JComponent::getHeight)
+											  .collect(Collectors.toSet());
+		assertTrue(differentHeights.size() == 1);
+		//noinspection unchecked
 	}
 
 	@Test
