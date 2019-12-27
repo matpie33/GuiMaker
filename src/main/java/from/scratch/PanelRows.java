@@ -12,6 +12,7 @@ public class PanelRows {
 	private List<JComponent> elementsToFill;
 	private boolean keepColumnSizeWithRowAboveOrBelow;
 	private PanelRowsData panelRowsData;
+	private boolean shouldFillThisRowVertically;
 
 	public PanelRows(JComponent... uiComponents) {
 		this(Arrays.asList(uiComponents), new PanelRowsData());
@@ -44,6 +45,26 @@ public class PanelRows {
 		return this;
 	}
 
+	public PanelRows fillThisRowVertically() {
+		shouldFillThisRowVertically = true;
+		if (fillType.equals(FillType.NONE)){
+			fillType = FillType.VERTICAL;
+		}
+		return this;
+	}
+
+	public PanelRows fillThisRowHorizontallyAndVertically() {
+		shouldFillThisRowVertically = true;
+		if (fillType.equals(FillType.NONE)) {
+			fillType = FillType.BOTH;
+		}
+		return this;
+	}
+
+	public boolean shouldFillThisRowVertically() {
+		return shouldFillThisRowVertically;
+	}
+
 	public boolean shouldFillAnyElementVertically() {
 		return fillType.equals(FillType.VERTICAL) || fillType.equals(
 				FillType.BOTH);
@@ -59,7 +80,8 @@ public class PanelRows {
 	}
 
 	public boolean shouldFillElement(JComponent element) {
-		return elementsToFill.contains(element);
+		return elementsToFill.contains(element) || (uiComponents.size() == 1
+				&& fillType != FillType.NONE);
 	}
 
 	public List<JComponent> getUiComponents() {

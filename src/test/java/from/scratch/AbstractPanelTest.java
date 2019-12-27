@@ -43,7 +43,7 @@ public abstract class AbstractPanelTest {
 
 	}
 
-	protected void assertElementsFilled(List<JComponent> allElementsInRow,
+	protected void assertElementsFilledHorizontally(List<JComponent> allElementsInRow,
 			List<JComponent> elementsFilled) {
 		Map<JComponent, Double> weightsOfElements = new HashMap<>();
 		double sumOfWidths = 0;
