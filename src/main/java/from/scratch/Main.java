@@ -12,10 +12,10 @@ public class Main {
 		JButton row1Element3 = new JButton("Test very long butttoooooooon");
 		JButton row2Element1 = new JButton("Test");
 		JButton row2Element2 = new JButton("Test");
-		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
+		PanelRow panelRow = new PanelRow(row1Element1, row1Element2,
 				row1Element3).nextRow(row2Element1, row2Element2)
 							 .fillElement(FillType.HORIZONTAL, row2Element2);
-		swiftPanel.addElements(panelRows);
+		swiftPanel.addElements(panelRow);
 
 		frame.setContentPane(swiftPanel.getPanel());
 		frame.pack();

@@ -7,8 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PanelRowsTest {
+class PanelRowTest {
 
 	@Test
 	void shouldSetFillTypeAndComponents() {
@@ -16,12 +17,12 @@ class PanelRowsTest {
 
 		//when
 		JButton button = new JButton("Test button");
-		PanelRows panelRows = new PanelRows(new JButton("Test"),
+		PanelRow panelRow = new PanelRow(new JButton("Test"),
 				new JLabel("Test label"), button).fillElement(
 				FillType.HORIZONTAL, button);
 
 		//then
-		assertEquals(FillType.HORIZONTAL, panelRows.getFillType());
+		assertEquals(FillType.HORIZONTAL, panelRow.getElementsFillType());
 	}
 
 	@Test
@@ -35,29 +36,21 @@ class PanelRowsTest {
 		List<JComponent> row2 = Arrays.asList(componentsRow2);
 
 		//when
-		PanelRows panelRows = new PanelRows(componentsRow1).fillElement(
+		PanelRow panelRow = new PanelRow(componentsRow1).fillElement(
 				FillType.HORIZONTAL, button)
-														   .nextRow(
-																   componentsRow2)
-														   .fillElement(
-																   FillType.VERTICAL,
-																   button1);
+														.nextRow(componentsRow2)
+														.fillElement(
+																FillType.VERTICAL,
+																button1);
 
 		//then
-		assertEquals(2, panelRows.getRows()
-								 .size());
-		assertEquals(FillType.HORIZONTAL, panelRows.getRows()
-												   .get(0)
-												   .getFillType());
-		assertEquals(row1, panelRows.getRows()
-									.get(0)
-									.getUiComponents());
-		assertEquals(FillType.VERTICAL, panelRows.getRows()
-												 .get(1)
-												 .getFillType());
-		assertEquals(row2, panelRows.getRows()
-									.get(1)
-									.getUiComponents());
+		assertTrue(panelRow.getPreviousRow() != null);
+		assertEquals(FillType.HORIZONTAL, panelRow.getPreviousRow()
+												  .getElementsFillType());
+		assertEquals(row1, panelRow.getPreviousRow()
+								   .getUIElements());
+		assertEquals(FillType.VERTICAL, panelRow.getElementsFillType());
+		assertEquals(row2, panelRow.getUIElements());
 	}
 
 }

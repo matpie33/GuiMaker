@@ -2,81 +2,60 @@ package from.scratch;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class SwiftPanel {
 
 	private JPanel panel;
-
-	private final int spaceBetweenElementsHorizontally = 4;
-	private final int spaceBetweenElementsVertically = 3;
-	private int numberOfRows = 0;
+	private RowsPreprocessor rowsPreprocessor;
 
 	public SwiftPanel() {
 		panel = createPanel();
+		rowsPreprocessor = new RowsPreprocessor();
 	}
 
 	private JPanel createPanel() {
 		return new JPanel(new GridBagLayout());
 	}
 
-	public void addElements(PanelRows panelRows) {
+	public void addElements(PanelRow panelRow) {
 
+		List<PanelBuilder> panelBuilders = rowsPreprocessor.preprocess(
+				panelRow);
 		JPanel currentPanel = null;
-		int numberOfRowsSharingColumnSize = 1;
-		boolean anyRowIsFilledVertically = false;
-		for (PanelRows row : panelRows.getRows()) {
-			if (!row.shouldKeepColumnSizeWithRowAboveOrBelow()
-					|| currentPanel == null) {
+		for (PanelBuilder panelBuilder : panelBuilders) {
+			if (currentPanel == null || panelBuilder.requiresNewRow()) {
 				currentPanel = new JPanel(new GridBagLayout());
-				numberOfRowsSharingColumnSize = 1;
 			}
-			else {
-				numberOfRowsSharingColumnSize++;
-			}
-			boolean isLast = row.isLast();
-			addElementsToPanel(currentPanel, numberOfRowsSharingColumnSize, row,
-					isLast);
-			anyRowIsFilledVertically = anyRowIsFilledVertically
-					|| row.shouldFillThisRowVertically();
+			addElementsToPanel(panelBuilder, currentPanel);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow(
-					false, row.shouldFillThisRowVertically());
+					panelBuilder);
 			this.panel.add(currentPanel, constraintsForRow);
-			numberOfRows++;
 		}
-		currentPanel = new JPanel(new GridBagLayout());
-		if (!anyRowIsFilledVertically) {
-			GridBagConstraints constraintsForNewRow = createConstraintsForNewRow(
-					true, true);
-			this.panel.add(currentPanel, constraintsForNewRow);
-		}
+
 	}
 
-	private void addElementsToPanel(JPanel currentPanel,
-			int numberOfRowsSharingColumnSize, PanelRows row,
-			boolean isLastRow) {
-		for (int i = 0; i < row.getUiComponents()
-							   .size(); i++) {
-
-			JComponent element = row.getUiComponents()
-									.get(i);
+	private void addElementsToPanel(PanelBuilder panelBuilder,
+			JPanel currentPanel) {
+		List<UIElementBuilder> elementsBuilders = panelBuilder.getElementsBuilders();
+		for (int index = 0; index < elementsBuilders.size(); index++) {
+			UIElementBuilder uiElementBuilder = elementsBuilders.get(index);
 			GridBagConstraints constraints = createConstraintsForElementsInsideRow(
-					i, element, numberOfRowsSharingColumnSize, row, isLastRow);
-			currentPanel.add(element, constraints);
-
+					uiElementBuilder, panelBuilder, index);
+			currentPanel.add(uiElementBuilder.getUiElement(), constraints);
 		}
 	}
 
-	private GridBagConstraints createConstraintsForNewRow(boolean last,
-			boolean shouldFillRowVertically) {
+	private GridBagConstraints createConstraintsForNewRow(
+			PanelBuilder panelBuilder) {
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.anchor = GridBagConstraints.NORTHWEST;
-		constraints.gridy = numberOfRows;
+		constraints.gridy = panelBuilder.getRowIndex();
 		constraints.insets = new Insets(0, 0, 0, 0);
 		constraints.weightx = 1;
-		boolean shouldFillThisRow = last || shouldFillRowVertically;
-		constraints.weighty = shouldFillThisRow ? 1 : 0;
-		constraints.fill = shouldFillThisRow ?
+		constraints.weighty = panelBuilder.shouldTakeAllSpaceToBottom() ? 1 : 0;
+		constraints.fill = panelBuilder.shouldTakeAllSpaceToBottom() ?
 				GridBagConstraints.BOTH :
 				GridBagConstraints.HORIZONTAL;
 		return constraints;
@@ -84,60 +63,42 @@ public class SwiftPanel {
 	}
 
 	private GridBagConstraints createConstraintsForElementsInsideRow(
-			int indexOfElement, JComponent element,
-			int numberOfRowsSharingColumnSize, PanelRows row,
-			boolean isLastRow) {
+			UIElementBuilder uiElementBuilder, PanelBuilder panelBuilder,
+			int indexOfElement) {
 		GridBagConstraints constraints = new GridBagConstraints();
-		createInsetsForElementInRow(indexOfElement, constraints);
-		createFillAndWeightsForElementInRow(indexOfElement, element, row,
-				isLastRow, constraints);
-
-		constraints.anchor = isLastRow ?
+		constraints.insets = new Insets(uiElementBuilder.getInsetTop(),
+				uiElementBuilder.getInsetLeft(),
+				uiElementBuilder.getInsetBottom(),
+				uiElementBuilder.getInsetRight());
+		createFillAndWeightsForElementInRow(uiElementBuilder, panelBuilder,
+				constraints, indexOfElement);
+		constraints.anchor = panelBuilder.isLast() ?
 				GridBagConstraints.NORTHWEST :
 				GridBagConstraints.WEST;
-		constraints.gridy = numberOfRowsSharingColumnSize - 1;
-		constraints.gridy = numberOfRows;
-		constraints.gridx = indexOfElement;
+		constraints.gridy = uiElementBuilder.getRowIndex();
+		constraints.gridx = uiElementBuilder.getColumnIndex();
 		return constraints;
 	}
 
-	private void createFillAndWeightsForElementInRow(int indexOfElement,
-			JComponent element, PanelRows row, boolean isLastRow,
-			GridBagConstraints constraints) {
-		if (row.shouldFillElement(element)) {
-			constraints.fill = row.getFillType()
-								  .getGridBagConstraintsFilling();
-			constraints.weightx = row.getFillType()
-									 .getWeightX();
-			constraints.weighty = row.getFillType()
-									 .getWeightY();
-		}
-		if ((row.shouldKeepColumnSizeWithRowAboveOrBelow() ?
-				indexOfElement == row.getHighestNumberOfColumns() - 1 :
-				indexOfElement == row.getUiComponents()
-									 .size() - 1)
-				&& !row.shouldFillAnyElementHorizontally()) {
+	private void createFillAndWeightsForElementInRow(
+			UIElementBuilder uiElementBuilder, PanelBuilder panelBuilder,
+			GridBagConstraints constraints, int indexOfElement) {
+		constraints.fill = uiElementBuilder.getFillType()
+										   .getGridBagConstraintsFilling();
+		constraints.weightx = uiElementBuilder.getFillType()
+											  .getWeightX();
+		constraints.weighty = uiElementBuilder.getFillType()
+											  .getWeightY();
+		if (indexOfElement
+				== panelBuilder.getHighestNumberOfColumnsInPanel() - 1
+				&& !panelBuilder.hasElementFilledHorizontallyToTheRightEdgeOfPanel()) {
 			constraints.weightx = 1;
 		}
-		if (isLastRow && !row.existsOtherRowWithElementFilledVertically()) {
+		if (panelBuilder.shouldTakeAllSpaceToBottom()) {
 			constraints.weighty = 1;
 		}
 	}
 
-	private void createInsetsForElementInRow(int indexOfElement,
-			GridBagConstraints constraints) {
-		int insetLeft = 0;
-		int insetTop = 0;
-		if (indexOfElement == 0) {
-			insetLeft = spaceBetweenElementsHorizontally;
-		}
-		if (numberOfRows == 0) {
-			insetTop = spaceBetweenElementsVertically;
-		}
-		constraints.insets = new Insets(insetTop, insetLeft,
-				spaceBetweenElementsVertically,
-				spaceBetweenElementsHorizontally);
-	}
 
 	public JPanel getPanel() {
 		return panel;

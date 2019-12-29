@@ -18,7 +18,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 	private SwiftPanel swiftPanel = new SwiftPanel();
 
 	@Test
-	void shouldFillElementsHorizontalyAndVerticalWithNormalRows(
+	void shouldFillElementsHorizontallyAndVerticallyWithNormalRows(
 			TestInfo testInfo) {
 		//given
 		JButton row1Element1 = new JButton("Test");
@@ -31,7 +31,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 		JButton row4Element1 = new JButton("Tee last row test");
 		JButton row4Element2 = new JButton("Test test test");
 
-		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
+		PanelRow panelRow = new PanelRow(row1Element1, row1Element2,
 				row1Element3).fillElement(FillType.HORIZONTAL, row1Element1)
 							 .nextRow(row2Element1, row2Element2)
 							 .fillElement(FillType.BOTH, row2Element2)
@@ -40,7 +40,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 							 .fillElement(FillType.HORIZONTAL, row4Element2);
 
 		//when
-		swiftPanel.addElements(panelRows);
+		swiftPanel.addElements(panelRow);
 		JPanel panel = swiftPanel.getPanel();
 		showPanel(panel, testInfo);
 
@@ -81,7 +81,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 		JTextField row3Element2 = new JTextField("Test");
 		JTextArea row3Element3 = new JTextArea("some kind", 1, 10);
 		JButton row3Element4 = new JButton("Test qwerwerwerw");
-		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
+		PanelRow panelRow = new PanelRow(row1Element1, row1Element2,
 				row1Element3).nextRowKeepingColumnSize(row2Element1,
 				row2Element2, row2Element3)
 							 .nextRowKeepingColumnSize(row3Element1,
@@ -90,7 +90,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 									 row3Element3);
 
 		//when
-		swiftPanel.addElements(panelRows);
+		swiftPanel.addElements(panelRow);
 		JPanel panel = swiftPanel.getPanel();
 		showPanel(panel, testInfo);
 
@@ -132,16 +132,16 @@ class SwiftPanelTest extends AbstractPanelTest {
 		JButton row1Element3 = new JButton("Test button");
 		JButton row2Element1 = new JButton("a");
 		JButton row4Element1 = new JButton("test");
-		PanelRows panelRows = new PanelRows(row1Element1, row1Element2,
+		PanelRow panelRow = new PanelRow(row1Element1, row1Element2,
 				row1Element3).nextRow(row2Element1, row2Element2)
 							 .fillElement(FillType.VERTICAL, row2Element2)
-							 .fillThisRowVertically()
+							 .fillThisRow(FillType.VERTICAL)
 							 .nextRow(row3Element1)
-							 .fillThisRowHorizontallyAndVertically()
+							 .fillThisRow(FillType.BOTH)
 							 .nextRow(row4Element1);
 
 		//when
-		swiftPanel.addElements(panelRows);
+		swiftPanel.addElements(panelRow);
 		JPanel panel = swiftPanel.getPanel();
 		showPanel(panel, testInfo);
 
@@ -175,6 +175,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 				getXCoordinate(row2Element1) - getXCoordinate(panel));
 		assertTrue(getYCoordinate(panel) + panel.getHeight() - (
 				row4Element1.getHeight() + getYCoordinate(row4Element1)) < 5);
+		assertTrue(row4Element1.getWidth() < 1D / 3D * panel.getWidth());
 	}
 
 }
