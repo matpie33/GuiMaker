@@ -8,6 +8,7 @@ public class SwiftPanel {
 
 	private JPanel panel;
 	private RowsPreprocessor rowsPreprocessor;
+	private static final boolean DEBUG_ON = false;
 
 	public SwiftPanel() {
 		panel = createPanel();
@@ -22,11 +23,9 @@ public class SwiftPanel {
 
 		List<PanelBuilder> panelBuilders = rowsPreprocessor.preprocess(
 				panelRow);
-		JPanel currentPanel = null;
 		for (PanelBuilder panelBuilder : panelBuilders) {
-			if (currentPanel == null || panelBuilder.requiresNewRow()) {
-				currentPanel = new JPanel(new GridBagLayout());
-			}
+			JPanel currentPanel = new JPanel(new GridBagLayout());
+			debug(currentPanel);
 			addElementsToPanel(panelBuilder, currentPanel);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow(
 					panelBuilder);
@@ -35,13 +34,18 @@ public class SwiftPanel {
 
 	}
 
+	private void debug(JPanel currentPanel) {
+		if (DEBUG_ON){
+			currentPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+		}
+	}
+
 	private void addElementsToPanel(PanelBuilder panelBuilder,
 			JPanel currentPanel) {
 		List<UIElementBuilder> elementsBuilders = panelBuilder.getElementsBuilders();
-		for (int index = 0; index < elementsBuilders.size(); index++) {
-			UIElementBuilder uiElementBuilder = elementsBuilders.get(index);
+		for (UIElementBuilder uiElementBuilder : elementsBuilders) {
 			GridBagConstraints constraints = createConstraintsForElementsInsideRow(
-					uiElementBuilder, panelBuilder, index);
+					uiElementBuilder, panelBuilder);
 			currentPanel.add(uiElementBuilder.getUiElement(), constraints);
 		}
 	}
@@ -53,52 +57,40 @@ public class SwiftPanel {
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.gridy = panelBuilder.getRowIndex();
 		constraints.insets = new Insets(0, 0, 0, 0);
-		constraints.weightx = 1;
-		constraints.weighty = panelBuilder.shouldTakeAllSpaceToBottom() ? 1 : 0;
-		constraints.fill = panelBuilder.shouldTakeAllSpaceToBottom() ?
-				GridBagConstraints.BOTH :
-				GridBagConstraints.HORIZONTAL;
+		constraints.weightx = panelBuilder.getFillType()
+										  .getWeightX();
+		constraints.weighty = panelBuilder.getFillType()
+										  .getWeightY();
+		constraints.fill = panelBuilder.getFillType()
+									   .getGridBagConstraintsFilling();
 		return constraints;
 
 	}
 
 	private GridBagConstraints createConstraintsForElementsInsideRow(
-			UIElementBuilder uiElementBuilder, PanelBuilder panelBuilder,
-			int indexOfElement) {
+			UIElementBuilder uiElementBuilder, PanelBuilder panelBuilder) {
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.insets = new Insets(uiElementBuilder.getInsetTop(),
 				uiElementBuilder.getInsetLeft(),
 				uiElementBuilder.getInsetBottom(),
 				uiElementBuilder.getInsetRight());
-		createFillAndWeightsForElementInRow(uiElementBuilder, panelBuilder,
-				constraints, indexOfElement);
-		constraints.anchor = panelBuilder.isLast() ?
-				GridBagConstraints.NORTHWEST :
-				GridBagConstraints.WEST;
-		constraints.gridy = uiElementBuilder.getRowIndex();
-		constraints.gridx = uiElementBuilder.getColumnIndex();
-		return constraints;
-	}
 
-	private void createFillAndWeightsForElementInRow(
-			UIElementBuilder uiElementBuilder, PanelBuilder panelBuilder,
-			GridBagConstraints constraints, int indexOfElement) {
 		constraints.fill = uiElementBuilder.getFillType()
 										   .getGridBagConstraintsFilling();
 		constraints.weightx = uiElementBuilder.getFillType()
 											  .getWeightX();
 		constraints.weighty = uiElementBuilder.getFillType()
 											  .getWeightY();
-		if (indexOfElement
-				== panelBuilder.getHighestNumberOfColumnsInPanel() - 1
-				&& !panelBuilder.hasElementFilledHorizontallyToTheRightEdgeOfPanel()) {
-			constraints.weightx = 1;
-		}
-		if (panelBuilder.shouldTakeAllSpaceToBottom()) {
-			constraints.weighty = 1;
-		}
-	}
 
+		constraints.anchor = panelBuilder.isLast()
+				&& uiElementBuilder.getRowIndex()
+				== panelBuilder.getNumberOfRowsInPanel() - 1 ?
+				GridBagConstraints.NORTHWEST :
+				GridBagConstraints.WEST;
+		constraints.gridy = uiElementBuilder.getRowIndex();
+		constraints.gridx = uiElementBuilder.getColumnIndex();
+		return constraints;
+	}
 
 	public JPanel getPanel() {
 		return panel;

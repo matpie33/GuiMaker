@@ -9,7 +9,9 @@ public class PanelRow {
 
 	private List<JComponent> uiElements;
 	private FillType elementsFillType;
+	private FillType fillTypeWithinColumnOrRowSize;
 	private List<JComponent> elementsToFill;
+	private List<JComponent> elementsToFillWithinColumnOrRowSize;
 	private boolean keepColumnSizeWithRowBelow;
 	private PanelRow previousRow;
 	private PanelRow nextRow;
@@ -21,6 +23,22 @@ public class PanelRow {
 		elementsFillType = FillType.NONE;
 		rowFillType = FillType.NONE;
 		elementsToFill = new ArrayList<>();
+		elementsToFillWithinColumnOrRowSize = new ArrayList<>();
+	}
+
+	public FillType getFillTypeWithinColumnOrRowSize() {
+		return fillTypeWithinColumnOrRowSize;
+	}
+
+	public PanelRow fillElementWithinColumnOrRowSize(FillType fillType,
+			JComponent... elements) {
+		elementsToFillWithinColumnOrRowSize = Arrays.asList(elements);
+		fillTypeWithinColumnOrRowSize = fillType;
+		return this;
+	}
+
+	public List<JComponent> getElementsToFillWithinColumnOrRowSize() {
+		return elementsToFillWithinColumnOrRowSize;
 	}
 
 	public PanelRow fillElement(FillType fillType,
@@ -63,14 +81,9 @@ public class PanelRow {
 
 	public PanelRow nextRowKeepingColumnSize(JComponent... elements) {
 		keepColumnSizeWithRowBelow = true;
-		nextRow = new PanelRow(elements).keepColumnSizeWithRowBelow();
+		nextRow = new PanelRow(elements);
 		nextRow.setPreviousRow(this);
 		return nextRow;
-	}
-
-	private PanelRow keepColumnSizeWithRowBelow() {
-		this.keepColumnSizeWithRowBelow = true;
-		return this;
 	}
 
 	public boolean shouldKeepColumnSizeWithRowBelow() {
@@ -89,7 +102,7 @@ public class PanelRow {
 		return rowFillType;
 	}
 
-	public boolean hasPreviousRow() {
-		return getPreviousRow() != null;
+	public boolean isFirstRow() {
+		return getPreviousRow() == null;
 	}
 }

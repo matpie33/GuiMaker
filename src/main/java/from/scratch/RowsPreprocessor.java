@@ -19,13 +19,10 @@ public class RowsPreprocessor {
 		PanelRow currentRow = findFirstPanel(panelRow);
 		while (currentRow != null) {
 			checkCorrectElementsToFill(currentRow);
-			existsRowFilledVertically =
-					existsRowFilledVertically || containsVerticalFill(
-							currentRow.getRowFillType());
+
 			if (panelBuilder == null || rowRequiresNewPanel(currentRow)) {
 				indexOfRowInsideSamePanel = 0;
-				panelBuilder = createRowBuilder(currentRow, rowIndex,
-						existsRowFilledVertically);
+				panelBuilder = new PanelBuilder();
 				panelBuilders.add(panelBuilder);
 			}
 			else {
@@ -33,7 +30,11 @@ public class RowsPreprocessor {
 			}
 			createUIElements(currentRow, panelBuilder,
 					indexOfRowInsideSamePanel, rowIndex);
-			adjustAdditionalProperties(panelBuilder);
+			setPanelProperties(currentRow, rowIndex, panelBuilder,
+					indexOfRowInsideSamePanel);
+			existsRowFilledVertically =
+					existsRowFilledVertically || containsVerticalFill(
+							panelBuilder.getFillType());
 			currentRow = currentRow.getNextRow();
 			if (panelBuilder.requiresNewRow()) {
 				rowIndex++;
@@ -42,28 +43,10 @@ public class RowsPreprocessor {
 		}
 		rowIndex++;
 		assert panelBuilder != null;
-		if (!existsRowFilledVertically) {
-			panelBuilders.add(
-					createEmptyPanelToTheBottomOfTheParentPanel(rowIndex));
-		}
+		panelBuilders.add(createEmptyPanelToTheBottomOfTheParentPanel(
+				existsRowFilledVertically, rowIndex));
 		return panelBuilders;
 
-	}
-
-	private void adjustAdditionalProperties(PanelBuilder panelBuilder) {
-		getFillTypeEqualToRowIfOnly1Element(panelBuilder);
-		checkIfLastElementInRowShouldGainAllPossibleHorizontalSpace(
-				panelBuilder, panelBuilder.getElementsBuilders());
-	}
-
-	private void getFillTypeEqualToRowIfOnly1Element(
-			PanelBuilder panelBuilder) {
-		if (panelBuilder.getElementsBuilders()
-						.size() == 1) {
-			panelBuilder.getElementsBuilders()
-						.get(0)
-						.setFillType(panelBuilder.getRowFillType());
-		}
 	}
 
 	private void checkCorrectElementsToFill(PanelRow currentRow) {
@@ -73,23 +56,14 @@ public class RowsPreprocessor {
 					"Some of the elements to fill are not on the"
 							+ " list of elements to add to row.");
 		}
-	}
-
-	private void checkIfLastElementInRowShouldGainAllPossibleHorizontalSpace(
-			PanelBuilder panelBuilder,
-			List<UIElementBuilder> elementsBuilders) {
-		if (panelBuilder.requiresNewRow()) {
-			panelBuilder.setHasElementFilledHorizontallyToTheRightEdgeOfPanel(
-					elementsBuilders.stream()
-									.anyMatch(uiElement -> containsHorizontalFill(
-											uiElement.getFillType())));
-		}
-		else {
-			UIElementBuilder lastElement = elementsBuilders.size() > 1 ?
-					elementsBuilders.get(elementsBuilders.size() - 1) :
-					elementsBuilders.get(0);
-			panelBuilder.setHasElementFilledHorizontallyToTheRightEdgeOfPanel(
-					containsHorizontalFill(lastElement.getFillType()));
+		if (!currentRow.getElementsToFillWithinColumnOrRowSize()
+					   .isEmpty() && (currentRow.isFirstRow()
+				|| !currentRow.getPreviousRow()
+							  .shouldKeepColumnSizeWithRowBelow())) {
+			throw new IllegalArgumentException("Wrong method used: fill "
+					+ "elements based on column or row size from previous "
+					+ "row, but previous row doesnt exist or does not keep "
+					+ "column size.");
 		}
 	}
 
@@ -102,9 +76,11 @@ public class RowsPreprocessor {
 	}
 
 	private PanelBuilder createEmptyPanelToTheBottomOfTheParentPanel(
-			int rowIndex) {
+			boolean existsRowFilledVertically, int rowIndex) {
 		PanelBuilder panelBuilder = new PanelBuilder();
-		panelBuilder.setShouldTakeAllSpaceToBottom(true);
+		panelBuilder.setFillType(!existsRowFilledVertically ?
+				FillType.BOTH :
+				FillType.HORIZONTAL);
 		panelBuilder.setRowIndex(rowIndex);
 		return panelBuilder;
 	}
@@ -146,31 +122,78 @@ public class RowsPreprocessor {
 		uiElementBuilder.setInsetRight(SPACE_BETWEEN_ELEMENTS_HORIZONTALLY);
 		uiElementBuilder.setInsetLeft(
 				columnIndex == 0 ? SPACE_BETWEEN_ELEMENTS_HORIZONTALLY : 0);
-		uiElementBuilder.setFillType(currentRow.getElementsToFill()
-											   .contains(uiElement) ?
-				currentRow.getElementsFillType() :
-				FillType.NONE);
+		setFillTypeForElement(uiElement, currentRow, uiElementBuilder);
 		return uiElementBuilder;
 	}
 
-	private PanelBuilder createRowBuilder(PanelRow currentRow, int rowIndex,
-			boolean existsRowFilledVertically) {
-		PanelBuilder panelBuilder = new PanelBuilder();
-		panelBuilder.setRowFillType(currentRow.getRowFillType());
+	private void setFillTypeForElement(JComponent uiElement,
+			PanelRow currentRow, UIElementBuilder uiElementBuilder) {
+		FillType fillType = FillType.NONE;
+		boolean shouldFillElementAndRowOrColumn = currentRow.getElementsToFill()
+															.contains(
+																	uiElement);
+
+		boolean shouldFillElementButNotRowNorColumn = currentRow.getElementsToFillWithinColumnOrRowSize()
+																.contains(
+																		uiElement);
+		if (shouldFillElementAndRowOrColumn) {
+			fillType = currentRow.getElementsFillType();
+		}
+		if (shouldFillElementButNotRowNorColumn) {
+			fillType = currentRow.getFillTypeWithinColumnOrRowSize();
+		}
+		uiElementBuilder.setFillType(fillType, shouldFillElementAndRowOrColumn);
+
+	}
+
+	private void setPanelProperties(PanelRow currentRow, int rowIndex,
+			PanelBuilder panelBuilder, int indexOfRowInsideSamePanel) {
 		panelBuilder.setRequiresNewRow(rowRequiresNewPanel(currentRow));
-		panelBuilder.setHighestNumberOfColumnsInPanel(currentRow.getUIElements()
-																.size());
 		panelBuilder.setLast(currentRow.isLastRow());
 		panelBuilder.setRowIndex(rowIndex);
-		panelBuilder.setShouldTakeAllSpaceToBottom(
-				containsVerticalFill(currentRow.getRowFillType()) || (
-						currentRow.isLastRow() && !existsRowFilledVertically));
-		return panelBuilder;
+		panelBuilder.setFillType(currentRow.getRowFillType());
+		panelBuilder.setNumberOfRowsInPanel(indexOfRowInsideSamePanel + 1);
+		panelBuilder.setFillType(getTotalFillTypeBasedOnElements(
+				panelBuilder.getElementsBuilders()));
+	}
+
+	private FillType getTotalFillTypeBasedOnElements(
+			List<UIElementBuilder> elementsBuilders) {
+		boolean hasHorizontalFill = false;
+		boolean hasVerticalFill = false;
+		for (UIElementBuilder elementsBuilder : elementsBuilders) {
+			if (!elementsBuilder.shouldUseAllAvailableSpace()) {
+				continue;
+			}
+			if (elementsBuilder.getFillType()
+							   .equals(FillType.BOTH)) {
+				return elementsBuilder.getFillType();
+			}
+			if (containsHorizontalFill(elementsBuilder.getFillType())) {
+				hasHorizontalFill = true;
+			}
+			if (containsVerticalFill(elementsBuilder.getFillType())) {
+				hasVerticalFill = true;
+			}
+		}
+		if (hasHorizontalFill && !hasVerticalFill) {
+			return FillType.HORIZONTAL;
+		}
+		else if (hasVerticalFill && !hasHorizontalFill) {
+			return FillType.VERTICAL;
+		}
+		else //noinspection ConstantConditions
+			if (hasVerticalFill && hasHorizontalFill) {
+				return FillType.BOTH;
+			}
+			else {
+				return FillType.NONE;
+			}
 	}
 
 	private boolean rowRequiresNewPanel(PanelRow currentRow) {
-		return !currentRow.hasPreviousRow() || !currentRow.getPreviousRow()
-														  .shouldKeepColumnSizeWithRowBelow();
+		return currentRow.isFirstRow() || !currentRow.getPreviousRow()
+													 .shouldKeepColumnSizeWithRowBelow();
 	}
 
 }

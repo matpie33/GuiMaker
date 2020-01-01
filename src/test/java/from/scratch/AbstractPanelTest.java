@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class AbstractPanelTest {
 
 	protected void assertDistancesBetweenRows(JPanel panel,
+			boolean assertIfLastElementIsOnBottomOfPanel,
 			List<JComponent>... rows) {
 		for (List<JComponent> row : rows) {
 			for (int i = 0; i < row.size() - 1; i++) {
@@ -39,11 +40,23 @@ public abstract class AbstractPanelTest {
 								  .getHeight()));
 
 		}
+		if (assertIfLastElementIsOnBottomOfPanel) {
+			List<JComponent> lastRowElements = rows[rows.length - 1];
+			JComponent elementInLastRow = lastRowElements.get(
+					lastRowElements.size() - 1);
+			int distanceFromLastElementToBottomOfPanel =
+					getYCoordinate(panel) + panel.getHeight() - (
+							elementInLastRow.getHeight() + getYCoordinate(
+									elementInLastRow));
+			assertTrue(distanceFromLastElementToBottomOfPanel < 10);
+		}
+
 		assertTrue(verticalDistancesBetweenRows.size() == 1);
 
 	}
 
-	protected void assertElementsFilledHorizontally(List<JComponent> allElementsInRow,
+	protected void assertElementsFilledHorizontally(
+			List<JComponent> allElementsInRow,
 			List<JComponent> elementsFilled) {
 		Map<JComponent, Double> weightsOfElements = new HashMap<>();
 		double sumOfWidths = 0;
@@ -132,9 +145,9 @@ public abstract class AbstractPanelTest {
 				checkRightPanelEdgeToo, elementsInRow);
 	}
 
-	protected void assertDistanceBetweenElementsHorizontally(JComponent firstElement,
-			JPanel rootPanel, boolean checkRightPanelEdgeToo,
-			Component... elementsInRow) {
+	protected void assertDistanceBetweenElementsHorizontally(
+			JComponent firstElement, JPanel rootPanel,
+			boolean checkRightPanelEdgeToo, Component... elementsInRow) {
 		List<Integer> spacesBetween = new ArrayList<>();
 		int distanceFromFirstElementToLeftEdgeOfPanel =
 				getXCoordinate(elementsInRow[0]) - getXCoordinate(firstElement);

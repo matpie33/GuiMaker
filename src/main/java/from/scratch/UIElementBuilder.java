@@ -12,6 +12,7 @@ public class UIElementBuilder {
 	private int columnIndex;
 	private int rowIndex;
 	private JComponent uiElement;
+	private boolean useAllAvailableSpace;
 
 	public JComponent getUiElement() {
 		return uiElement;
@@ -25,8 +26,13 @@ public class UIElementBuilder {
 		return fillType;
 	}
 
-	public void setFillType(FillType fillType) {
+	public void setFillType(FillType fillType, boolean useAllAvailableSpace) {
 		this.fillType = fillType;
+		this.useAllAvailableSpace = useAllAvailableSpace;
+	}
+
+	public boolean shouldUseAllAvailableSpace() {
+		return useAllAvailableSpace;
 	}
 
 	public int getInsetLeft() {

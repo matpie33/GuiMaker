@@ -1,41 +1,37 @@
 package from.scratch;
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PanelBuilder {
 
-	private FillType rowFillType;
 	private boolean requiresNewRow = true;
-	private int highestNumberOfColumnsInPanel;
 	private boolean isLast;
 	private int gridY;
 	private List<UIElementBuilder> elementsBuilders = new ArrayList<>();
-	private boolean shouldTakeAllSpaceToBottom;
-	private boolean hasElementFilledHorizontallyToTheRightEdgeOfPanel;
+	private FillType fillType;
+	private int numberOfRowsInPanel;
 
-	public boolean shouldTakeAllSpaceToBottom() {
-		return shouldTakeAllSpaceToBottom;
+	public int getNumberOfRowsInPanel() {
+		return numberOfRowsInPanel;
 	}
 
-	public void setShouldTakeAllSpaceToBottom(
-			boolean shouldTakeAllSpaceToBottom) {
-		this.shouldTakeAllSpaceToBottom = shouldTakeAllSpaceToBottom;
+	public void setNumberOfRowsInPanel(int numberOfRowsInPanel) {
+		this.numberOfRowsInPanel = numberOfRowsInPanel;
+	}
+
+	public FillType getFillType() {
+		return fillType;
+	}
+
+	public void setFillType(FillType fillType) {
+		if (!FillType.BOTH.equals(this.fillType)) {
+			this.fillType = fillType;
+		}
 	}
 
 	public void addElementBuilder(UIElementBuilder uiElementsBuilder) {
 		elementsBuilders.add(uiElementsBuilder);
-	}
-
-	public FillType getRowFillType() {
-		return rowFillType;
-	}
-
-	public void setRowFillType(FillType rowFillType) {
-		this.rowFillType = rowFillType;
 	}
 
 	public boolean requiresNewRow() {
@@ -44,17 +40,6 @@ public class PanelBuilder {
 
 	public void setRequiresNewRow(boolean requiresNewRow) {
 		this.requiresNewRow = requiresNewRow;
-	}
-
-	public int getHighestNumberOfColumnsInPanel() {
-		return highestNumberOfColumnsInPanel;
-	}
-
-	public void setHighestNumberOfColumnsInPanel(
-			int numberOfColumnsInCurrentRow) {
-		if (numberOfColumnsInCurrentRow > this.highestNumberOfColumnsInPanel){
-			this.highestNumberOfColumnsInPanel = numberOfColumnsInCurrentRow;
-		}
 	}
 
 	public boolean isLast() {
@@ -77,12 +62,4 @@ public class PanelBuilder {
 		return elementsBuilders;
 	}
 
-	public boolean hasElementFilledHorizontallyToTheRightEdgeOfPanel() {
-		return hasElementFilledHorizontallyToTheRightEdgeOfPanel;
-	}
-
-	public void setHasElementFilledHorizontallyToTheRightEdgeOfPanel(
-			boolean hasElementFilledHorizontallyToTheRightEdgeOfPanel) {
-		this.hasElementFilledHorizontallyToTheRightEdgeOfPanel = hasElementFilledHorizontallyToTheRightEdgeOfPanel;
-	}
 }
