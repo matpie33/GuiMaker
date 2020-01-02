@@ -1,5 +1,6 @@
 package from.scratch;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
@@ -17,6 +18,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 
 	private SwiftPanel swiftPanel = new SwiftPanel();
 
+	@DisplayName("Normal rows v1")
 	@Test
 	void shouldFillElementsHorizontallyAndVerticallyWithNormalRows(
 			TestInfo testInfo) {
@@ -67,6 +69,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 
 	}
 
+	@DisplayName("Column layout")
 	@Test
 	void shouldFillElementWithRowsPutAsColumns(TestInfo testInfo) {
 		//given
@@ -121,6 +124,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 		//noinspection unchecked
 	}
 
+	@DisplayName("Normal rows v2")
 	@Test
 	void shouldFillElementBothVerticalAndHorizontal(TestInfo testInfo) {
 		//given
@@ -176,6 +180,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 		assertTrue(row4Element1.getWidth() < 1D / 3D * panel.getWidth());
 	}
 
+	@DisplayName("Column layout different sizes")
 	@Test
 	void shouldNormalRowsMixedWithRowsKeepingColumnSize(TestInfo testInfo) {
 		//given
@@ -223,6 +228,7 @@ class SwiftPanelTest extends AbstractPanelTest {
 
 	}
 
+	@DisplayName("Column layout, different size, fill")
 	@Test
 	void shouldNormalRowsMixedWithRowsKeepingColumnSizeWithVerticalFill(
 			TestInfo testInfo) {
