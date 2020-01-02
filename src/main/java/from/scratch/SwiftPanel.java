@@ -21,14 +21,14 @@ public class SwiftPanel {
 
 	public void addElements(PanelRow panelRow) {
 
-		List<PanelBuilder> panelBuilders = rowsPreprocessor.preprocess(
+		List<ProcessedPanelData> processedPanelsData = rowsPreprocessor.preprocess(
 				panelRow);
-		for (PanelBuilder panelBuilder : panelBuilders) {
+		for (ProcessedPanelData processedPanelData : processedPanelsData) {
 			JPanel currentPanel = new JPanel(new GridBagLayout());
 			debug(currentPanel);
-			addElementsToPanel(panelBuilder, currentPanel);
+			addElementsToPanel(processedPanelData, currentPanel);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow(
-					panelBuilder);
+					processedPanelData);
 			this.panel.add(currentPanel, constraintsForRow);
 		}
 
@@ -40,55 +40,55 @@ public class SwiftPanel {
 		}
 	}
 
-	private void addElementsToPanel(PanelBuilder panelBuilder,
+	private void addElementsToPanel(ProcessedPanelData processedPanelData,
 			JPanel currentPanel) {
-		List<UIElementBuilder> elementsBuilders = panelBuilder.getElementsBuilders();
-		for (UIElementBuilder uiElementBuilder : elementsBuilders) {
+		List<ProcessedUIElementData> processedUIElementsData = processedPanelData.getProcessedUIElementsData();
+		for (ProcessedUIElementData processedUiElementData : processedUIElementsData) {
 			GridBagConstraints constraints = createConstraintsForElementsInsideRow(
-					uiElementBuilder, panelBuilder);
-			currentPanel.add(uiElementBuilder.getUiElement(), constraints);
+					processedUiElementData, processedPanelData);
+			currentPanel.add(processedUiElementData.getUiElement(), constraints);
 		}
 	}
 
 	private GridBagConstraints createConstraintsForNewRow(
-			PanelBuilder panelBuilder) {
+			ProcessedPanelData processedPanelData) {
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.anchor = GridBagConstraints.NORTHWEST;
-		constraints.gridy = panelBuilder.getRowIndex();
+		constraints.gridy = processedPanelData.getRowIndex();
 		constraints.insets = new Insets(0, 0, 0, 0);
-		constraints.weightx = panelBuilder.getFillType()
-										  .getWeightX();
-		constraints.weighty = panelBuilder.getFillType()
-										  .getWeightY();
-		constraints.fill = panelBuilder.getFillType()
-									   .getGridBagConstraintsFilling();
+		constraints.weightx = processedPanelData.getFillType()
+												.getWeightX();
+		constraints.weighty = processedPanelData.getFillType()
+												.getWeightY();
+		constraints.fill = processedPanelData.getFillType()
+											 .getGridBagConstraintsFilling();
 		return constraints;
 
 	}
 
 	private GridBagConstraints createConstraintsForElementsInsideRow(
-			UIElementBuilder uiElementBuilder, PanelBuilder panelBuilder) {
+			ProcessedUIElementData processedUiElementData, ProcessedPanelData processedPanelData) {
 		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.insets = new Insets(uiElementBuilder.getInsetTop(),
-				uiElementBuilder.getInsetLeft(),
-				uiElementBuilder.getInsetBottom(),
-				uiElementBuilder.getInsetRight());
+		constraints.insets = new Insets(processedUiElementData.getInsetTop(),
+				processedUiElementData.getInsetLeft(),
+				processedUiElementData.getInsetBottom(),
+				processedUiElementData.getInsetRight());
 
-		constraints.fill = uiElementBuilder.getFillType()
-										   .getGridBagConstraintsFilling();
-		constraints.weightx = uiElementBuilder.getFillType()
-											  .getWeightX();
-		constraints.weighty = uiElementBuilder.getFillType()
-											  .getWeightY();
+		constraints.fill = processedUiElementData.getFillType()
+												 .getGridBagConstraintsFilling();
+		constraints.weightx = processedUiElementData.getFillType()
+													.getWeightX();
+		constraints.weighty = processedUiElementData.getFillType()
+													.getWeightY();
 
-		constraints.anchor = panelBuilder.isLast()
-				&& uiElementBuilder.getRowIndex()
-				== panelBuilder.getNumberOfRowsInPanel() - 1 ?
+		constraints.anchor = processedPanelData.isLast()
+				&& processedUiElementData.getRowIndex()
+				== processedPanelData.getNumberOfRowsInPanel() - 1 ?
 				GridBagConstraints.NORTHWEST :
 				GridBagConstraints.WEST;
-		constraints.gridy = uiElementBuilder.getRowIndex();
-		constraints.gridx = uiElementBuilder.getColumnIndex();
+		constraints.gridy = processedUiElementData.getRowIndex();
+		constraints.gridx = processedUiElementData.getColumnIndex();
 		return constraints;
 	}
 

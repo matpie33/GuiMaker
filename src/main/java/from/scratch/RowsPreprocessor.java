@@ -9,42 +9,42 @@ public class RowsPreprocessor {
 	private static final int SPACE_BETWEEN_ELEMENTS_HORIZONTALLY = 4;
 	private static final int SPACE_BETWEEN_ELEMENTS_VERTICALLY = 3;
 
-	public List<PanelBuilder> preprocess(PanelRow panelRow) {
+	public List<ProcessedPanelData> preprocess(PanelRow panelRow) {
 
-		List<PanelBuilder> panelBuilders = new ArrayList<>();
+		List<ProcessedPanelData> processedPanelsData = new ArrayList<>();
 		int rowIndex = 0;
 		int indexOfRowInsideSamePanel = 0;
 		boolean existsRowFilledVertically = false;
-		PanelBuilder panelBuilder = null;
+		ProcessedPanelData currentlyProcessedPanel = null;
 		PanelRow currentRow = findFirstPanel(panelRow);
 		while (currentRow != null) {
 			checkCorrectElementsToFill(currentRow);
 
-			if (panelBuilder == null || rowRequiresNewPanel(currentRow)) {
+			if (currentlyProcessedPanel == null || rowRequiresNewPanel(currentRow)) {
 				indexOfRowInsideSamePanel = 0;
-				panelBuilder = new PanelBuilder();
-				panelBuilders.add(panelBuilder);
+				currentlyProcessedPanel = new ProcessedPanelData();
+				processedPanelsData.add(currentlyProcessedPanel);
 			}
 			else {
 				indexOfRowInsideSamePanel++;
 			}
-			createUIElements(currentRow, panelBuilder,
+			createUIElementsData(currentRow, currentlyProcessedPanel,
 					indexOfRowInsideSamePanel, rowIndex);
-			setPanelProperties(currentRow, rowIndex, panelBuilder,
+			setPanelData(currentRow, rowIndex, currentlyProcessedPanel,
 					indexOfRowInsideSamePanel);
 			existsRowFilledVertically =
 					existsRowFilledVertically || containsVerticalFill(
-							panelBuilder.getFillType());
+							currentlyProcessedPanel.getFillType());
 			currentRow = currentRow.getNextRow();
 			if (currentRow == null || rowRequiresNewPanel(currentRow)) {
 				rowIndex++;
 			}
 
 		}
-		assert panelBuilder != null;
-		panelBuilders.add(createEmptyPanelToTheBottomOfTheParentPanel(
+		assert currentlyProcessedPanel != null;
+		processedPanelsData.add(createEmptyPanelToTheBottomOfTheParentPanel(
 				existsRowFilledVertically, rowIndex));
-		return panelBuilders;
+		return processedPanelsData;
 
 	}
 
@@ -74,14 +74,14 @@ public class RowsPreprocessor {
 		return current;
 	}
 
-	private PanelBuilder createEmptyPanelToTheBottomOfTheParentPanel(
+	private ProcessedPanelData createEmptyPanelToTheBottomOfTheParentPanel(
 			boolean existsRowFilledVertically, int rowIndex) {
-		PanelBuilder panelBuilder = new PanelBuilder();
-		panelBuilder.setFillType(!existsRowFilledVertically ?
+		ProcessedPanelData processedPanelData = new ProcessedPanelData();
+		processedPanelData.setFillType(!existsRowFilledVertically ?
 				FillType.BOTH :
 				FillType.HORIZONTAL);
-		panelBuilder.setRowIndex(rowIndex);
-		return panelBuilder;
+		processedPanelData.setRowIndex(rowIndex);
+		return processedPanelData;
 	}
 
 	private boolean containsVerticalFill(FillType fillType) {
@@ -94,41 +94,41 @@ public class RowsPreprocessor {
 				FillType.BOTH);
 	}
 
-	private void createUIElements(PanelRow currentRow,
-			PanelBuilder panelBuilder, int indexOfRowInsideSamePanel,
+	private void createUIElementsData(PanelRow currentRow,
+			ProcessedPanelData processedPanelData, int indexOfRowInsideSamePanel,
 			int rowIndex) {
 		List<JComponent> uiElements = currentRow.getUIElements();
 		for (int indexOfElementInRow = 0;
 			 indexOfElementInRow < uiElements.size(); indexOfElementInRow++) {
 			JComponent uiElement = uiElements.get(indexOfElementInRow);
-			panelBuilder.addElementBuilder(
+			processedPanelData.addProcessedUIElementData(
 					createUIElement(uiElement, currentRow, indexOfElementInRow,
 							indexOfRowInsideSamePanel, rowIndex));
 		}
 	}
 
-	private UIElementBuilder createUIElement(JComponent uiElement,
+	private ProcessedUIElementData createUIElement(JComponent uiElement,
 			PanelRow currentRow, int columnIndex, int indexOfRowInsideSamePanel,
 			int rowIndex) {
-		UIElementBuilder uiElementBuilder = new UIElementBuilder();
-		uiElementBuilder.setUiElement(uiElement);
-		uiElementBuilder.setColumnIndex(columnIndex);
-		uiElementBuilder.setRowIndex(indexOfRowInsideSamePanel);
-		uiElementBuilder.setInsetBottom(SPACE_BETWEEN_ELEMENTS_VERTICALLY);
+		ProcessedUIElementData processedUiElementData = new ProcessedUIElementData();
+		processedUiElementData.setUiElement(uiElement);
+		processedUiElementData.setColumnIndex(columnIndex);
+		processedUiElementData.setRowIndex(indexOfRowInsideSamePanel);
+		processedUiElementData.setInsetBottom(SPACE_BETWEEN_ELEMENTS_VERTICALLY);
 
-		uiElementBuilder.setInsetTop(
+		processedUiElementData.setInsetTop(
 				rowIndex == 0 && indexOfRowInsideSamePanel == 0 ?
 						SPACE_BETWEEN_ELEMENTS_VERTICALLY :
 						0);
-		uiElementBuilder.setInsetRight(SPACE_BETWEEN_ELEMENTS_HORIZONTALLY);
-		uiElementBuilder.setInsetLeft(
+		processedUiElementData.setInsetRight(SPACE_BETWEEN_ELEMENTS_HORIZONTALLY);
+		processedUiElementData.setInsetLeft(
 				columnIndex == 0 ? SPACE_BETWEEN_ELEMENTS_HORIZONTALLY : 0);
-		setFillTypeForElement(uiElement, currentRow, uiElementBuilder);
-		return uiElementBuilder;
+		setFillTypeForElement(uiElement, currentRow, processedUiElementData);
+		return processedUiElementData;
 	}
 
 	private void setFillTypeForElement(JComponent uiElement,
-			PanelRow currentRow, UIElementBuilder uiElementBuilder) {
+			PanelRow currentRow, ProcessedUIElementData processedUiElementData) {
 		FillType fillType = FillType.NONE;
 		boolean shouldFillElementAndRowOrColumn = currentRow.getElementsToFill()
 															.contains(
@@ -143,36 +143,36 @@ public class RowsPreprocessor {
 		if (shouldFillElementButNotRowNorColumn) {
 			fillType = currentRow.getFillTypeWithinColumnOrRowSize();
 		}
-		uiElementBuilder.setFillType(fillType, shouldFillElementAndRowOrColumn);
+		processedUiElementData.setFillType(fillType, shouldFillElementAndRowOrColumn);
 
 	}
 
-	private void setPanelProperties(PanelRow currentRow, int rowIndex,
-			PanelBuilder panelBuilder, int indexOfRowInsideSamePanel) {
-		panelBuilder.setLast(currentRow.isLastRow());
-		panelBuilder.setRowIndex(rowIndex);
-		panelBuilder.setFillType(currentRow.getRowFillType());
-		panelBuilder.setNumberOfRowsInPanel(indexOfRowInsideSamePanel + 1);
-		panelBuilder.setFillType(getTotalFillTypeBasedOnElements(
-				panelBuilder.getElementsBuilders()));
+	private void setPanelData(PanelRow currentRow, int rowIndex,
+			ProcessedPanelData processedPanelData, int indexOfRowInsideSamePanel) {
+		processedPanelData.setLast(currentRow.isLastRow());
+		processedPanelData.setRowIndex(rowIndex);
+		processedPanelData.setFillType(currentRow.getRowFillType());
+		processedPanelData.setNumberOfRowsInPanel(indexOfRowInsideSamePanel + 1);
+		processedPanelData.setFillType(getTotalFillTypeBasedOnElements(
+				processedPanelData.getProcessedUIElementsData()));
 	}
 
 	private FillType getTotalFillTypeBasedOnElements(
-			List<UIElementBuilder> elementsBuilders) {
+			List<ProcessedUIElementData> processedUIElementsData) {
 		boolean hasHorizontalFill = false;
 		boolean hasVerticalFill = false;
-		for (UIElementBuilder elementsBuilder : elementsBuilders) {
-			if (!elementsBuilder.shouldUseAllAvailableSpace()) {
+		for (ProcessedUIElementData processedUIElementData : processedUIElementsData) {
+			if (!processedUIElementData.shouldUseAllAvailableSpace()) {
 				continue;
 			}
-			if (elementsBuilder.getFillType()
+			if (processedUIElementData.getFillType()
 							   .equals(FillType.BOTH)) {
-				return elementsBuilder.getFillType();
+				return processedUIElementData.getFillType();
 			}
-			if (containsHorizontalFill(elementsBuilder.getFillType())) {
+			if (containsHorizontalFill(processedUIElementData.getFillType())) {
 				hasHorizontalFill = true;
 			}
-			if (containsVerticalFill(elementsBuilder.getFillType())) {
+			if (containsVerticalFill(processedUIElementData.getFillType())) {
 				hasVerticalFill = true;
 			}
 		}

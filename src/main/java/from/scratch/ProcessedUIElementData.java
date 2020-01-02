@@ -2,7 +2,7 @@ package from.scratch;
 
 import javax.swing.*;
 
-public class UIElementBuilder {
+public class ProcessedUIElementData {
 
 	private FillType fillType;
 	private int insetLeft;

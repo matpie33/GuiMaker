@@ -3,11 +3,11 @@ package from.scratch;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PanelBuilder {
+public class ProcessedPanelData {
 
 	private boolean isLast;
 	private int gridY;
-	private List<UIElementBuilder> elementsBuilders = new ArrayList<>();
+	private List<ProcessedUIElementData> processedUIElementsData = new ArrayList<>();
 	private FillType fillType;
 	private int numberOfRowsInPanel;
 
@@ -29,8 +29,8 @@ public class PanelBuilder {
 		}
 	}
 
-	public void addElementBuilder(UIElementBuilder uiElementsBuilder) {
-		elementsBuilders.add(uiElementsBuilder);
+	public void addProcessedUIElementData(ProcessedUIElementData processedUIElementData) {
+		this.processedUIElementsData.add(processedUIElementData);
 	}
 
 	public boolean isLast() {
@@ -49,8 +49,8 @@ public class PanelBuilder {
 		this.gridY = rowNumber;
 	}
 
-	public List<UIElementBuilder> getElementsBuilders() {
-		return elementsBuilders;
+	public List<ProcessedUIElementData> getProcessedUIElementsData() {
+		return processedUIElementsData;
 	}
 
 }
