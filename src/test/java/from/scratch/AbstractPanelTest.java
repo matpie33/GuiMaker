@@ -178,7 +178,17 @@ public abstract class AbstractPanelTest {
 		frame.setContentPane(panel);
 		frame.setSize(new Dimension(800, 600));
 		frame.setVisible(true);
+		finishPainting();
 		saveToFile(frame, testInfo);
+	}
+
+	private void finishPainting() {
+		try {
+			Thread.sleep(200L);
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void saveToFile(JFrame frame, TestInfo testInfo) {
