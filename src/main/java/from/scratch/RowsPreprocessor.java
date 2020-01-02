@@ -36,12 +36,11 @@ public class RowsPreprocessor {
 					existsRowFilledVertically || containsVerticalFill(
 							panelBuilder.getFillType());
 			currentRow = currentRow.getNextRow();
-			if (panelBuilder.requiresNewRow()) {
+			if (currentRow == null || rowRequiresNewPanel(currentRow)) {
 				rowIndex++;
 			}
 
 		}
-		rowIndex++;
 		assert panelBuilder != null;
 		panelBuilders.add(createEmptyPanelToTheBottomOfTheParentPanel(
 				existsRowFilledVertically, rowIndex));
@@ -118,7 +117,9 @@ public class RowsPreprocessor {
 		uiElementBuilder.setInsetBottom(SPACE_BETWEEN_ELEMENTS_VERTICALLY);
 
 		uiElementBuilder.setInsetTop(
-				rowIndex == 0 ? SPACE_BETWEEN_ELEMENTS_VERTICALLY : 0);
+				rowIndex == 0 && indexOfRowInsideSamePanel == 0 ?
+						SPACE_BETWEEN_ELEMENTS_VERTICALLY :
+						0);
 		uiElementBuilder.setInsetRight(SPACE_BETWEEN_ELEMENTS_HORIZONTALLY);
 		uiElementBuilder.setInsetLeft(
 				columnIndex == 0 ? SPACE_BETWEEN_ELEMENTS_HORIZONTALLY : 0);
@@ -148,7 +149,6 @@ public class RowsPreprocessor {
 
 	private void setPanelProperties(PanelRow currentRow, int rowIndex,
 			PanelBuilder panelBuilder, int indexOfRowInsideSamePanel) {
-		panelBuilder.setRequiresNewRow(rowRequiresNewPanel(currentRow));
 		panelBuilder.setLast(currentRow.isLastRow());
 		panelBuilder.setRowIndex(rowIndex);
 		panelBuilder.setFillType(currentRow.getRowFillType());

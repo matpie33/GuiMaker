@@ -5,7 +5,6 @@ import java.util.List;
 
 public class PanelBuilder {
 
-	private boolean requiresNewRow = true;
 	private boolean isLast;
 	private int gridY;
 	private List<UIElementBuilder> elementsBuilders = new ArrayList<>();
@@ -32,14 +31,6 @@ public class PanelBuilder {
 
 	public void addElementBuilder(UIElementBuilder uiElementsBuilder) {
 		elementsBuilders.add(uiElementsBuilder);
-	}
-
-	public boolean requiresNewRow() {
-		return requiresNewRow;
-	}
-
-	public void setRequiresNewRow(boolean requiresNewRow) {
-		this.requiresNewRow = requiresNewRow;
 	}
 
 	public boolean isLast() {
