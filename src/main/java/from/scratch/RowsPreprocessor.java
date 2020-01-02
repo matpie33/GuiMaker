@@ -151,7 +151,6 @@ public class RowsPreprocessor {
 			ProcessedPanelData processedPanelData, int indexOfRowInsideSamePanel) {
 		processedPanelData.setLast(currentRow.isLastRow());
 		processedPanelData.setRowIndex(rowIndex);
-		processedPanelData.setFillType(currentRow.getRowFillType());
 		processedPanelData.setNumberOfRowsInPanel(indexOfRowInsideSamePanel + 1);
 		processedPanelData.setFillType(getTotalFillTypeBasedOnElements(
 				processedPanelData.getProcessedUIElementsData()));

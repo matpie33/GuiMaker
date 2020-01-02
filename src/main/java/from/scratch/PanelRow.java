@@ -15,13 +15,11 @@ public class PanelRow {
 	private boolean keepColumnSizeWithRowBelow;
 	private PanelRow previousRow;
 	private PanelRow nextRow;
-	private FillType rowFillType;
 
 	public PanelRow(JComponent... uiElements) {
 		this.uiElements = Arrays.asList(uiElements);
 		keepColumnSizeWithRowBelow = false;
 		elementsFillType = FillType.NONE;
-		rowFillType = FillType.NONE;
 		elementsToFill = new ArrayList<>();
 		elementsToFillWithinColumnOrRowSize = new ArrayList<>();
 	}
@@ -45,11 +43,6 @@ public class PanelRow {
 			JComponent... elementsToFill) {
 		this.elementsFillType = fillType;
 		this.elementsToFill = Arrays.asList(elementsToFill);
-		return this;
-	}
-
-	public PanelRow fillThisRow(FillType fillType) {
-		rowFillType = fillType;
 		return this;
 	}
 
@@ -96,10 +89,6 @@ public class PanelRow {
 
 	public PanelRow getNextRow() {
 		return nextRow;
-	}
-
-	public FillType getRowFillType() {
-		return rowFillType;
 	}
 
 	public boolean isFirstRow() {

@@ -246,7 +246,61 @@ class SwiftPanelTest extends AbstractPanelTest {
 				row1Element3).nextRowKeepingColumnSize(row2Element1,
 				row2Element2)
 							 .fillElement(FillType.BOTH, row2Element1)
-							 .fillThisRow(FillType.BOTH)
+							 .nextRow(row3Element1, row3Element2)
+							 .nextRowKeepingColumnSize(row4Element1,
+									 row4Element2);
+
+		//when
+		swiftPanel.addElements(panelRows);
+		JPanel panel = swiftPanel.getPanel();
+		showPanel(panel, testInfo);
+
+		//then
+
+		assertDistanceBetweenElementsHorizontally(row1Element2, panel, false,
+				row1Element3);
+		assertDistanceBetweenElementsHorizontally(panel, panel, false,
+				row2Element1, row2Element2);
+		assertDistanceBetweenElementsHorizontally(panel, panel, false,
+				row3Element1);
+		assertDistanceBetweenElementsHorizontally(panel, panel, false,
+				row4Element1);
+		//noinspection unchecked
+		assertDistancesBetweenRows(panel, true,
+				Arrays.asList(row1Element1, row1Element3),
+				Collections.singletonList(row2Element1),
+				Arrays.asList(row3Element1, row3Element2),
+				Arrays.asList(row4Element1, row4Element2));
+		assertThatComponentIsCenteredBetweenElements(row2Element1, row1Element1,
+				row3Element1);
+
+		assertTrue(row1Element1.getHeight() < 1D / 10D * panel.getHeight());
+		assertTrue(row2Element1.getHeight() > 1D / 3D * panel.getHeight());
+		assertEquals(row3Element1.getHeight(), row2Element2.getHeight());
+		assertEquals(getXCoordinate(row3Element1) - getXCoordinate(panel),
+				getXCoordinate(row2Element1) - getXCoordinate(panel));
+		assertTrue(getYCoordinate(panel) + panel.getHeight() - (
+				row4Element1.getHeight() + getYCoordinate(row4Element1)) < 5);
+	}
+
+	@DisplayName("Normal layout, add row after showing")
+	@Test
+	void shouldAddRowAfterPanelIsFinished(
+			TestInfo testInfo) {
+		//given
+		JButton row2Element2 = new JButton("filled");
+		JButton row3Element1 = new JButton("Full abc def ghhh fsda");
+		JButton row1Element1 = new JButton("Test");
+		JLabel row1Element2 = new JLabel("Test label");
+		JButton row1Element3 = new JButton("Test button");
+		JTextField row2Element1 = new JTextField("a");
+		JButton row4Element1 = new JButton("test");
+		JButton row3Element2 = new JButton("test ab ");
+		JButton row4Element2 = new JButton("test bc");
+		PanelRow panelRows = new PanelRow(row1Element1, row1Element2,
+				row1Element3).nextRowKeepingColumnSize(row2Element1,
+				row2Element2)
+							 .fillElement(FillType.BOTH, row2Element1)
 							 .nextRow(row3Element1, row3Element2)
 							 .nextRowKeepingColumnSize(row4Element1,
 									 row4Element2);
