@@ -159,36 +159,20 @@ public class RowsPreprocessor {
 
 	private FillType getTotalFillTypeBasedOnElements(
 			List<ProcessedUIElementData> processedUIElementsData) {
-		boolean hasHorizontalFill = false;
-		boolean hasVerticalFill = false;
+		double maxWeightx = 0;
+		double maxWeighty = 0;
 		for (ProcessedUIElementData processedUIElementData : processedUIElementsData) {
 			if (!processedUIElementData.shouldUseAllAvailableSpace()) {
 				continue;
 			}
-			if (processedUIElementData.getFillType()
-							   .equals(FillType.BOTH)) {
-				return processedUIElementData.getFillType();
-			}
-			if (containsHorizontalFill(processedUIElementData.getFillType())) {
-				hasHorizontalFill = true;
-			}
-			if (containsVerticalFill(processedUIElementData.getFillType())) {
-				hasVerticalFill = true;
-			}
+			maxWeightx = Math.max(processedUIElementData.getFillType()
+														.getWeightX(),
+					maxWeightx);
+			maxWeighty = Math.max(processedUIElementData.getFillType()
+														.getWeightY(),
+					maxWeighty);
 		}
-		if (hasHorizontalFill && !hasVerticalFill) {
-			return FillType.HORIZONTAL;
-		}
-		else if (hasVerticalFill && !hasHorizontalFill) {
-			return FillType.VERTICAL;
-		}
-		else //noinspection ConstantConditions
-			if (hasVerticalFill && hasHorizontalFill) {
-				return FillType.BOTH;
-			}
-			else {
-				return FillType.NONE;
-			}
+		return FillType.basedOnWeights(maxWeightx, maxWeighty);
 	}
 
 	private boolean rowRequiresNewPanel(PanelRow currentRow) {
