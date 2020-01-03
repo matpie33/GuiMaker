@@ -1,7 +1,5 @@
 package from.scratch;
 
-import com.guimaker.enums.Anchor;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,10 +117,7 @@ public class RowsPreprocessor {
 		processedUiElementData.setRowIndex(indexOfRowInsideSamePanel);
 		processedUiElementData.setInsetBottom(
 				SPACE_BETWEEN_ELEMENTS_VERTICALLY);
-		processedUiElementData.setAnchor(currentRow.isLastRow() ?
-				Anchor.NORTHWEST :
-				currentRow.getAnchor());
-
+		processedUiElementData.setAnchor(currentRow.getAnchor());
 		processedUiElementData.setInsetTop(
 				rowIndex == 0 && indexOfRowInsideSamePanel == 0 ?
 						SPACE_BETWEEN_ELEMENTS_VERTICALLY :

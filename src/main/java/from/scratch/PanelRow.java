@@ -3,7 +3,6 @@ package from.scratch;
 import com.guimaker.enums.Anchor;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,10 +93,6 @@ public class PanelRow {
 
 	public boolean shouldKeepColumnSizeWithRowBelow() {
 		return keepColumnSizeWithRowBelow;
-	}
-
-	public boolean isLastRow() {
-		return nextRow == null;
 	}
 
 	public PanelRow getNextRow() {
