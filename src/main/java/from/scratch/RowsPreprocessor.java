@@ -8,11 +8,14 @@ public class RowsPreprocessor {
 
 	private static final int SPACE_BETWEEN_ELEMENTS_HORIZONTALLY = 4;
 	private static final int SPACE_BETWEEN_ELEMENTS_VERTICALLY = 3;
+	private ProcessedPanelData lastPanelPlaceholder;
 
 	public List<ProcessedPanelData> preprocess(PanelRow panelRow) {
 
 		List<ProcessedPanelData> processedPanelsData = new ArrayList<>();
-		int rowIndex = 0;
+		int rowIndex = lastPanelPlaceholder != null ?
+				lastPanelPlaceholder.getRowIndex() :
+				0;
 		int indexOfRowInsideSamePanel = 0;
 		boolean existsRowFilledVertically = false;
 		ProcessedPanelData currentlyProcessedPanel = null;
@@ -20,7 +23,8 @@ public class RowsPreprocessor {
 		while (currentRow != null) {
 			checkCorrectElementsToFill(currentRow);
 
-			if (currentlyProcessedPanel == null || rowRequiresNewPanel(currentRow)) {
+			if (currentlyProcessedPanel == null || rowRequiresNewPanel(
+					currentRow)) {
 				indexOfRowInsideSamePanel = 0;
 				currentlyProcessedPanel = new ProcessedPanelData();
 				processedPanelsData.add(currentlyProcessedPanel);
@@ -30,7 +34,7 @@ public class RowsPreprocessor {
 			}
 			createUIElementsData(currentRow, currentlyProcessedPanel,
 					indexOfRowInsideSamePanel, rowIndex);
-			setPanelData(currentRow, rowIndex, currentlyProcessedPanel,
+			setPanelData(rowIndex, currentlyProcessedPanel,
 					indexOfRowInsideSamePanel);
 			existsRowFilledVertically =
 					existsRowFilledVertically || containsVerticalFill(
@@ -42,8 +46,10 @@ public class RowsPreprocessor {
 
 		}
 		assert currentlyProcessedPanel != null;
-		processedPanelsData.add(createEmptyPanelToTheBottomOfTheParentPanel(
-				existsRowFilledVertically, rowIndex));
+		ProcessedPanelData placeHolderPanel = createEmptyPanelToTheBottomOfTheParentPanel(
+				existsRowFilledVertically, rowIndex);
+		processedPanelsData.add(placeHolderPanel);
+		lastPanelPlaceholder = placeHolderPanel;
 		return processedPanelsData;
 
 	}
@@ -81,6 +87,7 @@ public class RowsPreprocessor {
 				FillType.BOTH :
 				FillType.HORIZONTAL);
 		processedPanelData.setRowIndex(rowIndex);
+		processedPanelData.setLast(true);
 		return processedPanelData;
 	}
 
@@ -89,14 +96,9 @@ public class RowsPreprocessor {
 				FillType.BOTH);
 	}
 
-	private boolean containsHorizontalFill(FillType fillType) {
-		return fillType.equals(FillType.HORIZONTAL) || fillType.equals(
-				FillType.BOTH);
-	}
-
 	private void createUIElementsData(PanelRow currentRow,
-			ProcessedPanelData processedPanelData, int indexOfRowInsideSamePanel,
-			int rowIndex) {
+			ProcessedPanelData processedPanelData,
+			int indexOfRowInsideSamePanel, int rowIndex) {
 		List<JComponent> uiElements = currentRow.getUIElements();
 		for (int indexOfElementInRow = 0;
 			 indexOfElementInRow < uiElements.size(); indexOfElementInRow++) {
@@ -114,13 +116,15 @@ public class RowsPreprocessor {
 		processedUiElementData.setUiElement(uiElement);
 		processedUiElementData.setColumnIndex(columnIndex);
 		processedUiElementData.setRowIndex(indexOfRowInsideSamePanel);
-		processedUiElementData.setInsetBottom(SPACE_BETWEEN_ELEMENTS_VERTICALLY);
+		processedUiElementData.setInsetBottom(
+				SPACE_BETWEEN_ELEMENTS_VERTICALLY);
 
 		processedUiElementData.setInsetTop(
 				rowIndex == 0 && indexOfRowInsideSamePanel == 0 ?
 						SPACE_BETWEEN_ELEMENTS_VERTICALLY :
 						0);
-		processedUiElementData.setInsetRight(SPACE_BETWEEN_ELEMENTS_HORIZONTALLY);
+		processedUiElementData.setInsetRight(
+				SPACE_BETWEEN_ELEMENTS_HORIZONTALLY);
 		processedUiElementData.setInsetLeft(
 				columnIndex == 0 ? SPACE_BETWEEN_ELEMENTS_HORIZONTALLY : 0);
 		setFillTypeForElement(uiElement, currentRow, processedUiElementData);
@@ -128,7 +132,8 @@ public class RowsPreprocessor {
 	}
 
 	private void setFillTypeForElement(JComponent uiElement,
-			PanelRow currentRow, ProcessedUIElementData processedUiElementData) {
+			PanelRow currentRow,
+			ProcessedUIElementData processedUiElementData) {
 		FillType fillType = FillType.NONE;
 		boolean shouldFillElementAndRowOrColumn = currentRow.getElementsToFill()
 															.contains(
@@ -143,15 +148,17 @@ public class RowsPreprocessor {
 		if (shouldFillElementButNotRowNorColumn) {
 			fillType = currentRow.getFillTypeWithinColumnOrRowSize();
 		}
-		processedUiElementData.setFillType(fillType, shouldFillElementAndRowOrColumn);
+		processedUiElementData.setFillType(fillType,
+				shouldFillElementAndRowOrColumn);
 
 	}
 
-	private void setPanelData(PanelRow currentRow, int rowIndex,
-			ProcessedPanelData processedPanelData, int indexOfRowInsideSamePanel) {
-		processedPanelData.setLast(currentRow.isLastRow());
+	private void setPanelData(int rowIndex,
+			ProcessedPanelData processedPanelData,
+			int indexOfRowInsideSamePanel) {
 		processedPanelData.setRowIndex(rowIndex);
-		processedPanelData.setNumberOfRowsInPanel(indexOfRowInsideSamePanel + 1);
+		processedPanelData.setNumberOfRowsInPanel(
+				indexOfRowInsideSamePanel + 1);
 		processedPanelData.setFillType(getTotalFillTypeBasedOnElements(
 				processedPanelData.getProcessedUIElementsData()));
 	}

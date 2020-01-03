@@ -9,6 +9,7 @@ public class SwiftPanel {
 	private JPanel panel;
 	private RowsPreprocessor rowsPreprocessor;
 	private static final boolean DEBUG_ON = false;
+	private JPanel placeholderPanel;
 
 	public SwiftPanel() {
 		panel = createPanel();
@@ -21,6 +22,9 @@ public class SwiftPanel {
 
 	public void addElements(PanelRow panelRow) {
 
+		if (placeholderPanel!= null){
+			this.panel.remove(placeholderPanel);
+		}
 		List<ProcessedPanelData> processedPanelsData = rowsPreprocessor.preprocess(
 				panelRow);
 		for (ProcessedPanelData processedPanelData : processedPanelsData) {
@@ -29,6 +33,9 @@ public class SwiftPanel {
 			addElementsToPanel(processedPanelData, currentPanel);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow(
 					processedPanelData);
+			if (processedPanelData.isLast()){
+				placeholderPanel = currentPanel;
+			}
 			this.panel.add(currentPanel, constraintsForRow);
 		}
 

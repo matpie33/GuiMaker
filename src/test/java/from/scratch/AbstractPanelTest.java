@@ -16,8 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractPanelTest {
 
+	protected void assertElementsNotFilledHorizontally(JPanel panel,
+			JComponent... elements) {
+		for (JComponent element : elements) {
+			assertTrue(element.getWidth() < panel.getWidth() / 3);
+		}
+	}
+
 	protected void assertDistancesBetweenRows(JPanel panel,
-			boolean assertIfLastElementIsOnBottomOfPanel,
+			boolean assertThatLastElementIsOnBottomOfPanel,
 			List<JComponent>... rows) {
 		for (List<JComponent> row : rows) {
 			for (int i = 0; i < row.size() - 1; i++) {
@@ -40,7 +47,7 @@ public abstract class AbstractPanelTest {
 								  .getHeight()));
 
 		}
-		if (assertIfLastElementIsOnBottomOfPanel) {
+		if (assertThatLastElementIsOnBottomOfPanel) {
 			List<JComponent> lastRowElements = rows[rows.length - 1];
 			JComponent elementInLastRow = lastRowElements.get(
 					lastRowElements.size() - 1);
