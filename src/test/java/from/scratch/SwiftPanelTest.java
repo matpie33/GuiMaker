@@ -351,4 +351,69 @@ class SwiftPanelTest extends AbstractPanelTest {
 				row2add2);
 	}
 
+	@DisplayName("Add row after showing keep column size")
+	@Test
+	void shouldAddRowAfterPanelIsFinishedKeepingColumnSize(TestInfo testInfo) {
+		//given
+		JButton row2Element2 = new JButton("filled");
+		JButton row1Element1 = new JButton("Test");
+		JLabel row1Element2 = new JLabel("Test label");
+		JButton row1Element3 = new JButton("Test button");
+		JTextField row2Element1 = new JTextField("a");
+		PanelRow panelRows = new PanelRow(row1Element1, row1Element2,
+				row1Element3).nextRow(row2Element1, row2Element2);
+
+		//when
+		swiftPanel.addElements(panelRows);
+		JPanel panel = swiftPanel.getPanel();
+		showPanel(panel, testInfo);
+
+		JButton row3Element1 = new JButton("Added 1 button");
+		JButton row3Element2 = new JButton("Added 2 button");
+		JButton row4Element1 = new JButton("Add b");
+		JButton row4Element2 = new JButton("Add a");
+		JButton row5Element1 = new JButton("Ad 1111");
+		JButton row5Element2 = new JButton("Add 5 row 22222222222222");
+		PanelRow nextAdded = new PanelRow(row3Element1,
+				row3Element2).keepColumnSizeWithRowAbove()
+							 .nextRowKeepingColumnSize(row4Element1,
+									 row4Element2)
+							 .fillElementWithinColumnOrRowSize(
+									 FillType.HORIZONTAL, row4Element1)
+							 .nextRow(row5Element1, row5Element2);
+
+		swiftPanel.addElements(nextAdded);
+		showPanel(panel, testInfo);
+
+		//then
+
+		assertDistanceBetweenElementsHorizontally(panel, panel, false,
+				row1Element1, row1Element2, row1Element3);
+		assertDistanceBetweenElementsHorizontally(panel, panel, false,
+				row3Element1, row3Element2);
+		assertDistanceBetweenElementsHorizontally(panel, panel, false,
+				row4Element1, row4Element2);
+		assertDistanceBetweenElementsHorizontally(panel, panel, false,
+				row5Element1, row5Element2);
+
+		//noinspection unchecked
+		assertDistancesBetweenRows(panel, false,
+				Arrays.asList(row1Element1, row1Element3),
+				Collections.singletonList(row2Element2),
+				Arrays.asList(row3Element1, row3Element2),
+				Arrays.asList(row4Element1, row4Element2),
+				Arrays.asList(row5Element1, row5Element2));
+
+		assertTrue(row1Element1.getHeight() < 1D / 10D * panel.getHeight());
+		assertElementsNotFilledHorizontally(panel, row1Element1, row1Element2,
+				row1Element3, row2Element1, row2Element2, row3Element1,
+				row3Element2, row4Element1, row4Element2, row5Element1,
+				row5Element2);
+		int referenceHeight = row1Element1.getHeight();
+		Arrays.asList(row1Element1, row1Element3, row2Element2, row3Element1,
+				row3Element2, row4Element1, row4Element2, row5Element1,
+				row5Element2)
+			  .forEach(e -> assertTrue(e.getHeight() == referenceHeight));
+	}
+
 }

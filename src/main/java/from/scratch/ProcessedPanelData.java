@@ -9,6 +9,15 @@ public class ProcessedPanelData {
 	private int gridY;
 	private List<ProcessedUIElementData> processedUIElementsData = new ArrayList<>();
 	private FillType fillType;
+	private boolean addElementsToPreviousPanel;
+
+	public boolean shouldAddElementsToPreviousPanel() {
+		return addElementsToPreviousPanel;
+	}
+
+	public void setShouldAddElementsToPreviousPanel() {
+		this.addElementsToPreviousPanel = true;
+	}
 
 	public FillType getFillType() {
 		return fillType;

@@ -15,6 +15,7 @@ public class PanelRow {
 	private List<JComponent> elementsToFill;
 	private List<JComponent> elementsToFillWithinColumnOrRowSize;
 	private boolean keepColumnSizeWithRowBelow;
+	private boolean keepColumnSizeWithRowAbove;
 	private PanelRow previousRow;
 	private PanelRow nextRow;
 	private Anchor anchor;
@@ -26,6 +27,15 @@ public class PanelRow {
 		elementsToFill = new ArrayList<>();
 		elementsToFillWithinColumnOrRowSize = new ArrayList<>();
 		anchor = Anchor.WEST;
+	}
+
+	public boolean shouldKeepColumnSizeWithRowAbove() {
+		return keepColumnSizeWithRowAbove;
+	}
+
+	public PanelRow keepColumnSizeWithRowAbove() {
+		this.keepColumnSizeWithRowAbove = true;
+		return this;
 	}
 
 	public Anchor getAnchor() {
