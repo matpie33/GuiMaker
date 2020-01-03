@@ -1,6 +1,9 @@
 package from.scratch;
 
+import com.guimaker.enums.Anchor;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +18,7 @@ public class PanelRow {
 	private boolean keepColumnSizeWithRowBelow;
 	private PanelRow previousRow;
 	private PanelRow nextRow;
+	private Anchor anchor;
 
 	public PanelRow(JComponent... uiElements) {
 		this.uiElements = Arrays.asList(uiElements);
@@ -22,6 +26,15 @@ public class PanelRow {
 		elementsFillType = FillType.NONE;
 		elementsToFill = new ArrayList<>();
 		elementsToFillWithinColumnOrRowSize = new ArrayList<>();
+		anchor = Anchor.WEST;
+	}
+
+	public Anchor getAnchor() {
+		return anchor;
+	}
+
+	public void setAnchor(Anchor anchor) {
+		this.anchor = anchor;
 	}
 
 	public FillType getFillTypeWithinColumnOrRowSize() {

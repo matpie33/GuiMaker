@@ -9,15 +9,6 @@ public class ProcessedPanelData {
 	private int gridY;
 	private List<ProcessedUIElementData> processedUIElementsData = new ArrayList<>();
 	private FillType fillType;
-	private int numberOfRowsInPanel;
-
-	public int getNumberOfRowsInPanel() {
-		return numberOfRowsInPanel;
-	}
-
-	public void setNumberOfRowsInPanel(int numberOfRowsInPanel) {
-		this.numberOfRowsInPanel = numberOfRowsInPanel;
-	}
 
 	public FillType getFillType() {
 		return fillType;
@@ -29,7 +20,8 @@ public class ProcessedPanelData {
 		}
 	}
 
-	public void addProcessedUIElementData(ProcessedUIElementData processedUIElementData) {
+	public void addProcessedUIElementData(
+			ProcessedUIElementData processedUIElementData) {
 		this.processedUIElementsData.add(processedUIElementData);
 	}
 

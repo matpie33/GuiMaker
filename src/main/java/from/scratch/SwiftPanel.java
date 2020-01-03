@@ -89,11 +89,7 @@ public class SwiftPanel {
 		constraints.weighty = processedUiElementData.getFillType()
 													.getWeightY();
 
-		constraints.anchor = processedPanelData.isLast()
-				&& processedUiElementData.getRowIndex()
-				== processedPanelData.getNumberOfRowsInPanel() - 1 ?
-				GridBagConstraints.NORTHWEST :
-				GridBagConstraints.WEST;
+		constraints.anchor = processedUiElementData.getAnchor().getAnchor();
 		constraints.gridy = processedUiElementData.getRowIndex();
 		constraints.gridx = processedUiElementData.getColumnIndex();
 		return constraints;

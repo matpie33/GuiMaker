@@ -1,5 +1,7 @@
 package from.scratch;
 
+import com.guimaker.enums.Anchor;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +36,7 @@ public class RowsPreprocessor {
 			}
 			createUIElementsData(currentRow, currentlyProcessedPanel,
 					indexOfRowInsideSamePanel, rowIndex);
-			setPanelData(rowIndex, currentlyProcessedPanel,
-					indexOfRowInsideSamePanel);
+			setPanelData(rowIndex, currentlyProcessedPanel);
 			existsRowFilledVertically =
 					existsRowFilledVertically || containsVerticalFill(
 							currentlyProcessedPanel.getFillType());
@@ -118,6 +119,9 @@ public class RowsPreprocessor {
 		processedUiElementData.setRowIndex(indexOfRowInsideSamePanel);
 		processedUiElementData.setInsetBottom(
 				SPACE_BETWEEN_ELEMENTS_VERTICALLY);
+		processedUiElementData.setAnchor(currentRow.isLastRow() ?
+				Anchor.NORTHWEST :
+				currentRow.getAnchor());
 
 		processedUiElementData.setInsetTop(
 				rowIndex == 0 && indexOfRowInsideSamePanel == 0 ?
@@ -154,11 +158,8 @@ public class RowsPreprocessor {
 	}
 
 	private void setPanelData(int rowIndex,
-			ProcessedPanelData processedPanelData,
-			int indexOfRowInsideSamePanel) {
+			ProcessedPanelData processedPanelData) {
 		processedPanelData.setRowIndex(rowIndex);
-		processedPanelData.setNumberOfRowsInPanel(
-				indexOfRowInsideSamePanel + 1);
 		processedPanelData.setFillType(getTotalFillTypeBasedOnElements(
 				processedPanelData.getProcessedUIElementsData()));
 	}

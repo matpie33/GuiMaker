@@ -1,5 +1,7 @@
 package from.scratch;
 
+import com.guimaker.enums.Anchor;
+
 import javax.swing.*;
 
 public class ProcessedUIElementData {
@@ -13,6 +15,15 @@ public class ProcessedUIElementData {
 	private int rowIndex;
 	private JComponent uiElement;
 	private boolean useAllAvailableSpace;
+	private Anchor anchor;
+
+	public Anchor getAnchor() {
+		return anchor;
+	}
+
+	public void setAnchor(Anchor anchor) {
+		this.anchor = anchor;
+	}
 
 	public JComponent getUiElement() {
 		return uiElement;
