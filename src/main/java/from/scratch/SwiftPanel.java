@@ -10,14 +10,20 @@ public class SwiftPanel {
 	private RowsPreprocessor rowsPreprocessor;
 	private static final boolean DEBUG_ON = false;
 	private JPanel placeholderPanel;
+	private PanelUpdater panelUpdater;
 
 	public SwiftPanel() {
-		panel = createPanel();
+		panel = createRootPanel();
+		panelUpdater = new PanelUpdater(panel);
 		rowsPreprocessor = new RowsPreprocessor();
 	}
 
-	private JPanel createPanel() {
+	private JPanel createRootPanel() {
 		return new JPanel(new GridBagLayout());
+	}
+
+	public void removeElement(JComponent element) {
+		panelUpdater.removeElement(element);
 	}
 
 	public void addElements(PanelRow panelRow) {
@@ -27,6 +33,7 @@ public class SwiftPanel {
 		}
 		List<ProcessedPanelData> processedPanelsData = rowsPreprocessor.preprocess(
 				panelRow);
+		panelUpdater.addProcessedPanelData(processedPanelsData);
 		for (ProcessedPanelData processedPanelData : processedPanelsData) {
 			JPanel currentPanel = createPanel(processedPanelData);
 			debug(currentPanel);
@@ -65,7 +72,7 @@ public class SwiftPanel {
 		List<ProcessedUIElementData> processedUIElementsData = processedPanelData.getProcessedUIElementsData();
 		for (ProcessedUIElementData processedUiElementData : processedUIElementsData) {
 			GridBagConstraints constraints = createConstraintsForElementsInsideRow(
-					processedUiElementData, processedPanelData);
+					processedUiElementData);
 			currentPanel.add(processedUiElementData.getUiElement(),
 					constraints);
 		}
@@ -89,8 +96,7 @@ public class SwiftPanel {
 	}
 
 	private GridBagConstraints createConstraintsForElementsInsideRow(
-			ProcessedUIElementData processedUiElementData,
-			ProcessedPanelData processedPanelData) {
+			ProcessedUIElementData processedUiElementData) {
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.insets = new Insets(processedUiElementData.getInsetTop(),
 				processedUiElementData.getInsetLeft(),

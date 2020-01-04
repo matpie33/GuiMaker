@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SwiftPanelTest extends AbstractPanelTest {
+class SwiftPanelAddRowsTest extends AbstractPanelTest {
 
 	private SwiftPanel swiftPanel = new SwiftPanel();
 
