@@ -111,7 +111,7 @@ public class SwiftPanel {
 													.getWeightY();
 
 		constraints.anchor = processedUiElementData.getAnchor()
-												   .getAnchor();
+												   .getIntValue();
 		constraints.gridy = processedUiElementData.getRowIndex();
 		constraints.gridx = processedUiElementData.getColumnIndex();
 		return constraints;

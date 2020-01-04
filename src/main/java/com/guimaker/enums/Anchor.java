@@ -18,7 +18,7 @@ public enum Anchor {
 		this.anchor = anchor;
 	}
 
-	public int getAnchor() {
+	public int getIntValue() {
 		return anchor;
 	}
 

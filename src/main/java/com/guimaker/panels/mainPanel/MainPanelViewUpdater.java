@@ -182,7 +182,7 @@ public class MainPanelViewUpdater {
 		c.weightx = 1;
 		int fill = row.getFillTypeAsGridBagConstraint();
 		int anchor = row.getAnchor()
-						.getAnchor();
+						.getIntValue();
 		if (shouldPutRowsHighestAsPossible || row.isUseAllExtraVerticalSpace()
 				|| fill == GridBagConstraints.BOTH
 				|| fill == GridBagConstraints.VERTICAL) {
