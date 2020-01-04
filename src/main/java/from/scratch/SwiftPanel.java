@@ -9,7 +9,6 @@ public class SwiftPanel {
 	private JPanel panel;
 	private RowsPreprocessor rowsPreprocessor;
 	private static final boolean DEBUG_ON = false;
-	private JPanel placeholderPanel;
 	private PanelUpdater panelUpdater;
 
 	public SwiftPanel() {
@@ -28,23 +27,18 @@ public class SwiftPanel {
 
 	public void addElements(PanelRow panelRow) {
 
-		if (placeholderPanel != null) {
-			this.panel.remove(placeholderPanel);
-		}
+		panelUpdater.removePlaceholderPanel();
 		List<ProcessedPanelData> processedPanelsData = rowsPreprocessor.preprocess(
 				panelRow);
-		panelUpdater.addProcessedPanelData(processedPanelsData);
 		for (ProcessedPanelData processedPanelData : processedPanelsData) {
 			JPanel currentPanel = createPanel(processedPanelData);
 			debug(currentPanel);
 			addElementsToPanel(processedPanelData, currentPanel);
 			GridBagConstraints constraintsForRow = createConstraintsForNewRow(
 					processedPanelData);
-			if (processedPanelData.isLast()) {
-				placeholderPanel = currentPanel;
-			}
 			this.panel.add(currentPanel, constraintsForRow);
 		}
+		panelUpdater.addProcessedPanelData(processedPanelsData);
 
 	}
 

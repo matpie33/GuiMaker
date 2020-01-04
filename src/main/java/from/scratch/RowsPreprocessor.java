@@ -97,7 +97,6 @@ public class RowsPreprocessor {
 				FillType.BOTH :
 				FillType.HORIZONTAL);
 		processedPanelData.setRowIndex(rowIndex);
-		processedPanelData.setLast(true);
 		return processedPanelData;
 	}
 

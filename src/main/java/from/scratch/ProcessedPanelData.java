@@ -5,7 +5,6 @@ import java.util.List;
 
 public class ProcessedPanelData {
 
-	private boolean isLast;
 	private int gridY;
 	private List<ProcessedUIElementData> processedUIElementsData = new ArrayList<>();
 	private FillType fillType;
@@ -32,14 +31,6 @@ public class ProcessedPanelData {
 	public void addProcessedUIElementData(
 			ProcessedUIElementData processedUIElementData) {
 		this.processedUIElementsData.add(processedUIElementData);
-	}
-
-	public boolean isLast() {
-		return isLast;
-	}
-
-	public void setLast(boolean last) {
-		isLast = last;
 	}
 
 	public int getRowIndex() {

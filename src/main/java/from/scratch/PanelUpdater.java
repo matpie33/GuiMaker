@@ -41,21 +41,19 @@ public class PanelUpdater {
 								 .findFirst();
 	}
 
-	private void shiftElementsLeftFromPanel(
-			ProcessedPanelData panelData,
+	private void shiftElementsLeftFromPanel(ProcessedPanelData panelData,
 			ProcessedUIElementData uiElementData,
 			JPanel panelContainingElement) {
 		GridBagLayout layout = (GridBagLayout) panelContainingElement.getLayout();
 		int columnIndex = uiElementData.getColumnIndex();
 		panelData.getProcessedUIElementsData()
-						  .stream()
-						  .filter(uiElement -> uiElement.getColumnIndex()
-								  > columnIndex)
-						  .filter(uiElement -> uiElement.getRowIndex()
-								  == uiElementData.getRowIndex())
-						  .forEach(uiElement -> {
-							  shiftElement1PlaceLeft(layout, uiElement);
-						  });
+				 .stream()
+				 .filter(uiElement -> uiElement.getColumnIndex() > columnIndex)
+				 .filter(uiElement -> uiElement.getRowIndex()
+						 == uiElementData.getRowIndex())
+				 .forEach(uiElement -> {
+					 shiftElement1PlaceLeft(layout, uiElement);
+				 });
 	}
 
 	private void shiftElement1PlaceLeft(GridBagLayout layout,
@@ -67,12 +65,11 @@ public class PanelUpdater {
 		layout.setConstraints(uiElement.getUiElement(), constraints);
 	}
 
-	private void removeElement(JComponent element,
-			ProcessedPanelData panelData,
+	private void removeElement(JComponent element, ProcessedPanelData panelData,
 			ProcessedUIElementData uiElementData,
 			JPanel panelContainingElement) {
 		panelData.getProcessedUIElementsData()
-						  .remove(uiElementData);
+				 .remove(uiElementData);
 		panelContainingElement.remove(element);
 	}
 
@@ -82,8 +79,26 @@ public class PanelUpdater {
 		return (JPanel) this.panel.getComponent(rowIndex);
 	}
 
-	public void addProcessedPanelData(
-			List<ProcessedPanelData> processedPanelsData) {
-		this.processedPanelsData.addAll(processedPanelsData);
+	public void addProcessedPanelData(List<ProcessedPanelData> panelsToAdd) {
+		ProcessedPanelData firstPanelToAdd = panelsToAdd.get(0);
+
+		if (firstPanelToAdd.shouldAddElementsToPreviousPanel()) {
+			ProcessedPanelData lastPanel = processedPanelsData.get(
+					processedPanelsData.size() - 1);
+			lastPanel.getProcessedUIElementsData()
+					 .addAll(firstPanelToAdd.getProcessedUIElementsData());
+			lastPanel.setFillType(firstPanelToAdd.getFillType());
+			panelsToAdd.remove(firstPanelToAdd);
+
+		}
+		this.processedPanelsData.addAll(panelsToAdd);
+	}
+
+	public void removePlaceholderPanel() {
+		if (panel.getComponentCount() > 0) {
+			panel.remove(panel.getComponent(panel.getComponentCount() - 1));
+			processedPanelsData.remove(processedPanelsData.get(
+					processedPanelsData.size() - 1));
+		}
 	}
 }
