@@ -1,6 +1,5 @@
 package com.guimaker.list;
 
-import javafx.beans.property.Property;
 
 import javax.swing.text.JTextComponent;
 
